@@ -1,14 +1,12 @@
 [
 {
-  "modid": "mvpppfix",
+  "modid": "mvpplusplusfix",
   "name": "[MVP++] Fix",
   "description": "Makes the golden [MVP++]-Tag aqua.",
   "version": "0.1",
   "mcversion": "1.8.9",
   "url": "https://github.com/unaussprechlich/Hypixel-MVPppFix",
   "authorList": ["unaussprechlich"],
-  "credits": "Created by unaussprechlich",
-  "screenshots": [],
-  "dependencies": []
+  "credits": "Created by unaussprechlich"
 }
 ]
