@@ -1,39 +1,40 @@
-
 // For those who want the bleeding edge
 buildscript {
     repositories {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
     }
 }
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = project_version
 group= "net.unaussprechlich.mvpplusplusfix" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "$archive_name-$mc_version"
 
+minecraft {
+    version = "$mc_version-$forge_version-$mc_version"
+    runDir = "run"
+    mappings = "stable_20"
+}
 
 dependencies {
 
 }
 
+sourceCompatibility = targetCompatibility = "1.8"
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
-minecraft {
-    version = "$mc_version-$forge_version-$mc_version"
-    runDir = "run"
-    mappings = forge_mappings
-}
 
-
-
-processResources
-{
+processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version

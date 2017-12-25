@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod(modid = MvpPlusPlusFix.MODID, version = MvpPlusPlusFix.VERSION, acceptedMinecraftVersions = "1.8.9", clientSideOnly = true)
+@Mod(modid = MvpPlusPlusFix.MODID, version = MvpPlusPlusFix.VERSION, clientSideOnly = true)
 public class MvpPlusPlusFix {
 
     static final String MODID = "mvpplusplusfix";
@@ -25,7 +25,6 @@ public class MvpPlusPlusFix {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        FMLCommonHandler.instance().bus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
         FMLLog.info("", "[MVP++]-Fix loaded.");
     }
