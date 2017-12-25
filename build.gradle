@@ -21,7 +21,7 @@ archivesBaseName = "$archive_name-$mc_version"
 minecraft {
     version = "$mc_version-$forge_version-$mc_version"
     runDir = "run"
-    mappings = "stable_20"
+    mappings = "stable_22"
 }
 
 dependencies {
