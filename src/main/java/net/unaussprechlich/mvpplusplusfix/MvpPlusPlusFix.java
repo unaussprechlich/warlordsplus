@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 public class MvpPlusPlusFix {
 
     static final String MODID = "mvpplusplusfix";
-    static final String VERSION = "0.1";
+    static final String VERSION = "0.2";
 
     private static final String MVPppREGEX = ".*(\u00a7r)?\u00a76\\[MVP(\u00a7r)?\u00a7[0-9|a-f]\\+\\+(\u00a7r)?\u00a76].*";
     private static final Pattern MVPppPATTERN = Pattern.compile(MVPppREGEX);
