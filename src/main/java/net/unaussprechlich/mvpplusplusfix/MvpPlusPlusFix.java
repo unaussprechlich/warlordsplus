@@ -2,6 +2,7 @@ package net.unaussprechlich.mvpplusplusfix;
 
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -14,6 +15,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Mod(modid = MvpPlusPlusFix.MODID, version = MvpPlusPlusFix.VERSION, clientSideOnly = true)
 public class MvpPlusPlusFix {
 
@@ -21,6 +25,8 @@ public class MvpPlusPlusFix {
     static final String VERSION = "0.1";
 
     private static final String MVPppREGEX = ".*(\u00a7r)?\u00a76\\[MVP(\u00a7r)?\u00a7[0-9|a-f]\\+\\+(\u00a7r)?\u00a76].*";
+    private static final Pattern MVPppPATTERN = Pattern.compile(MVPppREGEX);
+    private static final Matcher MVPppMATCHER = MVPppPATTERN.matcher("");
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
@@ -28,17 +34,24 @@ public class MvpPlusPlusFix {
         FMLLog.info("", "[MVP++]-Fix loaded.");
     }
 
+    private boolean checkMvpPP(String s){
+        return  MVPppMATCHER.reset(s).matches();
+    }
 
     @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGH)
     public void onChatMessage(ClientChatReceivedEvent e) {
         try {
 
-            if(e.message.getFormattedText().matches(MVPppREGEX)){
+            if(checkMvpPP(e.message.getFormattedText())){
 
                 IChatComponent newMessage = new ChatComponentText(e.message.getUnformattedTextForChat()).setChatStyle(e.message.getChatStyle());
 
+                if(newMessage.getUnformattedTextForChat().equals("[MVP") && newMessage.getChatStyle().getColor() == EnumChatFormatting.GOLD)
+                    newMessage.getChatStyle().setColor(EnumChatFormatting.AQUA);
+
                 for(IChatComponent sib : e.message.getSiblings()){
-                    if(sib.getFormattedText().matches(MVPppREGEX)) {
+
+                    if(checkMvpPP(sib.getFormattedText())) {
                         int indexOfMvpPP = sib.getFormattedText().indexOf("\u00a76[MVP\u00a7");
 
                         if(sib.getFormattedText().charAt(indexOfMvpPP + 7) == 'r'){
@@ -62,6 +75,7 @@ public class MvpPlusPlusFix {
                         newMessage.appendSibling(sib);
                     } else newMessage.appendSibling(sib);
                 }
+
                 e.message = newMessage;
             }
         } catch (Exception ex) {
@@ -73,11 +87,10 @@ public class MvpPlusPlusFix {
     public void onPlayerName(PlayerEvent.NameFormat e) {
         try{
             ScorePlayerTeam team = (ScorePlayerTeam) e.entityPlayer.getTeam();
-            if(team.getColorPrefix().matches(MVPppREGEX)){
-                team.setNamePrefix("\u00a7b[MVP\u00a7" + team.getColorPrefix().charAt(7) + "++\u00a7b]");
+            if(checkMvpPP(team.getColorPrefix())){
+                team.setNamePrefix("\u00a7b[MVP\u00a7" + team.getColorPrefix().charAt(7) + "++\u00a7b] ");
                 e.entityPlayer.refreshDisplayName();
             }
-
         } catch(Exception ex){
             ex.printStackTrace();
         }
