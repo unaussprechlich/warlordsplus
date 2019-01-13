@@ -15,7 +15,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = project_version
-group= "net.unaussprechlich.mvpplusplusfix" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group= "net.unaussprechlich.warlordsplus" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "$archive_name-$mc_version"
 
 minecraft {

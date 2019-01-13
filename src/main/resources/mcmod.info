@@ -1,11 +1,11 @@
 [
 {
-  "modid": "mvpplusplusfix",
-  "name": "[MVP++] Fix",
-  "description": "Makes the golden [MVP++]-Tag aqua.",
+  "modid": "warlordsplus",
+  "name": "warlordsplus",
+  "description": "warlords+",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "https://github.com/unaussprechlich/Hypixel-MVPppFix",
+  "url": "https://github.com/unaussprechlich/inviteroni",
   "authorList": ["unaussprechlich"],
   "credits": "Created by unaussprechlich"
 }

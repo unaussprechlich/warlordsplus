@@ -1,0 +1,10 @@
+{
+  "SUCTION": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "SUCTION"
+      }
+    ]
+  }
+}
