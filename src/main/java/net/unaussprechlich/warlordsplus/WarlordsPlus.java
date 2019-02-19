@@ -17,6 +17,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.opengl.GL11;
@@ -79,11 +80,9 @@ public class WarlordsPlus {
         }
     }
 
-
-
     private void updateRespawnThingy() {
         respawnTimer--;
-        if (scoreboardTitle.contains("WARLORDS") && scoreboardNames.size() == 15 && (scoreboardNames.get(9).contains("Wins in:") || scoreboardNames.get(9).contains("Time Left:"))) {
+        if (scoreboardTitle.matches(".*W.*A.*R.*L.*O*R.*D.*S.*") && scoreboardNames.size() == 15 && (scoreboardNames.get(9).contains("Wins in:") || scoreboardNames.get(9).contains("Time Left:"))) {
             int colon = scoreboardNames.get(9).lastIndexOf(":");
             String after = scoreboardNames.get(9).substring(colon + 1, colon + 3);
 
@@ -97,23 +96,29 @@ public class WarlordsPlus {
             }
         } else {
             respawnThingy = "";
+            System.out.println(scoreboardTitle);
         }
     }
 
 
-    @SubscribeEvent
-    public void onRender(RenderGameOverlayEvent.Post event) {
+    @SubscribeEvent(priority = EventPriority.NORMAL)
+    public void onRender(RenderGameOverlayEvent.Text event) {
+        //if(event.isCancelable()) return;
         if (respawnThingy.equals("")) return;
+
+        //respawnThingy = "Respawn: TEST";
+
         try {
             FontRenderer fontRenderer = FMLClientHandler.instance().getClient().fontRendererObj;
             if (respawnTimer - 1 < 5)
-                renderBoxWithColor(4, 4, fontRenderer.getStringWidth(respawnThingy) + 2, 10, 255, 0, 0);
+                renderBoxWithColor(4, 4, fontRenderer.getStringWidth(respawnThingy) + 4, 13, 255, 0, 0);
             else
-                renderBoxWithColor(4, 4, fontRenderer.getStringWidth(respawnThingy) + 2, 10, 0, 255, 0);
+                renderBoxWithColor(4, 4, fontRenderer.getStringWidth(respawnThingy) + 4, 13, 0, 255, 0);
 
-            fontRenderer.drawStringWithShadow(respawnThingy, 5, 5, 0xffffff);
+            fontRenderer.drawStringWithShadow(respawnThingy, 6, 6, 0xffffff);
+
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
