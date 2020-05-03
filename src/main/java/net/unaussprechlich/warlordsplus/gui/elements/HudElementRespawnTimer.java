@@ -1,6 +1,7 @@
 package net.unaussprechlich.warlordsplus.gui.elements;
 
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.unaussprechlich.warlordsplus.ScoreboardManager;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.gui.AbstractHudElement;
@@ -14,11 +15,13 @@ public class HudElementRespawnTimer extends AbstractHudElement {
     private int respawnTimer = 0;
 
     @Override
-    public String getRenderString() {
-        if (respawnTimer - 1 < 5){
-            return EnumChatFormatting.RED + "Respawn: " + (respawnTimer - 1);
+    public String[] getRenderString() {
+        if (respawnTimer - 1 < 5) {
+            return new String[]{EnumChatFormatting.RED + "Respawn: " + (respawnTimer - 1)};
+        } else if (respawnTimer - 1 < 8) {
+            return new String[]{EnumChatFormatting.YELLOW + "Respawn: " + (respawnTimer - 1)};
         } else {
-            return EnumChatFormatting.GREEN + "Respawn: " + (respawnTimer - 1);
+            return new String[]{EnumChatFormatting.GREEN + "Respawn: " + (respawnTimer - 1)};
         }
     }
 
@@ -45,7 +48,7 @@ public class HudElementRespawnTimer extends AbstractHudElement {
     }
 
     @Override
-    public void onChat() {
+    public void onChat(ClientChatReceivedEvent e) {
 
     }
 

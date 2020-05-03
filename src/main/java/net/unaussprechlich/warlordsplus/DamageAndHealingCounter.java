@@ -54,62 +54,14 @@ import java.util.regex.Pattern;
 
 public class DamageAndHealingCounter {
 
-    public static final String take = "\u00AB";
-    public static final String give = "\u00BB";
-    public static final String healing = " healed ";
-    public static final String absorption = " absorbed ";
-
-    private int healingCounter = 0;
-    private int damageCounter = 0;
 
     /**
      * @return The damage or health. Int.MAX_VALUE in case of failure.
      */
-    public static int getDamageOrHealthValue(String message) {
-        try {
-            // filter !, which highlights critical damage/health
-            message = message.replace("!", "");
 
-            // do some regex magic
-            Pattern p = Pattern.compile("\\s[0-9]+\\s");
-            Matcher m = p.matcher(message);
-            if (!m.find()) {
-                // We failed :(
-                return 0;
-            }
-
-            // save the result
-            String result = m.group();
-
-            // if there is a second match, we'll use that because the first was an all number username in this case
-            if (m.find()) {
-                result = m.group();
-            }
-
-            // and cast it into an integer (without whitespace)
-            return Integer.parseInt(result.replace(" ", ""));
-        } catch (Exception e) {
-            System.out.print("Failed to extract damage from this message: " + message);
-        }
-        // We failed :(
-        return 0;
-    }
 
     public void onChat(ClientChatReceivedEvent e) {
-        if (!WarlordsPlus.isIngame()) return;
 
-        String textMessage = e.message.getUnformattedText();
-
-        if (textMessage.startsWith(DamageAndHealingCounter.give)) {
-
-            if (textMessage.contains(DamageAndHealingCounter.healing)) {
-                this.healingCounter += getDamageOrHealthValue(textMessage);
-            }
-
-            if (!textMessage.contains(DamageAndHealingCounter.absorption) && !textMessage.contains(DamageAndHealingCounter.healing)) {
-                this.damageCounter += getDamageOrHealthValue(textMessage);
-            }
-        }
     }
 
 }

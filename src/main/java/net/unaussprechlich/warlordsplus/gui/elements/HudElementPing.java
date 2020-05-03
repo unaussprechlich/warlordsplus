@@ -2,21 +2,16 @@ package net.unaussprechlich.warlordsplus.gui.elements;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.gui.AbstractHudElement;
 
-/**
- * HudElementFps Created by Alexander on 03.05.2020.
- * Description:
- **/
-public class HudElementFps extends AbstractHudElement {
+import java.net.UnknownHostException;
 
+public class HudElementPing extends AbstractHudElement {
     @Override
     public String[] getRenderString() {
-        String[] fps = new String[1];
-        fps[0] = "FPS: " + Minecraft.getDebugFPS();
-        return fps;
+        return new String[]{"Ping: "};
     }
+    //https://github.com/HudPixel/HudPixel/blob/1.8.9_SNAPSHOT/src/main/java/eladkay/hudpixel/modulargui/components/PingAndFpsModularGuiProvider.java
 
     @Override
     public void onTick() {
@@ -35,6 +30,6 @@ public class HudElementFps extends AbstractHudElement {
 
     @Override
     public boolean isVisible() {
-        return true;
+        return false;
     }
 }

@@ -7,6 +7,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.unaussprechlich.warlordsplus.gui.elements.HudElementDamageAndHealingCounter;
 import net.unaussprechlich.warlordsplus.gui.elements.HudElementFps;
 import net.unaussprechlich.warlordsplus.gui.elements.HudElementRespawnTimer;
 import net.unaussprechlich.warlordsplus.util.RenderUtils;
@@ -23,8 +24,9 @@ public class HudManager {
     private static HudManager instance;
 
     private HudManager(){
-        hudElements.add(new HudElementFps());
+        //hudElements.add(new HudElementFps());
         hudElements.add(new HudElementRespawnTimer());
+        hudElements.add(new HudElementDamageAndHealingCounter());
     }
 
     public static HudManager INSTANCE(){
@@ -61,7 +63,7 @@ public class HudManager {
     public void onChat(ClientChatReceivedEvent event) {
         for(AbstractHudElement element : hudElements){
             if(element.isVisible())
-                element.onChat();
+                element.onChat(event);
         }
     }
 
@@ -80,11 +82,12 @@ public class HudManager {
             yStart+=height;
 
             for(AbstractHudElement element : hudElements){
-                if (element.isVisible()){
-                    String s = element.getRenderString();
-                    RenderUtils.renderBoxWithColor(4, yStart, fontRenderer.getStringWidth(s) + 4, height, 0, 0, 0, 100);
-                    fontRenderer.drawStringWithShadow(s, 6, yStart + 2, 0xffffff);
-                    yStart+= height;
+                if (element.isVisible()) {
+                    for (String s : element.getRenderString()) {
+                        RenderUtils.renderBoxWithColor(4, yStart, fontRenderer.getStringWidth(s) + 4, height, 0, 0, 0, 100);
+                        fontRenderer.drawStringWithShadow(s, 6, yStart + 2, 0xffffff);
+                        yStart += height;
+                    }
                 }
             }
 
