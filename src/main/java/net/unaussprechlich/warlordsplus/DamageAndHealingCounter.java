@@ -58,10 +58,6 @@ public class DamageAndHealingCounter {
     public static final String give = "\u00BB";
     public static final String healing = " healed ";
     public static final String absorption = " absorbed ";
-    public static final String wounded1 = "You are now wounded.";
-    public static final String wounded2 = "You are wounded.";
-    public static final String noLongerWounded = "You are no longer wounded.";
-
 
     private int healingCounter = 0;
     private int damageCounter = 0;
