@@ -17,10 +17,12 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.opengl.GL11;
+import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,8 +31,16 @@ import java.util.Collection;
 @Mod(modid = WarlordsPlus.MODID, version = WarlordsPlus.VERSION, clientSideOnly = true)
 public class WarlordsPlus {
 
-    static final String MODID = "warlordsplus";
-    static final String VERSION = "0.1";
+    public static final String MODID = "warlordsplus";
+    public static final String VERSION = "0.1";
+    public static final boolean IS_DEBUGGING = false;
+    public static Configuration CONFIG;
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event){
+        CONFIG = new Configuration(event.getSuggestedConfigurationFile());
+        CONFIG.load();
+    }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
@@ -42,6 +52,12 @@ public class WarlordsPlus {
     private ArrayList<String> scoreboardNames = new ArrayList<>();
     private String respawnThingy = "";
     private int respawnTimer = 12;
+
+    private static boolean isIngame = false;
+
+    public static boolean isIngame() {
+        return isIngame;
+    }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
@@ -85,7 +101,7 @@ public class WarlordsPlus {
         if (scoreboardTitle.matches(".*W.*A.*R.*L.*O*R.*D.*S.*") && scoreboardNames.size() == 15 && (scoreboardNames.get(9).contains("Wins in:") || scoreboardNames.get(9).contains("Time Left:"))) {
             int colon = scoreboardNames.get(9).lastIndexOf(":");
             String after = scoreboardNames.get(9).substring(colon + 1, colon + 3);
-
+            isIngame = true;
             try {
                 if (Integer.parseInt(after) % 12 == 0) {
                     respawnTimer = 12;
@@ -96,7 +112,7 @@ public class WarlordsPlus {
             }
         } else {
             respawnThingy = "";
-            System.out.println(scoreboardTitle);
+            isIngame = false;
         }
     }
 
