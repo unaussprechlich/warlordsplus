@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.gui;
+package net.unaussprechlich.warlordsplus.hud;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.EnumChatFormatting;
@@ -7,10 +7,10 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.unaussprechlich.warlordsplus.gui.elements.HudElementDamageAndHealingCounter;
-import net.unaussprechlich.warlordsplus.gui.elements.HudElementFps;
-import net.unaussprechlich.warlordsplus.gui.elements.HudElementRespawnTimer;
-import net.unaussprechlich.warlordsplus.util.RenderUtils;
+import net.unaussprechlich.warlordsplus.hud.elements.HudElementDamageAndHealingCounter;
+import net.unaussprechlich.warlordsplus.hud.elements.HudElementRespawnTimer;
+import net.unaussprechlich.warlordsplus.util.FancyGui;
+import org.lwjgl.util.Color;
 
 import java.util.ArrayList;
 
@@ -18,12 +18,13 @@ import java.util.ArrayList;
  * HudManager Created by Alexander on 03.05.2020.
  * Description:
  **/
-public class HudManager {
+public class HudManager extends FancyGui {
 
     private ArrayList<AbstractHudElement> hudElements = new ArrayList<>();
     private static HudManager instance;
 
     private HudManager(){
+        super();
         //hudElements.add(new HudElementFps());
         hudElements.add(new HudElementRespawnTimer());
         hudElements.add(new HudElementDamageAndHealingCounter());
@@ -77,15 +78,14 @@ public class HudManager {
 
 
         try {
-            RenderUtils.renderBoxWithColor(4, yStart, fontRenderer.getStringWidth("WarlordsPlus") + 4, height, 0, 0, 0, 150);
-            fontRenderer.drawStringWithShadow("" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD + "Warlords" + EnumChatFormatting.RED + "Plus", 6, yStart + 2, 0xffffff);
+
+            FancyGui.Companion.drawStringWithBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD + "Warlords" + EnumChatFormatting.RED + "Plus", new Color(0, 0, 0, 150));
             yStart+=height;
 
             for(AbstractHudElement element : hudElements){
                 if (element.isVisible()) {
                     for (String s : element.getRenderString()) {
-                        RenderUtils.renderBoxWithColor(4, yStart, fontRenderer.getStringWidth(s) + 4, height, 0, 0, 0, 100);
-                        fontRenderer.drawStringWithShadow(s, 6, yStart + 2, 0xffffff);
+                        FancyGui.Companion.drawStringWithBox(this, 4, yStart, s, new Color(0, 0, 0, 150));
                         yStart += height;
                     }
                 }
