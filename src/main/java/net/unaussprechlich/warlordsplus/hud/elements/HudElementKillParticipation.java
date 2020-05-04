@@ -7,9 +7,13 @@ import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
 
 public class HudElementKillParticipation extends AbstractHudElement {
 
-    private TeamEnum team;
-    private int numberOfTeamKills;
-    private int playerKills;
+    private TeamEnum team = TeamEnum.NONE;
+    private int numberOfTeamKills = 0;
+    private int playerKills = 0;
+
+    enum TeamEnum {
+        BLUE, RED, NONE
+    }
 
     @Override
     public String[] getRenderString() {
@@ -18,25 +22,28 @@ public class HudElementKillParticipation extends AbstractHudElement {
 
     @Override
     public void onTick() {
+        if (Minecraft.getMinecraft().thePlayer != null) {
 
+            if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A7c")){
+                System.out.println("RED");
+                team = TeamEnum.RED;
+            } else if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A79")){
+                team = TeamEnum.BLUE;
+            } else {
+                team = TeamEnum.NONE;
+            }
+        }
     }
 
     @Override
     public void onEverySecond() {
-        if (Minecraft.getMinecraft().thePlayer != null) {
-            //RED TEAM
-            if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("§c"))
-                team = TeamEnum.RED;
-                //BLUE TEAM
-            else if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("§9"))
-                team = TeamEnum.BLUE;
-
-        }
 
     }
 
     @Override
     public void onChat(ClientChatReceivedEvent e) {
+        if(team == TeamEnum.NONE) return;
+
         String message = e.message.getFormattedText();
 
         if (message.contains("was killed by")) {
@@ -52,9 +59,7 @@ public class HudElementKillParticipation extends AbstractHudElement {
 
     }
 
-    public enum TeamEnum {
-        BLUE, RED, NONE
-    }
+
 
     @Override
     public boolean isVisible() {

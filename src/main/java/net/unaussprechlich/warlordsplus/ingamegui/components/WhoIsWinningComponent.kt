@@ -26,14 +26,10 @@ object WhoIsWinningComponent : AbstractRenderComponent(), ITickable {
 
             if(ScoreboardManager.scoreboardNames.size != 15) return
 
-
             val blue = EnumChatFormatting.getTextWithoutFormattingCodes(ScoreboardManager.scoreboardNames[12]
                     .replace(" ", "").replace("\uD83D\uDCA3", ""))
             val red = EnumChatFormatting.getTextWithoutFormattingCodes(ScoreboardManager.scoreboardNames[11]
                     .replace(" ", "").replace("\uD83D\uDC7D", ""))
-
-            println("BLU: $blue")
-            println("RED: $red")
 
             pointsToWin = blue.substring(blue.indexOf("/") + 1).toInt()
             bluePoints = blue.substring(blue.indexOf(":") + 1, blue.indexOf("/")).toInt()
