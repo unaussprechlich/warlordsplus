@@ -1,6 +1,7 @@
 package net.unaussprechlich.warlordsplus;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,7 +35,7 @@ public class WarlordsPlus {
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(HudManager.INSTANCE());
-        MinecraftForge.EVENT_BUS.register(ScoreboardManager.INSTANCE());
+        MinecraftForge.EVENT_BUS.register(ScoreboardManager.INSTANCE);
         MinecraftForge.EVENT_BUS.register(IngameGuiManager.INSTANCE);
     }
 
@@ -57,9 +58,12 @@ public class WarlordsPlus {
     }
 
     private void updateIngame() {
-        isIngame = ScoreboardManager.INSTANCE().getScoreboardTitle().matches(".*W.*A.*R.*L.*O*R.*D.*S.*")
-                && ScoreboardManager.INSTANCE().getScoreboardNames().size() == 15
-                && (ScoreboardManager.INSTANCE().getScoreboardNames().get(9).contains("Wins in:") || ScoreboardManager.INSTANCE().getScoreboardNames().get(9).contains("Time Left:"));
+        //TODO
+
+        isIngame = ScoreboardManager.INSTANCE.getScoreboardTitle().matches(".*W.*A.*R.*L.*O*R.*D.*S.*")
+                && ScoreboardManager.INSTANCE.getScoreboardNames().size() == 15
+                && (ScoreboardManager.INSTANCE.getScoreboardNames().get(9).contains("Wins in:")
+                || ScoreboardManager.INSTANCE.getScoreboardNames().get(9).contains("Time Left:"));
     }
 
 

@@ -6,6 +6,7 @@ import net.unaussprechlich.warlordsplus.ScoreboardManager;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
 
+
 /**
  * HudElementRespawnTimer Created by Alexander on 03.05.2020.
  * Description:
@@ -25,7 +26,6 @@ public class HudElementRespawnTimer extends AbstractHudElement {
         }
     }
 
-
     @Override
     public void onTick() {
 
@@ -35,8 +35,8 @@ public class HudElementRespawnTimer extends AbstractHudElement {
     public void onEverySecond() {
         respawnTimer--;
 
-        int colon = ScoreboardManager.INSTANCE().getScoreboardNames().get(9).lastIndexOf(":");
-        String after = ScoreboardManager.INSTANCE().getScoreboardNames().get(9).substring(colon + 1, colon + 3);
+        int colon = ScoreboardManager.INSTANCE.getScoreboardNames().get(9).lastIndexOf(":");
+        String after = ScoreboardManager.INSTANCE.getScoreboardNames().get(9).substring(colon + 1, colon + 3);
 
         try {
             if (Integer.parseInt(after) % 12 == 0) {

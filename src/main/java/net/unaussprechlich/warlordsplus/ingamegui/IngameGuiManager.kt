@@ -1,7 +1,6 @@
 package net.unaussprechlich.warlordsplus.ingamegui
 
-import com.sun.org.apache.regexp.internal.RE
-import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.util.ITickable
 import net.minecraftforge.client.GuiIngameForge
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.EventPriority
@@ -10,7 +9,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.warlordsplus.WarlordsPlus
 import net.unaussprechlich.warlordsplus.ingamegui.components.EnergyComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.HealthComponent
-import org.lwjgl.opengl.GL11
+import net.unaussprechlich.warlordsplus.ingamegui.components.WhoIsWinningComponent
+import net.unaussprechlich.warlordsplus.ingamegui.components.skills.*
 
 
 object IngameGuiManager {
@@ -18,14 +18,16 @@ object IngameGuiManager {
     private val components = ArrayList<AbstractRenderComponent>()
 
     init {
-        components.add(HealthComponent)
-        components.add(EnergyComponent)
-    }
 
-    private fun renderComponents(e: RenderGameOverlayEvent.Post) {
-
-        components.forEach{
-            it.render(e)
+        with(components){
+            add(HealthComponent)
+            add(EnergyComponent)
+            add(RedThingyComponent)
+            add(BlueThingyComponent)
+            add(PurpleThingyComponent)
+            add(YellowThingyComponent)
+            add(HorseComponent)
+            add(WhoIsWinningComponent)
         }
 
     }
@@ -33,6 +35,10 @@ object IngameGuiManager {
     @SubscribeEvent
     fun onTick(e : TickEvent.ClientTickEvent){
         if(WarlordsPlus.isIngame()){
+
+            components.filter { it is ITickable }.forEach{
+                (it as ITickable).update()
+            }
 
             GuiIngameForge.renderHelmet = false
             GuiIngameForge.renderPortal = false

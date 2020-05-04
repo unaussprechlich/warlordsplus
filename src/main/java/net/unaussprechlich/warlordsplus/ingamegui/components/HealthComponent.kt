@@ -1,7 +1,6 @@
 package net.unaussprechlich.warlordsplus.ingamegui.components
 
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.MathHelper
 import net.minecraftforge.client.event.RenderGameOverlayEvent
@@ -11,7 +10,7 @@ import org.lwjgl.util.Color
 
 object HealthComponent : AbstractRenderComponent() {
 
-    override fun render(e: RenderGameOverlayEvent.Post) : Boolean {
+    override fun render(e: RenderGameOverlayEvent.Post){
         val mc = Minecraft.getMinecraft()
         mc.mcProfiler.startSection("health")
 
@@ -21,7 +20,6 @@ object HealthComponent : AbstractRenderComponent() {
         drawStringWithBox(200, 200, "Health: $health", Color(0, 0, 0, 255))
 
         mc.mcProfiler.endSection()
-        return true
     }
 
 }

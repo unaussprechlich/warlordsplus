@@ -1,9 +1,14 @@
 package net.unaussprechlich.warlordsplus.util
 
 import net.minecraft.client.Minecraft
+import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.ScaledResolution
+import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.client.renderer.RenderHelper
+import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import org.lwjgl.util.Color
 
 fun Color.convertToArgb() : Int {
@@ -21,11 +26,14 @@ open class FancyGui : Gui() {
 
     companion object{
 
-        val Gui.fontRenderer : FontRenderer
-            get() = mc.fontRendererObj
-
         val Gui.mc: Minecraft
             get() = Minecraft.getMinecraft()
+
+        val Gui.thePlayer: EntityPlayerSP
+            get() = mc.thePlayer
+
+        val Gui.fontRenderer : FontRenderer
+            get() = mc.fontRendererObj
 
         val Gui.mcScale: Int
             get() {
@@ -40,6 +48,26 @@ open class FancyGui : Gui() {
         val Gui.scaledMcHeight: Int
             get() = mc.displayHeight / mcScale
 
+        fun Gui.drawItemStackWithText(id: Int, meta: Int, xStart: Int, yStart: Int, overlay: String?) {
+
+            GlStateManager.enableBlend()
+            RenderHelper.enableStandardItemLighting()
+            GlStateManager.color(0.0f, 0.0f, 32.0f)
+
+            val iStack = ItemStack(Item.getItemById(id))
+            if (meta > 0) iStack.itemDamage = meta
+            val renderItem = mc.renderItem
+            renderItem.renderItemAndEffectIntoGUI(iStack, xStart, yStart)
+            renderItem.renderItemOverlayIntoGUI(fontRenderer, iStack, xStart, yStart, overlay)
+
+            RenderHelper.disableStandardItemLighting()
+            GlStateManager.disableBlend()
+        }
+
+        fun Gui.drawRectangle(xStart : Int, yStart : Int, size : Int, color : Color){
+            drawRect(xStart, yStart, size, size, color)
+        }
+
         fun Gui.drawRect(xStart : Int, yStart : Int, width : Int, height : Int, color : Color){
             Gui.drawRect(xStart, yStart, xStart + width, yStart + height, color.convertToArgb())
         }
@@ -48,9 +76,5 @@ open class FancyGui : Gui() {
             drawRect(xStart, yStart, fontRenderer.getStringWidth(text) + 4, 12, color)
             fontRenderer.drawStringWithShadow(text, xStart + 2f, yStart + 2f, 0xffffff)
         }
-
-
-
     }
-
 }
