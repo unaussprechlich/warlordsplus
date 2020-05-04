@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.unaussprechlich.warlordsplus.gui.elements.HudElementDamageAndHealingCounter;
 import net.unaussprechlich.warlordsplus.gui.elements.HudElementFps;
+import net.unaussprechlich.warlordsplus.gui.elements.HudElementKillParticipation;
 import net.unaussprechlich.warlordsplus.gui.elements.HudElementRespawnTimer;
 import net.unaussprechlich.warlordsplus.util.RenderUtils;
 
@@ -24,9 +25,10 @@ public class HudManager {
     private static HudManager instance;
 
     private HudManager(){
-        //hudElements.add(new HudElementFps());
+        hudElements.add(new HudElementFps());
         hudElements.add(new HudElementRespawnTimer());
         hudElements.add(new HudElementDamageAndHealingCounter());
+        hudElements.add(new HudElementKillParticipation());
     }
 
     public static HudManager INSTANCE(){
@@ -62,8 +64,7 @@ public class HudManager {
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
         for(AbstractHudElement element : hudElements){
-            if(element.isVisible())
-                element.onChat(event);
+            element.onChat(event);
         }
     }
 

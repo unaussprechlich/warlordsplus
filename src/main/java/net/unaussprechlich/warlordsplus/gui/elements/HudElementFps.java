@@ -13,9 +13,7 @@ public class HudElementFps extends AbstractHudElement {
 
     @Override
     public String[] getRenderString() {
-        String[] fps = new String[1];
-        fps[0] = "FPS: " + Minecraft.getDebugFPS();
-        return fps;
+        return new String[]{"FPS: " + Minecraft.getDebugFPS()};
     }
 
     @Override
