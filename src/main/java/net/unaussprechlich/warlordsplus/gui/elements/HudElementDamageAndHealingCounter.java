@@ -65,10 +65,10 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
     @Override
     public void onEverySecond() {
         int colon = ScoreboardManager.INSTANCE().getScoreboardNames().get(9).lastIndexOf(":");
-        String before = ScoreboardManager.INSTANCE().getScoreboardNames().get(9).substring(colon - 1, colon);
+        String before = ScoreboardManager.INSTANCE().getScoreboardNames().get(9).substring(colon - 2, colon);
         String after = ScoreboardManager.INSTANCE().getScoreboardNames().get(9).substring(colon + 1, colon + 3);
 
-        if (Integer.parseInt(before) == 0 && Integer.parseInt(after) == 0) {
+        if (before.equals("00") && after.equals("00")) {
             damageCounter = 0;
             healingCounter = 0;
         }
