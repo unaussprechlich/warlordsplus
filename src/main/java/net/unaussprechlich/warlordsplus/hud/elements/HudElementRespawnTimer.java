@@ -1,10 +1,10 @@
-package net.unaussprechlich.warlordsplus.gui.elements;
+package net.unaussprechlich.warlordsplus.hud.elements;
 
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.unaussprechlich.warlordsplus.ScoreboardManager;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
-import net.unaussprechlich.warlordsplus.gui.AbstractHudElement;
+import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
 
 /**
  * HudElementRespawnTimer Created by Alexander on 03.05.2020.

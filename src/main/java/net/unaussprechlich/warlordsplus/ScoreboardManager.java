@@ -7,7 +7,6 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.unaussprechlich.warlordsplus.gui.AbstractHudElement;
 
 import java.util.ArrayList;
 import java.util.Collection;

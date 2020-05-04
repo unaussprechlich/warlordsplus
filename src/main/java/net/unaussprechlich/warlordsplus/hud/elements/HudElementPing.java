@@ -1,10 +1,7 @@
-package net.unaussprechlich.warlordsplus.gui.elements;
+package net.unaussprechlich.warlordsplus.hud.elements;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.unaussprechlich.warlordsplus.gui.AbstractHudElement;
-
-import java.net.UnknownHostException;
+import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
 
 public class HudElementPing extends AbstractHudElement {
     @Override

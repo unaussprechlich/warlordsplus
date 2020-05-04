@@ -1,32 +1,19 @@
 package net.unaussprechlich.warlordsplus;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.scoreboard.Score;
-import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.scoreboard.Scoreboard;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.unaussprechlich.warlordsplus.gui.HudManager;
-import org.lwjgl.opengl.GL11;
+import net.unaussprechlich.warlordsplus.hud.HudManager;
+import net.unaussprechlich.warlordsplus.ingamegui.IngameGuiManager;
+import org.jetbrains.annotations.NotNull;
 import net.minecraftforge.common.config.Configuration;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 
 @Mod(modid = WarlordsPlus.MODID, version = WarlordsPlus.VERSION, clientSideOnly = true)
@@ -48,6 +35,7 @@ public class WarlordsPlus {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(HudManager.INSTANCE());
         MinecraftForge.EVENT_BUS.register(ScoreboardManager.INSTANCE());
+        MinecraftForge.EVENT_BUS.register(IngameGuiManager.INSTANCE);
     }
 
     private static boolean isIngame = false;

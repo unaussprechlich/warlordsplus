@@ -1,11 +1,11 @@
-package net.unaussprechlich.warlordsplus.gui.elements;
+package net.unaussprechlich.warlordsplus.hud.elements;
 
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.unaussprechlich.warlordsplus.DamageAndHealingCounter;
 import net.unaussprechlich.warlordsplus.ScoreboardManager;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
-import net.unaussprechlich.warlordsplus.gui.AbstractHudElement;
+import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
+
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
