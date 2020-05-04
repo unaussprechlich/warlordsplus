@@ -64,20 +64,18 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
 
     @Override
     public void onEverySecond() {
-        int colon = ScoreboardManager.INSTANCE().getScoreboardNames().get(9).lastIndexOf(":");
-        String before = ScoreboardManager.INSTANCE().getScoreboardNames().get(9).substring(colon - 1, colon);
-        String after = ScoreboardManager.INSTANCE().getScoreboardNames().get(9).substring(colon + 1, colon + 3);
 
-        if (Integer.parseInt(before) == 0 && Integer.parseInt(after) == 0) {
-            damageCounter = 0;
-            healingCounter = 0;
-        }
     }
 
     @Override
     public void onChat(ClientChatReceivedEvent e) {
 
         String textMessage = e.message.getUnformattedText();
+
+        if (textMessage.equals("The game starts in 1 second!")) {
+            damageCounter = 0;
+            healingCounter = 0;
+        }
 
         if (textMessage.startsWith(give)) {
 
