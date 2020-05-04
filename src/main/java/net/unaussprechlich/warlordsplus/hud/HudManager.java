@@ -98,8 +98,6 @@ public class HudManager extends FancyGui {
             e.printStackTrace();
         }
 
-
-
     }
 
 }

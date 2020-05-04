@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.util.EnumChatFormatting
 import org.lwjgl.util.Color
 
 fun Color.convertToArgb() : Int {
@@ -73,7 +74,7 @@ open class FancyGui : Gui() {
         }
 
         fun Gui.drawStringWithBox(xStart: Int, yStart: Int, text : String, color : Color){
-            drawRect(xStart, yStart, fontRenderer.getStringWidth(text) + 4, 12, color)
+            drawRect(xStart, yStart, fontRenderer.getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(text)) + 4, 12, color)
             fontRenderer.drawStringWithShadow(text, xStart + 2f, yStart + 2f, 0xffffff)
         }
     }

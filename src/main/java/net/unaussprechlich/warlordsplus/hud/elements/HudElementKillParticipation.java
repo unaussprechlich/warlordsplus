@@ -25,7 +25,6 @@ public class HudElementKillParticipation extends AbstractHudElement {
         if (Minecraft.getMinecraft().thePlayer != null) {
 
             if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A7c")){
-                System.out.println("RED");
                 team = TeamEnum.RED;
             } else if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A79")){
                 team = TeamEnum.BLUE;

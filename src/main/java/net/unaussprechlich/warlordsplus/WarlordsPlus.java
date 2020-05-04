@@ -36,7 +36,7 @@ public class WarlordsPlus {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(HudManager.INSTANCE());
         MinecraftForge.EVENT_BUS.register(ScoreboardManager.INSTANCE);
-        MinecraftForge.EVENT_BUS.register(IngameGuiManager.INSTANCE);
+        //MinecraftForge.EVENT_BUS.register(IngameGuiManager.INSTANCE);
     }
 
     private static boolean isIngame = false;
