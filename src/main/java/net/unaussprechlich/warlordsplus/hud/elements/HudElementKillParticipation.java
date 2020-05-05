@@ -45,7 +45,7 @@ public class HudElementKillParticipation extends AbstractHudElement {
 
         String message = e.message.getFormattedText();
 
-        if (message.equals("The gates will fall in 10 seconds!")) {
+        if (message.contains("The gates will fall")) {
             numberOfTeamKills = 0;
             playerKills = 0;
         }
