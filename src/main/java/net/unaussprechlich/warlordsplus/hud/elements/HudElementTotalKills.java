@@ -8,8 +8,13 @@ import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
 
 public class HudElementTotalKills extends AbstractHudElement {
 
+    TeamEnum team = TeamEnum.NONE;
     private int redKills = 0;
     private int blueKills = 0;
+
+    enum TeamEnum {
+        BLUE, RED, NONE
+    }
 
     @Override
     public String[] getRenderString() {
@@ -23,7 +28,15 @@ public class HudElementTotalKills extends AbstractHudElement {
 
     @Override
     public void onEverySecond() {
-
+        if (Minecraft.getMinecraft().thePlayer != null) {
+            if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A7c")) {
+                team = TeamEnum.RED;
+            } else if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A79")) {
+                team = TeamEnum.BLUE;
+            } else {
+                team = TeamEnum.NONE;
+            }
+        }
     }
 
     @Override
@@ -41,6 +54,20 @@ public class HudElementTotalKills extends AbstractHudElement {
                 redKills++;
             } else
                 blueKills++;
+        }
+
+        if (message.contains("You killed")) {
+            if (team == TeamEnum.RED)
+                redKills++;
+            else if (team == TeamEnum.BLUE)
+                blueKills++;
+        }
+
+        if (message.contains("You were killed")) {
+            if (team == TeamEnum.RED)
+                blueKills++;
+            else if (team == TeamEnum.BLUE)
+                redKills++;
         }
     }
 

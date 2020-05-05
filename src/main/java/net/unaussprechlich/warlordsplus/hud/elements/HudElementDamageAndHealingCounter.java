@@ -56,12 +56,20 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
 
     @Override
     public String[] getRenderString() {
-        String[] damageAndHealing = new String[4];
-        damageAndHealing[0] = EnumChatFormatting.RED + "Damage: " + damageCounter;
-        damageAndHealing[1] = EnumChatFormatting.GREEN + "Healing: " + healingCounter;
-        damageAndHealing[2] = EnumChatFormatting.YELLOW + "Energy Given: " + energyCounter;
-        damageAndHealing[3] = EnumChatFormatting.GRAY + "DHP: " + DHP;
-        return damageAndHealing;
+
+        if (ScoreboardManager.INSTANCE.getScoreboardNames().get(4).contains("Crusade")) {
+            String[] damageHealingAndEnergy = new String[3];
+            damageHealingAndEnergy[0] = EnumChatFormatting.RED + "Damage: " + damageCounter;
+            damageHealingAndEnergy[1] = EnumChatFormatting.GREEN + "Healing: " + healingCounter;
+            damageHealingAndEnergy[2] = EnumChatFormatting.YELLOW + "Energy Given: " + energyCounter;
+            //damageAndHealing[3] = EnumChatFormatting.GRAY + "DHP: " + DHP;
+            return damageHealingAndEnergy;
+        } else {
+            String[] damageAndHealing = new String[2];
+            damageAndHealing[0] = EnumChatFormatting.RED + "Damage: " + damageCounter;
+            damageAndHealing[1] = EnumChatFormatting.GREEN + "Healing: " + healingCounter;
+            return damageAndHealing;
+        }
     }
 
     @Override
