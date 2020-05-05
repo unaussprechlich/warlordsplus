@@ -1,10 +1,12 @@
 package net.unaussprechlich.warlordsplus.hud.elements;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.unaussprechlich.warlordsplus.ScoreboardManager;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
+import scala.collection.parallel.ParIterableLike;
 
 
 import java.util.regex.Matcher;
@@ -16,8 +18,11 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
     public static final String give = "\u00BB";
     public static final String healing = " healed ";
     public static final String absorption = " absorbed ";
+    public static final String energy = " energy.";
+    private int DHP = 0;
     private int healingCounter = 0;
     private int damageCounter = 0;
+    private int energyCounter = 0;
 
     public static int getDamageOrHealthValue(String message) {
         try {
@@ -51,9 +56,11 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
 
     @Override
     public String[] getRenderString() {
-        String[] damageAndHealing = new String[2];
+        String[] damageAndHealing = new String[4];
         damageAndHealing[0] = EnumChatFormatting.RED + "Damage: " + damageCounter;
         damageAndHealing[1] = EnumChatFormatting.GREEN + "Healing: " + healingCounter;
+        damageAndHealing[2] = EnumChatFormatting.YELLOW + "Energy Given: " + energyCounter;
+        damageAndHealing[3] = EnumChatFormatting.GRAY + "DHP: " + DHP;
         return damageAndHealing;
     }
 
@@ -72,19 +79,28 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
 
         String textMessage = e.message.getUnformattedText();
 
-        if (textMessage.equals("The game starts in 1 second!")) {
+        if (textMessage.equals("The gates will fall in 10 seconds!")) {
             damageCounter = 0;
             healingCounter = 0;
+            energyCounter = 0;
+        }
+
+        if (textMessage.contains("Your Crusader's Strike gave ")) {
+            int pos = textMessage.indexOf(" energy") - 2;
+            String energyAmount = textMessage.substring(pos, pos + 2);
+            this.energyCounter += Integer.parseInt(energyAmount);
         }
 
         if (textMessage.startsWith(give)) {
 
             if (textMessage.contains(healing)) {
                 this.healingCounter += getDamageOrHealthValue(textMessage);
+                this.DHP += getDamageOrHealthValue(textMessage);
             }
 
             if (!textMessage.contains(absorption) && !textMessage.contains(healing)) {
                 this.damageCounter += getDamageOrHealthValue(textMessage);
+                this.DHP += getDamageOrHealthValue(textMessage);
             }
         }
     }

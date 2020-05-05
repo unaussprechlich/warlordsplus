@@ -23,10 +23,15 @@ public class HudElementKillParticipation extends AbstractHudElement {
 
     @Override
     public void onTick() {
+
+    }
+
+    @Override
+    public void onEverySecond() {
         if (Minecraft.getMinecraft().thePlayer != null) {
-            if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A7c")){
+            if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A7c")) {
                 team = TeamEnum.RED;
-            } else if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A79")){
+            } else if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A79")) {
                 team = TeamEnum.BLUE;
             } else {
                 team = TeamEnum.NONE;
@@ -35,15 +40,15 @@ public class HudElementKillParticipation extends AbstractHudElement {
     }
 
     @Override
-    public void onEverySecond() {
-
-    }
-
-    @Override
     public void onChat(ClientChatReceivedEvent e) {
-        if(team == TeamEnum.NONE) return;
+        if (team == TeamEnum.NONE) return;
 
         String message = e.message.getFormattedText();
+
+        if (message.equals("The gates will fall in 10 seconds!")) {
+            numberOfTeamKills = 0;
+            playerKills = 0;
+        }
 
         if (message.contains("was killed by")) {
             String after = message.substring(message.indexOf("was killed by"));
@@ -51,8 +56,11 @@ public class HudElementKillParticipation extends AbstractHudElement {
                 numberOfTeamKills++;
             }
         }
-        if ((e.message.getFormattedText().contains("You killed"))) {
+        if (message.contains("You killed")) {
             numberOfTeamKills++;
+            playerKills++;
+        }
+        if (message.contains("You assisted")) {
             playerKills++;
         }
 

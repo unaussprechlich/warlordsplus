@@ -37,6 +37,8 @@ public class HudElementRespawnTimer extends AbstractHudElement {
 
         int colon = ScoreboardManager.INSTANCE.getScoreboardNames().get(9).lastIndexOf(":");
         String after = ScoreboardManager.INSTANCE.getScoreboardNames().get(9).substring(colon + 1, colon + 3);
+        if (respawnTimer < 0)
+            respawnTimer = Math.abs(respawnTimer);
 
         try {
             if (Integer.parseInt(after) % 12 == 0) {

@@ -9,10 +9,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.unaussprechlich.warlordsplus.hud.elements.HudElementDamageAndHealingCounter;
-import net.unaussprechlich.warlordsplus.hud.elements.HudElementFps;
-import net.unaussprechlich.warlordsplus.hud.elements.HudElementKillParticipation;
-import net.unaussprechlich.warlordsplus.hud.elements.HudElementRespawnTimer;
+import net.unaussprechlich.warlordsplus.hud.elements.*;
 import net.unaussprechlich.warlordsplus.util.FancyGui;
 import org.lwjgl.util.Color;
 
@@ -33,6 +30,7 @@ public class HudManager extends FancyGui {
         hudElements.add(new HudElementRespawnTimer());
         hudElements.add(new HudElementDamageAndHealingCounter());
         hudElements.add(new HudElementKillParticipation());
+        hudElements.add(new HudElementTotalKills());
     }
 
     public static HudManager INSTANCE(){
