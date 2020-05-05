@@ -20,7 +20,9 @@ object GameStateManager : IModule{
     fun onClientTick(event: ClientTickEvent) {
         isIngame = (scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))
                 && scoreboardNames.size == 15 && (scoreboardNames[9].contains("Wins in:")
-                || scoreboardNames[9].contains("Time Left:")))
+                || scoreboardNames[9].contains("Time Left:")
+                || scoreboardNames[6].contains("Wins in:")
+                || scoreboardNames[6].contains("Time Left:")))
     }
 
 

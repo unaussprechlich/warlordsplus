@@ -23,7 +23,7 @@ object ModuleManager {
             add(GameStateManager)
             add(Meme)
             add(HudManager.INSTANCE())
-            add(IngameGuiManager)
+            //add(IngameGuiManager)
         }
     }
 
