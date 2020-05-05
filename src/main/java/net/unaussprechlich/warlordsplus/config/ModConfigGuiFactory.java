@@ -53,7 +53,7 @@ import net.minecraftforge.fml.client.IModGuiFactory;
 import java.util.Set;
 
 
-public class HudPixelGuiFactory implements IModGuiFactory {
+public class ModConfigGuiFactory implements IModGuiFactory {
 
     @Override
     public void initialize(Minecraft minecraftInstance) {
@@ -61,7 +61,7 @@ public class HudPixelGuiFactory implements IModGuiFactory {
 
     @Override
     public Class<? extends GuiScreen> mainConfigGuiClass() {
-        return HudPixelConfigGui.class;
+        return ModConfigGui.class;
     }
 
     @Override

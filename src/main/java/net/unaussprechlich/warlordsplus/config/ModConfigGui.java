@@ -62,7 +62,7 @@ import java.util.stream.Collectors;
 /**
  * HudPixel ConfigGUI
  */
-public class HudPixelConfigGui extends GuiConfig {
+public class ModConfigGui extends GuiConfig {
 
     /**
      * static HasMap to store the element lists with key categiry
@@ -74,8 +74,8 @@ public class HudPixelConfigGui extends GuiConfig {
      *
      * @param parent ParentGUI
      */
-    public HudPixelConfigGui(GuiScreen parent) {
-        super(parent, getConfigElements(), WarlordsPlus.MODID, false, false, "HudPixel Config");
+    public ModConfigGui(GuiScreen parent) {
+        super(parent, getConfigElements(), WarlordsPlus.MODID, false, false, "WarlordsPlus Settings");
     }
 
     /**

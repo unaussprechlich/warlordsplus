@@ -46,7 +46,6 @@
 
 package net.unaussprechlich.warlordsplus.config
 
-import net.unaussprechlich.warlordsplus.config.EasyConfigHandler.init
 import net.minecraftforge.fml.common.discovery.ASMDataTable
 import net.unaussprechlich.warlordsplus.WarlordsPlus
 import net.unaussprechlich.warlordsplus.util.AnnotationHelper
@@ -77,7 +76,7 @@ object EasyConfigHandler {
     }
 
     fun synchronize() {
-        HudPixelConfigGui.deleteBeforReload()//clears the list
+        ModConfigGui.deleteBeforReload()//clears the list
 
         println("[Configuration] going to load the Configuration!")
 
@@ -85,7 +84,7 @@ object EasyConfigHandler {
             it.key.isAccessible = true
             if (!it.value.getBoolean("devOnly", false) || WarlordsPlus.IS_DEBUGGING) {
                 it.key.set(null, WarlordsPlus.CONFIG.get(it.value.getString("category", CCategory.UNKNOWN), it.value.getString("id", ""), it.value.getString("def", ""), it.value.getString("comment", "")).string)
-                HudPixelConfigGui.addElement(
+                ModConfigGui.addElement(
                         CCategory.getCategoryByName(it.value.getString("category", CCategory.UNKNOWN)),
                         it.value.getString("id", ""),
                         it.value.getString("def", ""),
@@ -98,7 +97,7 @@ object EasyConfigHandler {
             it.key.isAccessible = true
             if (!it.value.getBoolean("devOnly", false) || WarlordsPlus.IS_DEBUGGING) {
                 it.key.set(null, WarlordsPlus.CONFIG.get(it.value.getString("category", CCategory.UNKNOWN), it.value.getString("id", ""), it.value.getInt("def", 0), it.value.getString("comment", "")).int)
-                HudPixelConfigGui.addElement(
+                ModConfigGui.addElement(
                         CCategory.getCategoryByName(it.value.getString("category", CCategory.UNKNOWN)),
                         it.value.getString("id", ""),
                         it.value.getInt("def", 0),
@@ -110,7 +109,7 @@ object EasyConfigHandler {
             it.key.isAccessible = true
             if (!it.value.getBoolean("devOnly", false) || WarlordsPlus.IS_DEBUGGING) {
                 it.key.set(null, WarlordsPlus.CONFIG.get(it.value.getString("category", CCategory.UNKNOWN), it.value.getString("id", ""), it.value.getBoolean("def", false), it.value.getString("comment", "")).boolean)
-                HudPixelConfigGui.addElement(
+                ModConfigGui.addElement(
                         CCategory.getCategoryByName(it.value.getString("category", CCategory.UNKNOWN)),
                         it.value.getString("id", ""),
                         it.value.getBoolean("def", false),
@@ -198,15 +197,15 @@ object EasyConfigHandler {
 
 
 object GeneralConfigSettings {
-    @ConfigPropertyBoolean(CCategory.HUD, "hudDisabled", "HUD Disabled", false) @JvmStatic var hudDisabled: Boolean = false
-    @ConfigPropertyBoolean(CCategory.HUD, "hudDisplayVersion", "HUD DisplayVersion", true) @JvmStatic var hudDisplayVersion: Boolean = true
+    @ConfigPropertyBoolean(CCategory.GENERAL, "hudDisabled", "HUD Disabled", false) @JvmStatic var hudDisabled: Boolean = false
+    @ConfigPropertyBoolean(CCategory.GENERAL, "hudDisplayVersion", "HUD DisplayVersion", true) @JvmStatic var hudDisplayVersion: Boolean = true
 
-    @ConfigPropertyInt(CCategory.HUD, "displayXOffset", "HUD offset (X)", 5) @JvmStatic var displayXOffset: Int = 5
-    @ConfigPropertyInt(CCategory.HUD, "displayYOffset", "HUD offset (Y)", 5) @JvmStatic var displayYOffset: Int = 5
+    @ConfigPropertyInt(CCategory.GENERAL, "displayXOffset", "HUD offset (X)", 5) @JvmStatic var displayXOffset: Int = 5
+    @ConfigPropertyInt(CCategory.GENERAL, "displayYOffset", "HUD offset (Y)", 5) @JvmStatic var displayYOffset: Int = 5
 
-    @ConfigPropertyBoolean(CCategory.HUD, "hudBackground", "Should the HUD have a background?", true) @JvmStatic var hudBackground: Boolean = true
-    @ConfigPropertyInt(CCategory.HUD, "hudRed", "HUD Red", 0) @JvmStatic var hudRed: Int = 0
-    @ConfigPropertyInt(CCategory.HUD, "hudGreen", "HUD green", 0) @JvmStatic var hudGreen: Int = 0
-    @ConfigPropertyInt(CCategory.HUD, "hudAlpha", "HUD alpha", 150) @JvmStatic var hudAlpha: Int = 150
+    @ConfigPropertyBoolean(CCategory.GENERAL, "hudBackground", "Should the HUD have a background?", true) @JvmStatic var hudBackground: Boolean = true
+    @ConfigPropertyInt(CCategory.GENERAL, "hudRed", "HUD Red", 0) @JvmStatic var hudRed: Int = 0
+    @ConfigPropertyInt(CCategory.GENERAL, "hudGreen", "HUD green", 0) @JvmStatic var hudGreen: Int = 0
+    @ConfigPropertyInt(CCategory.GENERAL, "hudAlpha", "HUD alpha", 150) @JvmStatic var hudAlpha: Int = 150
 
 }

@@ -1,23 +1,21 @@
 package net.unaussprechlich.warlordsplus;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.unaussprechlich.warlordsplus.config.EasyConfigHandler;
 import net.unaussprechlich.warlordsplus.hud.HudManager;
 import net.unaussprechlich.warlordsplus.ingamegui.IngameGuiManager;
-import org.jetbrains.annotations.NotNull;
 import net.minecraftforge.common.config.Configuration;
 
 
-@Mod(modid = WarlordsPlus.MODID, version = WarlordsPlus.VERSION, name = WarlordsPlus.MODID, guiFactory = "net.unaussprechlich.warlordsplus.config.HudPixelGuiFactory", acceptedMinecraftVersions = "1.8.9")
+@Mod(modid = WarlordsPlus.MODID, version = WarlordsPlus.VERSION, name = WarlordsPlus.MODID, guiFactory = "net.unaussprechlich.warlordsplus.config.ModConfigGuiFactory", acceptedMinecraftVersions = "1.8.9")
 public class WarlordsPlus {
 
     public static final String MODID = "warlordsplus";
@@ -29,6 +27,7 @@ public class WarlordsPlus {
     public void preInit(FMLPreInitializationEvent event){
         CONFIG = new Configuration(event.getSuggestedConfigurationFile());
         CONFIG.load();
+        EasyConfigHandler.INSTANCE.init(event.getAsmData());
     }
 
     @Mod.EventHandler
@@ -55,6 +54,17 @@ public class WarlordsPlus {
 
         tick = 0;
         updateIngame();
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
+        try {
+            if (eventArgs.modID.equals(MODID)) {
+                EasyConfigHandler.INSTANCE.synchronize();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateIngame() {
