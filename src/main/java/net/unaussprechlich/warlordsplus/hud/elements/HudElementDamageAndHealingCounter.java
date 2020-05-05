@@ -87,7 +87,7 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
 
         String textMessage = e.message.getUnformattedText();
 
-        if (textMessage.equals("The gates will fall in 10 seconds!")) {
+        if (textMessage.contains("The gates will fall")) {
             damageCounter = 0;
             healingCounter = 0;
             energyCounter = 0;

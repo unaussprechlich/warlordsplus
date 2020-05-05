@@ -43,7 +43,7 @@ public class HudElementTotalKills extends AbstractHudElement {
     public void onChat(ClientChatReceivedEvent e) {
         String message = e.message.getFormattedText();
 
-        if (message.equals("The gates will fall in 10 seconds!")) {
+        if (message.contains("The gates will fall")) {
             redKills = 0;
             blueKills = 0;
         }
