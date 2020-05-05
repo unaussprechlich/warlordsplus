@@ -1,20 +1,21 @@
 package net.unaussprechlich.warlordsplus.hud.elements;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.unaussprechlich.warlordsplus.ScoreboardManager;
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager;
+import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.config.CCategory;
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
-import scala.collection.parallel.ParIterableLike;
+import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
+import net.unaussprechlich.warlordsplus.util.consumers.IResetConsumer;
 
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HudElementDamageAndHealingCounter extends AbstractHudElement {
+public class HudElementDamageAndHealingCounter extends AbstractHudElement implements IChatConsumer, IResetConsumer {
 
     public static final String take = "\u00AB";
     public static final String give = "\u00BB";
@@ -79,26 +80,16 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
     }
 
     @Override
-    public void onTick() {
-
-    }
-
-    @Override
-    public void onEverySecond() {
-
+    public void reset() {
+        damageCounter = 0;
+        healingCounter = 0;
+        energyCounter = 0;
     }
 
     @Override
     public void onChat(ClientChatReceivedEvent e) {
-        if(!enabled) return;
 
         String textMessage = e.message.getUnformattedText();
-
-        if (textMessage.contains("The gates will fall")) {
-            damageCounter = 0;
-            healingCounter = 0;
-            energyCounter = 0;
-        }
 
         if (textMessage.contains("Your Crusader's Strike gave ")) {
             int pos = textMessage.indexOf(" energy") - 2;
@@ -122,6 +113,11 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
 
     @Override
     public boolean isVisible() {
-        return WarlordsPlus.isIngame() && enabled;
+        return GameStateManager.INSTANCE.isIngame() && enabled;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

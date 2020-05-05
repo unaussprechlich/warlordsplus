@@ -1,11 +1,10 @@
 package net.unaussprechlich.warlordsplus.ingamegui.components
 
 import net.minecraft.util.EnumChatFormatting
-import net.minecraft.util.ITickable
 import net.minecraftforge.client.event.RenderGameOverlayEvent
-import net.unaussprechlich.warlordsplus.ScoreboardManager
+import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
-import net.unaussprechlich.warlordsplus.ingamegui.consumers.IUpdateConsumer
+import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import net.unaussprechlich.warlordsplus.util.fdiv
 import org.lwjgl.util.Color
 
@@ -39,11 +38,14 @@ object WhoIsWinningComponent : AbstractRenderComponent(), IUpdateConsumer {
 
             if(ScoreboardManager.scoreboardNames.size != 15) return
 
-            val blue = EnumChatFormatting.getTextWithoutFormattingCodes(ScoreboardManager.scoreboardNames[12]
+            val blue = EnumChatFormatting.getTextWithoutFormattingCodes(
+                ScoreboardManager.scoreboardNames[12]
                     .replace(" ", "").replace("\uD83D\uDCA3", ""))
-            val red = EnumChatFormatting.getTextWithoutFormattingCodes(ScoreboardManager.scoreboardNames[11]
+            val red = EnumChatFormatting.getTextWithoutFormattingCodes(
+                ScoreboardManager.scoreboardNames[11]
                     .replace(" ", "").replace("\uD83D\uDC7D", ""))
-            val time = EnumChatFormatting.getTextWithoutFormattingCodes(ScoreboardManager.scoreboardNames[9]
+            val time = EnumChatFormatting.getTextWithoutFormattingCodes(
+                ScoreboardManager.scoreboardNames[9]
                     .replace(" ", "").replace("\uD83D\uDC0D", ""))
 
             timeToWin = time.substring(time.indexOf(":") + 1)

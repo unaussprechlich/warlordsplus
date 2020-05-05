@@ -13,12 +13,14 @@ import net.unaussprechlich.warlordsplus.ingamegui.components.EnergyComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.HealthComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.WhoIsWinningComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.skills.*
-import net.unaussprechlich.warlordsplus.ingamegui.consumers.IChatConsumer
-import net.unaussprechlich.warlordsplus.ingamegui.consumers.IResetConsumer
-import net.unaussprechlich.warlordsplus.ingamegui.consumers.IUpdateConsumer
+import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
+import net.unaussprechlich.warlordsplus.util.consumers.IResetConsumer
+import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
+import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 
 
-object IngameGuiManager {
+object IngameGuiManager : IModule, IResetConsumer{
 
     private val components = ArrayList<AbstractRenderComponent>()
 
@@ -39,7 +41,7 @@ object IngameGuiManager {
 
     @SubscribeEvent
     fun onTick(e : TickEvent.ClientTickEvent){
-        if(WarlordsPlus.isIngame()){
+        if(GameStateManager.isIngame){
 
             components.filter { it is IUpdateConsumer }.forEach{
                 (it as IUpdateConsumer).update()
@@ -75,7 +77,7 @@ object IngameGuiManager {
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     fun render(e : RenderGameOverlayEvent.Post) : Boolean{
-        if(!WarlordsPlus.isIngame()) return false
+        if(GameStateManager.notIngame) return false
         if(Minecraft.getMinecraft().currentScreen is GuiChat) return false
 
         if(e.type == RenderGameOverlayEvent.ElementType.ALL)
@@ -88,27 +90,20 @@ object IngameGuiManager {
 
     @SubscribeEvent
     fun onChatMessage(event: ClientChatReceivedEvent) {
-        if(!WarlordsPlus.isIngame()) return;
+        if(GameStateManager.notIngame) return;
         try {
 
             components.filter { it is IChatConsumer }.forEach{
                 (it as IChatConsumer).onChat(event)
-            }
-
-            components.filter { it is IResetConsumer }.forEach {
-                (it as IResetConsumer).reset()
-            }
-
-            if (event.message.formattedText == "§r§eThe gates will fall in §r§c5 §r§eseconds!§r") {
-                components.filter { it is IResetConsumer }.forEach{
-                    (it as IResetConsumer).reset()
-                }
             }
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
         }
     }
 
-
-
+    override fun reset() {
+        components.filter { it is IResetConsumer }.forEach{
+            (it as IResetConsumer).reset()
+        }
+    }
 }

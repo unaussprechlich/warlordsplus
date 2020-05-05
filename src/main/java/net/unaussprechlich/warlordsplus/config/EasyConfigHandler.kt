@@ -46,8 +46,12 @@
 
 package net.unaussprechlich.warlordsplus.config
 
+import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent
 import net.minecraftforge.fml.common.discovery.ASMDataTable
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.warlordsplus.WarlordsPlus
+import net.unaussprechlich.warlordsplus.config.EasyConfigHandler.init
+import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.AnnotationHelper
 import java.lang.reflect.Field
 
@@ -56,7 +60,8 @@ import java.lang.reflect.Field
  * This object contains utilities for the automatic config system. Its [init] method should be invoked at
  * pre-initialization time.
  */
-object EasyConfigHandler {
+object EasyConfigHandler : IModule{
+
     val fieldMapStr: MutableMap<Field, AnnotationHelper.AnnotationInfo> = mutableMapOf()
     val fieldMapInt: MutableMap<Field, AnnotationHelper.AnnotationInfo> = mutableMapOf()
     val fieldMapBoolean: MutableMap<Field, AnnotationHelper.AnnotationInfo> = mutableMapOf()
@@ -73,6 +78,17 @@ object EasyConfigHandler {
         findByClass(Long::class.javaPrimitiveType!!, asm)
 
         synchronize()
+    }
+
+    @SubscribeEvent
+    fun onConfigChanged(eventArgs: OnConfigChangedEvent) {
+        try {
+            if (eventArgs.modID == WarlordsPlus.MODID) {
+                synchronize()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun synchronize() {
@@ -196,16 +212,3 @@ object EasyConfigHandler {
 @Target(AnnotationTarget.FIELD) annotation class ConfigPropertyBoolean(val category: String, val id: String, val comment: String, val def: Boolean, val devOnly: Boolean = false)
 
 
-object GeneralConfigSettings {
-    @ConfigPropertyBoolean(CCategory.GENERAL, "hudDisabled", "HUD Disabled", false) @JvmStatic var hudDisabled: Boolean = false
-    @ConfigPropertyBoolean(CCategory.GENERAL, "hudDisplayVersion", "HUD DisplayVersion", true) @JvmStatic var hudDisplayVersion: Boolean = true
-
-    @ConfigPropertyInt(CCategory.GENERAL, "displayXOffset", "HUD offset (X)", 5) @JvmStatic var displayXOffset: Int = 5
-    @ConfigPropertyInt(CCategory.GENERAL, "displayYOffset", "HUD offset (Y)", 5) @JvmStatic var displayYOffset: Int = 5
-
-    @ConfigPropertyBoolean(CCategory.GENERAL, "hudBackground", "Should the HUD have a background?", true) @JvmStatic var hudBackground: Boolean = true
-    @ConfigPropertyInt(CCategory.GENERAL, "hudRed", "HUD Red", 0) @JvmStatic var hudRed: Int = 0
-    @ConfigPropertyInt(CCategory.GENERAL, "hudGreen", "HUD green", 0) @JvmStatic var hudGreen: Int = 0
-    @ConfigPropertyInt(CCategory.GENERAL, "hudAlpha", "HUD alpha", 150) @JvmStatic var hudAlpha: Int = 150
-
-}

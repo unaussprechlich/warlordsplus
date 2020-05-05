@@ -5,29 +5,18 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager;
+import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
+import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer;
 
-public class HudElementKillParticipation extends AbstractHudElement {
+public class HudElementKillParticipation extends AbstractHudElement implements IUpdateConsumer, IChatConsumer {
 
     private TeamEnum team = TeamEnum.NONE;
     private int numberOfTeamKills = 0;
     private int playerKills = 0;
 
-    enum TeamEnum {
-        BLUE, RED, NONE
-    }
-
     @Override
-    public String[] getRenderString() {
-        return new String[]{EnumChatFormatting.YELLOW + "KP: " + Math.round(((double) playerKills / numberOfTeamKills) * 100) + "%"};
-    }
-
-    @Override
-    public void onTick() {
-
-    }
-
-    @Override
-    public void onEverySecond() {
+    public void update() {
         if (Minecraft.getMinecraft().thePlayer != null) {
             if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A7c")) {
                 team = TeamEnum.RED;
@@ -37,6 +26,15 @@ public class HudElementKillParticipation extends AbstractHudElement {
                 team = TeamEnum.NONE;
             }
         }
+    }
+
+    enum TeamEnum {
+        BLUE, RED, NONE
+    }
+
+    @Override
+    public String[] getRenderString() {
+        return new String[]{EnumChatFormatting.YELLOW + "KP: " + Math.round(((double) playerKills / numberOfTeamKills) * 100) + "%"};
     }
 
     @Override
@@ -63,13 +61,15 @@ public class HudElementKillParticipation extends AbstractHudElement {
         if (message.contains("You assisted")) {
             playerKills++;
         }
-
     }
-
-
 
     @Override
     public boolean isVisible() {
-        return WarlordsPlus.isIngame();
+        return GameStateManager.INSTANCE.isIngame();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

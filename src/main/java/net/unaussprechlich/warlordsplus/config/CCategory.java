@@ -68,7 +68,6 @@ public enum CCategory {
     public static final String GENERAL = "General";
     public static final String HUD = "Hud";
 
-
     private final String name;
     private final EnumChatFormatting enumChatFormatting;
 

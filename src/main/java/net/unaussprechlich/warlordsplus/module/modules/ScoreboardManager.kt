@@ -1,17 +1,17 @@
-package net.unaussprechlich.warlordsplus
+package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
 import net.minecraft.scoreboard.ScorePlayerTeam
-import net.minecraftforge.fml.client.FMLClientHandler
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
+import net.unaussprechlich.warlordsplus.module.IModule
 import java.util.*
 
 /**
  * ScoreboardManager Created by Alexander on 03.05.2020.
  * Description:
  */
-object ScoreboardManager {
+object ScoreboardManager : IModule{
     var scoreboardTitle = ""
         private set
 

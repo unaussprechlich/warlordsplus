@@ -1,17 +1,18 @@
 package net.unaussprechlich.warlordsplus.hud.elements;
 
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.unaussprechlich.warlordsplus.ScoreboardManager;
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager;
+import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
+import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer;
 
 
 /**
  * HudElementRespawnTimer Created by Alexander on 03.05.2020.
  * Description:
  **/
-public class HudElementRespawnTimer extends AbstractHudElement {
+public class HudElementRespawnTimer extends AbstractHudElement implements IUpdateConsumer {
 
     private int respawnTimer = 0;
 
@@ -27,12 +28,7 @@ public class HudElementRespawnTimer extends AbstractHudElement {
     }
 
     @Override
-    public void onTick() {
-
-    }
-
-    @Override
-    public void onEverySecond() {
+    public void update() {
         respawnTimer--;
 
         int colon = ScoreboardManager.INSTANCE.getScoreboardNames().get(9).lastIndexOf(":");
@@ -50,12 +46,12 @@ public class HudElementRespawnTimer extends AbstractHudElement {
     }
 
     @Override
-    public void onChat(ClientChatReceivedEvent e) {
-
+    public boolean isVisible() {
+        return GameStateManager.INSTANCE.isIngame();
     }
 
     @Override
-    public boolean isVisible() {
-        return WarlordsPlus.isIngame();
+    public boolean isEnabled() {
+        return true;
     }
 }

@@ -2,10 +2,9 @@ package net.unaussprechlich.warlordsplus.ingamegui.components.skills
 
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.ITickable
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
-import net.unaussprechlich.warlordsplus.ingamegui.consumers.IUpdateConsumer
+import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import org.lwjgl.util.Color
 
 

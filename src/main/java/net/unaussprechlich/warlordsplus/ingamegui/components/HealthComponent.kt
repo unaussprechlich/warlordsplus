@@ -1,14 +1,10 @@
 package net.unaussprechlich.warlordsplus.ingamegui.components
 
-import com.sun.org.apache.regexp.internal.RE
 import net.minecraft.client.Minecraft
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.MathHelper
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
-import net.unaussprechlich.warlordsplus.ingamegui.consumers.IChatConsumer
-import net.unaussprechlich.warlordsplus.util.FancyGui.Companion.mc
+import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import net.unaussprechlich.warlordsplus.util.fdiv
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import net.unaussprechlich.warlordsplus.util.removeSpaces

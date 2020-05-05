@@ -10,12 +10,7 @@ public abstract class AbstractHudElement{
 
     public abstract String[] getRenderString();
 
-    public abstract void onTick();
-
-    public abstract void onEverySecond();
-
-    public abstract void onChat(ClientChatReceivedEvent e);
-
     public abstract boolean isVisible();
 
+    public abstract boolean isEnabled();
 }

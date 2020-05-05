@@ -5,12 +5,16 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager;
+import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
+import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer;
 
-public class HudElementTotalKills extends AbstractHudElement {
+public class HudElementTotalKills extends AbstractHudElement implements IUpdateConsumer, IChatConsumer {
 
     TeamEnum team = TeamEnum.NONE;
     private int redKills = 0;
     private int blueKills = 0;
+
 
     enum TeamEnum {
         BLUE, RED, NONE
@@ -22,12 +26,7 @@ public class HudElementTotalKills extends AbstractHudElement {
     }
 
     @Override
-    public void onTick() {
-
-    }
-
-    @Override
-    public void onEverySecond() {
+    public void update() {
         if (Minecraft.getMinecraft().thePlayer != null) {
             if (Minecraft.getMinecraft().thePlayer.getDisplayName().getFormattedText().contains("\u00A7c")) {
                 team = TeamEnum.RED;
@@ -38,6 +37,7 @@ public class HudElementTotalKills extends AbstractHudElement {
             }
         }
     }
+
 
     @Override
     public void onChat(ClientChatReceivedEvent e) {
@@ -73,6 +73,11 @@ public class HudElementTotalKills extends AbstractHudElement {
 
     @Override
     public boolean isVisible() {
-        return WarlordsPlus.isIngame();
+        return GameStateManager.INSTANCE.isIngame();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

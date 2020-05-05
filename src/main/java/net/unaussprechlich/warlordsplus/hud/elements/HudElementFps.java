@@ -16,22 +16,12 @@ public class HudElementFps extends AbstractHudElement {
     }
 
     @Override
-    public void onTick() {
-
-    }
-
-    @Override
-    public void onEverySecond() {
-
-    }
-
-    @Override
-    public void onChat(ClientChatReceivedEvent e) {
-
-    }
-
-    @Override
     public boolean isVisible() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
         return true;
     }
 }
