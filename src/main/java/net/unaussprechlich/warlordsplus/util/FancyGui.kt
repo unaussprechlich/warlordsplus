@@ -30,7 +30,7 @@ open class FancyGui : Gui() {
         val Gui.mc: Minecraft
             get() = Minecraft.getMinecraft()
 
-        val Gui.thePlayer: EntityPlayerSP
+        val Gui.thePlayer: EntityPlayerSP?
             get() = mc.thePlayer
 
         val Gui.fontRenderer : FontRenderer
@@ -43,11 +43,39 @@ open class FancyGui : Gui() {
                 else scale
             }
 
+        val Gui.displayWith: Int
+            get() = mc.displayWidth
+
+        val Gui.displayHeight: Int
+            get() = mc.displayHeight
+
         val Gui.scaledMcWidth: Int
             get() = mc.displayWidth / mcScale
 
         val Gui.scaledMcHeight: Int
             get() = mc.displayHeight / mcScale
+
+        val Gui.xCenter : Int
+            get() = mc.displayWidth / 2 / mcScale
+
+        val Gui.yCenter : Int
+            get() = mc.displayHeight / 2 / mcScale
+
+        val Gui.xLeft: Int
+            get() = 0
+
+        val Gui.xRight : Int
+            get() = mc.displayWidth / mcScale
+
+        val Gui.yBottom : Int
+            get() = mc.displayHeight / mcScale
+
+        val Gui.yTop : Int
+            get() = 0
+
+        fun Gui.getTextWidth(text: String) = fontRenderer.getStringWidth(text)
+        fun Gui.getUnformattedTextWidth(text: String) = fontRenderer.getStringWidth(getTextWithoutFormatting(text))
+        fun Gui.getTextWithoutFormatting(text: String) = EnumChatFormatting.getTextWithoutFormattingCodes(text)
 
         fun Gui.drawItemStackWithText(id: Int, meta: Int, xStart: Int, yStart: Int, overlay: String?) {
 
@@ -73,9 +101,21 @@ open class FancyGui : Gui() {
             Gui.drawRect(xStart, yStart, xStart + width, yStart + height, color.convertToArgb())
         }
 
-        fun Gui.drawStringWithBox(xStart: Int, yStart: Int, text : String, color : Color){
+        fun Gui.drawCenteredStringWithBox(xStart: Int, yStart: Int, width: Int, text : String, color : Color, shadow: Boolean = false){
+            drawRect(xStart, yStart, width, 13, color)
+            if(shadow) fontRenderer.drawStringWithShadow(text, xStart + ((width - getTextWidth(text)) / 2) + 0f, yStart + 3f, 0xffffff)
+            fontRenderer.drawString(text, xStart + ((width - getTextWidth(text)) / 2), yStart + 3, 0xffffff)
+        }
+
+        fun Gui.drawStringWithBox(xStart: Int, yStart: Int, text : String, color : Color, shadow: Boolean = false){
             drawRect(xStart, yStart, fontRenderer.getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(text)) + 4, 12, color)
-            fontRenderer.drawStringWithShadow(text, xStart + 2f, yStart + 2f, 0xffffff)
+            if(shadow) fontRenderer.drawStringWithShadow(text, xStart + 2f, yStart + 2f, 0xffffff)
+            fontRenderer.drawString(text, xStart + 2, yStart + 2, 0xffffff)
+        }
+
+        fun Gui.drawString(xStart: Int, yStart: Int, text : String, shadow: Boolean= false ){
+            if(shadow) fontRenderer.drawStringWithShadow(text, xStart.toFloat(), yStart.toFloat(), 0xffffff)
+            fontRenderer.drawString(text, xStart, yStart, 0xffffff)
         }
     }
 }

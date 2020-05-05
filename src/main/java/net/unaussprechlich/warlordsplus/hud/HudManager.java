@@ -82,13 +82,13 @@ public class HudManager extends FancyGui {
 
         try {
 
-            FancyGui.Companion.drawStringWithBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD + "Warlords" + EnumChatFormatting.RED + "Plus", new Color(0, 0, 0, 150));
+            FancyGui.Companion.drawStringWithBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD + "Warlords" + EnumChatFormatting.RED + "Plus", new Color(0, 0, 0, 150), false);
             yStart+=height;
 
             for(AbstractHudElement element : hudElements){
                 if (element.isVisible()) {
                     for (String s : element.getRenderString()) {
-                        FancyGui.Companion.drawStringWithBox(this, 4, yStart, s, new Color(0, 0, 0, 150));
+                        FancyGui.Companion.drawStringWithBox(this, 4, yStart, s, new Color(0, 0, 0, 150), false);
                         yStart += height;
                     }
                 }

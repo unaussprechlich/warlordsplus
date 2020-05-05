@@ -1,7 +1,9 @@
 package net.unaussprechlich.warlordsplus.ingamegui
 
-import net.minecraft.util.ITickable
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiChat
 import net.minecraftforge.client.GuiIngameForge
+import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -11,6 +13,9 @@ import net.unaussprechlich.warlordsplus.ingamegui.components.EnergyComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.HealthComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.WhoIsWinningComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.skills.*
+import net.unaussprechlich.warlordsplus.ingamegui.consumers.IChatConsumer
+import net.unaussprechlich.warlordsplus.ingamegui.consumers.IResetConsumer
+import net.unaussprechlich.warlordsplus.ingamegui.consumers.IUpdateConsumer
 
 
 object IngameGuiManager {
@@ -36,8 +41,8 @@ object IngameGuiManager {
     fun onTick(e : TickEvent.ClientTickEvent){
         if(WarlordsPlus.isIngame()){
 
-            components.filter { it is ITickable }.forEach{
-                (it as ITickable).update()
+            components.filter { it is IUpdateConsumer }.forEach{
+                (it as IUpdateConsumer).update()
             }
 
             GuiIngameForge.renderHelmet = false
@@ -68,9 +73,10 @@ object IngameGuiManager {
     }
 
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.NORMAL)
     fun render(e : RenderGameOverlayEvent.Post) : Boolean{
         if(!WarlordsPlus.isIngame()) return false
+        if(Minecraft.getMinecraft().currentScreen is GuiChat) return false
 
         if(e.type == RenderGameOverlayEvent.ElementType.ALL)
             components.forEach{
@@ -79,5 +85,30 @@ object IngameGuiManager {
 
         return false
     }
+
+    @SubscribeEvent
+    fun onChatMessage(event: ClientChatReceivedEvent) {
+        if(!WarlordsPlus.isIngame()) return;
+        try {
+
+            components.filter { it is IChatConsumer }.forEach{
+                (it as IChatConsumer).onChat(event)
+            }
+
+            components.filter { it is IResetConsumer }.forEach {
+                (it as IResetConsumer).reset()
+            }
+
+            if (event.message.formattedText == "§r§eThe gates will fall in §r§c5 §r§eseconds!§r") {
+                components.filter { it is IResetConsumer }.forEach{
+                    (it as IResetConsumer).reset()
+                }
+            }
+        } catch (throwable: Throwable) {
+            throwable.printStackTrace()
+        }
+    }
+
+
 
 }

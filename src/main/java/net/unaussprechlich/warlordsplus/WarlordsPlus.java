@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import net.minecraftforge.common.config.Configuration;
 
 
-@Mod(modid = WarlordsPlus.MODID, version = WarlordsPlus.VERSION, clientSideOnly = true)
+@Mod(modid = WarlordsPlus.MODID, version = WarlordsPlus.VERSION, name = WarlordsPlus.MODID, guiFactory = "net.unaussprechlich.warlordsplus.config.HudPixelGuiFactory", acceptedMinecraftVersions = "1.8.9")
 public class WarlordsPlus {
 
     public static final String MODID = "warlordsplus";
@@ -36,7 +36,7 @@ public class WarlordsPlus {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(HudManager.INSTANCE());
         MinecraftForge.EVENT_BUS.register(ScoreboardManager.INSTANCE);
-        //MinecraftForge.EVENT_BUS.register(IngameGuiManager.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(IngameGuiManager.INSTANCE);
     }
 
     private static boolean isIngame = false;
@@ -64,12 +64,6 @@ public class WarlordsPlus {
                 && ScoreboardManager.INSTANCE.getScoreboardNames().size() == 15
                 && (ScoreboardManager.INSTANCE.getScoreboardNames().get(9).contains("Wins in:")
                 || ScoreboardManager.INSTANCE.getScoreboardNames().get(9).contains("Time Left:"));
-    }
-
-
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public void onRender(RenderGameOverlayEvent.Text event) {
-
     }
 
     @SubscribeEvent

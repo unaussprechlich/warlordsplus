@@ -5,6 +5,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.unaussprechlich.warlordsplus.ScoreboardManager;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
+import net.unaussprechlich.warlordsplus.config.CCategory;
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
 import scala.collection.parallel.ParIterableLike;
 
@@ -24,7 +26,11 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
     private int damageCounter = 0;
     private int energyCounter = 0;
 
+    @ConfigPropertyBoolean(category = CCategory.HUD, id = "showDHCounter", comment = "Enable or disable the Healing counter", def = true)
+    public static boolean enabled = false;
+
     public static int getDamageOrHealthValue(String message) {
+        //OG HudPixel CODE :)
         try {
             // filter !, which highlights critical damage/health
             message = message.replace("!", "");
@@ -84,6 +90,7 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
 
     @Override
     public void onChat(ClientChatReceivedEvent e) {
+        if(!enabled) return;
 
         String textMessage = e.message.getUnformattedText();
 
@@ -115,6 +122,6 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
 
     @Override
     public boolean isVisible() {
-        return WarlordsPlus.isIngame();
+        return WarlordsPlus.isIngame() && enabled;
     }
 }
