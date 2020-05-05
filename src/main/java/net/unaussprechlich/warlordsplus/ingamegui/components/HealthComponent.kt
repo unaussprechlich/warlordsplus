@@ -25,10 +25,10 @@ object HealthComponent : AbstractRenderComponent(), IChatConsumer {
 
         val ew = (w * (currentHp fdiv maxHp)).toInt()
 
-        drawRect(xLeft + 5, yBottom - 25 - h, w, h, Color(0, 0, 0, 50))
-        drawRect(xLeft + 5, yBottom - 25 - h, ew, h, Color(255, 0, 20, 200))
+        drawRect(xRight - w - 5, yBottom - 25 - h, w, h, Color(0, 0, 0, 50))
+        drawRect(xRight - w - 5, yBottom - 25 - h, ew, h, Color(255, 0, 20, 200))
 
-        drawString(xLeft + 10, yBottom - 25 - h + 7, "$currentHp/$maxHp")
+        drawString(xRight - w + 10, yBottom - 25 - h + 7, "$currentHp/$maxHp")
 
 
         mc.mcProfiler.endSection()

@@ -68,13 +68,13 @@ public class HudManager extends FancyGui implements IModule, IResetConsumer {
 
         try {
 
-            FancyGui.Companion.drawStringWithBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD + "Warlords" + EnumChatFormatting.RED + "Plus", new Color(0, 0, 0, 150), false);
+            FancyGui.Companion.drawStringWithBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD + "Warlords" + EnumChatFormatting.RED + "Plus", new Color(34,34,39, 200), false);
             yStart+=height;
 
             for(AbstractHudElement element : hudElements){
                 if (element.isVisible() && element.isEnabled()) {
                     for (String s : element.getRenderString()) {
-                        FancyGui.Companion.drawStringWithBox(this, 4, yStart, s, new Color(0, 0, 0, 150), false);
+                        FancyGui.Companion.drawStringWithBox(this, 4, yStart, s, new Color(34,34,39, 100), false);
                         yStart += height;
                     }
                 }

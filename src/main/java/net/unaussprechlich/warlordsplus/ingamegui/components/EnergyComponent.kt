@@ -20,10 +20,10 @@ object EnergyComponent : AbstractRenderComponent(), IResetConsumer, IUpdateConsu
 
         val ew = (w * (mc.thePlayer.experienceLevel fdiv maxEnergy)).toInt()
 
-        drawRect(xLeft + 5, yBottom - 5 - h, w, h, Color(0, 0, 0, 50))
-        drawRect(xLeft + 5, yBottom - 5 - h, ew, h, Color(20, 0, 255, 200))
+        drawRect(xRight - w - 5, yBottom - 5 - h, w, h, Color(0, 0, 0, 50))
+        drawRect(xRight - w - 5, yBottom - 5 - h, ew, h, Color(20, 0, 255, 200))
 
-        drawString(xLeft + 10, yBottom - 5 - h + 7, thePlayer?.experienceLevel.toString())
+        drawString(xRight - w + 10, yBottom - 5 - h + 7, thePlayer?.experienceLevel.toString())
 
         mc.mcProfiler.endSection()
 

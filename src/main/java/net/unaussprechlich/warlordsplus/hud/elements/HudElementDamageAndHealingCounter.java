@@ -4,7 +4,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager;
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager;
-import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.config.CCategory;
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
