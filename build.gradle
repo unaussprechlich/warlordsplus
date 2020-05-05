@@ -50,6 +50,7 @@ compileJava {
 }
 
 processResources {
+    duplicatesStrategy = DuplicatesStrategy.WARN
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
@@ -63,6 +64,7 @@ processResources {
 
     inputs.files "src/main/resources"
     outputs.dir "build/classes/main"
+
     copy {
         from("src/main/resources")
         into("build/classes/main")
@@ -81,6 +83,7 @@ jar {
         }
     }
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 repositories {
