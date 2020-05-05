@@ -27,14 +27,22 @@ public class HudElementRespawnTimer extends AbstractHudElement implements IUpdat
         }
     }
 
+    private int tick = 0;
+
     @Override
     public void update() {
+        if(tick >= 40){
+            tick = 0;
+        } else {
+            tick++;
+            return;
+        }
+
         respawnTimer--;
 
         int colon = ScoreboardManager.INSTANCE.getScoreboardNames().get(9).lastIndexOf(":");
         String after = ScoreboardManager.INSTANCE.getScoreboardNames().get(9).substring(colon + 1, colon + 3);
-        if (respawnTimer < 0)
-            respawnTimer = Math.abs(respawnTimer);
+        if (respawnTimer < 0) respawnTimer = 0;
 
         try {
             if (Integer.parseInt(after) % 12 == 0) {
