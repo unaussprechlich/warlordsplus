@@ -24,8 +24,8 @@ object Player {
     var energyLostCounter = 0
         private set;
 
-    enum class Classes {
-        AVENGER, CRUSADER, PROTECTOR,
+    enum class Classes(val classname : String) {
+        AVENGER("Avenger"), CRUSADER("Crusader"), PROTECTOR,
         BERSERKER, DEFENDER, REVENANT,
         PYROMANCER, CRYOMANCER, AQUAMANCER,
         THUNDERLORD, SPIRITGUARD, EARTHWARDEN
