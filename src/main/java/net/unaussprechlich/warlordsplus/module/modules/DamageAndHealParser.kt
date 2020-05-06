@@ -75,6 +75,13 @@ object DamageAndHealParser : IModule {
         }
     }
 
+    fun parseDamageTaken(msg : String) : DamageTakenEvent{
+
+        //magic code
+
+        return DamageTakenEvent(130, false, "sumSmash")
+    }
+
     private fun getDamageOrHealthValue(message: String): Int {
         try {
             val m = numberPattern.matcher(message.replace("!", ""))
