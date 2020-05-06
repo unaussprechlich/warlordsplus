@@ -15,15 +15,17 @@ private const val absorption = " absorbed "
 private const val energy = " energy."
 private val numberPattern = Pattern.compile("\\s[0-9]+\\s")
 
-object DamageAndHealParser : IModule {
+object KillAssistParser : IModule {
 
     @SubscribeEvent
     fun onChatMessage(e: ClientChatReceivedEvent) {
         if(GameStateManager.notIngame) return
         try {
-
-
             val textMessage: String = e.message.unformattedText.removeFormatting()
+
+            println()
+
+            EventBus.post(KillEvent("unaussprechlich", "sumSmash"))
 
             /* TODO @ebic
                 Extract from each textMessage:
@@ -53,60 +55,18 @@ object DamageAndHealParser : IModule {
                     })
              */
 
-            if(true)
-                EventBus.post(HealingGivenEvent(1243, false, "Test"))
-
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
         }
     }
 
-    private fun getDamageOrHealthValue(message: String): Int {
-        try {
-            val m = numberPattern.matcher(message.replace("!", ""))
-            if (!m.find()) return 0
-            return m.group().replace(" ", "").toInt()
-        } catch (e: Exception) {
-            print("Failed to extract damage from this message: $message")
-        }
-        return 0
-    }
 }
 
 /**
  * A data class that can be Posted onto the EventBus
  * Must extend IEvent
  */
-data class HealingGivenEvent(
-    val amount : Int,
-    val isCrit : Boolean,
-    val player : String
-) : IEvent
-
-data class DamageGivenEvent(
-    val amount : Int,
-    val isCrit : Boolean,
-    val player : String
-) : IEvent
-
-data class EnergyGivenEvent(
-    val amount : Int,
-    val player : String
-) : IEvent
-
-data class HealingTakenEvent(
-    val amount : Int,
-    val isCrit : Boolean,
-    val player : String
-) : IEvent
-
-data class DamageTakenEvent(
-    val amount : Int,
-    val isCrit : Boolean,
-    val player : String
-) : IEvent
-
-data class EnergyTakenEvent(
-    val amount : Int,
-    val player : String
+data class KillEvent(
+    val player : String,
+    val deathPlayer : String
 ) : IEvent

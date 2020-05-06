@@ -1,5 +1,9 @@
 package net.unaussprechlich.warlordsplus
 
+import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.warlordsplus.module.ResetEvent
+import net.unaussprechlich.warlordsplus.module.modules.HealingGivenEvent
+
 
 object Player {
 
@@ -15,6 +19,22 @@ object Player {
         private set
     var energyTakenCounter = 0
         private set
+
+    init {
+
+        EventBus.register<ResetEvent> {
+            healingGivenCounter = 0
+            damageGivenCounter = 0
+            energyGivenCounter = 0
+            //...
+        }
+
+        EventBus.register<HealingGivenEvent> {
+            healingGivenCounter += it.amount
+        }
+
+
+    }
 
 
 }

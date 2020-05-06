@@ -6,10 +6,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
 import net.unaussprechlich.warlordsplus.hud.HudManager
-import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
-import net.unaussprechlich.warlordsplus.module.modules.Meme
+import net.unaussprechlich.warlordsplus.module.modules.*
 
 
 object ModuleManager {
@@ -21,7 +19,8 @@ object ModuleManager {
             add(EasyConfigHandler)
             add(ScoreboardManager)
             add(GameStateManager)
-            //add(DamageAndHealParser)
+            add(DamageAndHealParser)
+            add(KillAssistParser)
             add(Meme)
             add(HudManager.INSTANCE())
             //add(IngameGuiManager)
