@@ -12,6 +12,7 @@ object ClassManager : IModule {
 
     init {
         EventBus.register<ResetEvent> {
+
             ScoreboardManager.scoreboardNames.forEach { sc ->
                 Player.Classes.values().forEach {
                     if(sc.removeFormatting() has it.classname){

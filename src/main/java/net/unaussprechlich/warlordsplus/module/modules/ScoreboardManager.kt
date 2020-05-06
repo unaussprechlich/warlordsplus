@@ -25,12 +25,14 @@ object ScoreboardManager : IModule{
         try {
             val scoreboard = Minecraft.getMinecraft().theWorld.scoreboard
             val sidebarObjective = scoreboard.getObjectiveInDisplaySlot(1)
+
             scoreboardTitle = sidebarObjective.displayName
-            val scores = scoreboard.getSortedScores(sidebarObjective)
-            for (score in scores) {
+
+            for (score in scoreboard.getSortedScores(sidebarObjective)) {
                 val team = scoreboard.getPlayersTeam(score.playerName)
                 scoreboardNames.add(ScorePlayerTeam.formatPlayerName(team, score.playerName))
             }
+
         } catch (e: Exception) {
             //Ignore
         }
