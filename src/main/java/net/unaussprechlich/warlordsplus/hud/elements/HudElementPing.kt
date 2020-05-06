@@ -41,7 +41,7 @@ class HudElementPing : AbstractHudElement() {
                             .currentServerData != null
                     ) serverPinger.ping(Minecraft.getMinecraft().currentServerData)
                 } catch (e: UnknownHostException) {
-                    e.printStackTrace()
+                    //ignore
                 }
             }
         }
