@@ -8,19 +8,17 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
-import net.unaussprechlich.warlordsplus.WarlordsPlus
 import net.unaussprechlich.warlordsplus.ingamegui.components.EnergyComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.HealthComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.WhoIsWinningComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.skills.*
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
-import net.unaussprechlich.warlordsplus.util.consumers.IResetConsumer
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 
 
-object IngameGuiManager : IModule, IResetConsumer{
+object IngameGuiManager : IModule{
 
     private val components = ArrayList<AbstractRenderComponent>()
 
@@ -98,12 +96,6 @@ object IngameGuiManager : IModule, IResetConsumer{
             }
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
-        }
-    }
-
-    override fun reset() {
-        components.filter { it is IResetConsumer }.forEach{
-            (it as IResetConsumer).reset()
         }
     }
 }

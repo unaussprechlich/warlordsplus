@@ -2,19 +2,20 @@ package net.unaussprechlich.warlordsplus.hud.elements;
 
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.unaussprechlich.eventbus.EventBus;
+import net.unaussprechlich.warlordsplus.module.ResetEvent;
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager;
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager;
 import net.unaussprechlich.warlordsplus.config.CCategory;
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
-import net.unaussprechlich.warlordsplus.util.consumers.IResetConsumer;
 
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HudElementDamageAndHealingCounter extends AbstractHudElement implements IChatConsumer, IResetConsumer {
+public class HudElementDamageAndHealingCounter extends AbstractHudElement implements IChatConsumer{
 
     public static final String take = "\u00AB";
     public static final String give = "\u00BB";
@@ -29,34 +30,38 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement implem
     @ConfigPropertyBoolean(category = CCategory.HUD, id = "showDHCounter", comment = "Enable or disable the Healing counter", def = true)
     public static boolean enabled = false;
 
+    public HudElementDamageAndHealingCounter(){
+        EventBus.INSTANCE.register(ResetEvent.class, resetEvent -> {
+            damageCounter = 0;
+            healingCounter = 0;
+            energyCounter = 0;
+            return null;
+        });
+    }
+
     public static int getDamageOrHealthValue(String message) {
         //OG HudPixel CODE :)
         try {
-            // filter !, which highlights critical damage/health
             message = message.replace("!", "");
 
-            // do some regex magic
             Pattern p = Pattern.compile("\\s[0-9]+\\s");
             Matcher m = p.matcher(message);
+
             if (!m.find()) {
-                // We failed :(
                 return 0;
             }
 
-            // save the result
             String result = m.group();
 
-            // if there is a second match, we'll use that because the first was an all number username in this case
             if (m.find()) {
                 result = m.group();
             }
 
-            // and cast it into an integer (without whitespace)
             return Integer.parseInt(result.replace(" ", ""));
         } catch (Exception e) {
             System.out.print("Failed to extract damage from this message: " + message);
         }
-        // We failed :(
+
         return 0;
     }
 
@@ -76,13 +81,6 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement implem
             damageAndHealing[1] = EnumChatFormatting.GREEN + "Healing: " + healingCounter;
             return damageAndHealing;
         }
-    }
-
-    @Override
-    public void reset() {
-        damageCounter = 0;
-        healingCounter = 0;
-        energyCounter = 0;
     }
 
     @Override

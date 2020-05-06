@@ -7,9 +7,10 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.unaussprechlich.eventbus.EventBus;
 import net.unaussprechlich.warlordsplus.hud.elements.*;
+import net.unaussprechlich.warlordsplus.module.ResetEvent;
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
-import net.unaussprechlich.warlordsplus.util.consumers.IResetConsumer;
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer;
 import net.unaussprechlich.warlordsplus.module.IModule;
 import net.unaussprechlich.warlordsplus.util.FancyGui;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  * HudManager Created by Alexander on 03.05.2020.
  * Description:
  **/
-public class HudManager extends FancyGui implements IModule, IResetConsumer {
+public class HudManager extends FancyGui implements IModule {
 
     private ArrayList<AbstractHudElement> hudElements = new ArrayList<>();
     private static HudManager instance;
@@ -34,6 +35,11 @@ public class HudManager extends FancyGui implements IModule, IResetConsumer {
         hudElements.add(new HudElementDamageAndHealingCounter());
         hudElements.add(new HudElementKillParticipation());
         hudElements.add(new HudElementTotalKills());
+
+        EventBus.INSTANCE.register(ResetEvent.class, t -> {
+
+            return null;
+        });
     }
 
     public static HudManager INSTANCE(){
@@ -84,14 +90,5 @@ public class HudManager extends FancyGui implements IModule, IResetConsumer {
             e.printStackTrace();
         }
 
-    }
-
-    @Override
-    public void reset() {
-        for (AbstractHudElement hudElement : hudElements) {
-            if(hudElement instanceof IResetConsumer){
-                ((IResetConsumer) hudElement).reset();
-            }
-        }
     }
 }

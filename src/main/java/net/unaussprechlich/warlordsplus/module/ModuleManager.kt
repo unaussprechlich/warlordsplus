@@ -3,13 +3,13 @@ package net.unaussprechlich.warlordsplus.module
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
 import net.unaussprechlich.warlordsplus.hud.HudManager
-import net.unaussprechlich.warlordsplus.ingamegui.IngameGuiManager
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.Meme
-import net.unaussprechlich.warlordsplus.util.consumers.IResetConsumer
 
 
 object ModuleManager {
@@ -21,6 +21,7 @@ object ModuleManager {
             add(EasyConfigHandler)
             add(ScoreboardManager)
             add(GameStateManager)
+            //add(DamageAndHealParser)
             add(Meme)
             add(HudManager.INSTANCE())
             //add(IngameGuiManager)
@@ -38,12 +39,12 @@ object ModuleManager {
         try {
 
             if (event.message.formattedText == "§r§eThe gates will fall in §r§c5 §r§eseconds!§r") {
-                modules.filter { it is IResetConsumer }.forEach {
-                    (it as IResetConsumer).reset()
-                }
+                EventBus.post(ResetEvent())
             }
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
         }
     }
 }
+
+data class ResetEvent(val time: Long = System.currentTimeMillis()) : IEvent
