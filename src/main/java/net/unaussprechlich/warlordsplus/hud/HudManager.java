@@ -71,7 +71,7 @@ public class HudManager extends FancyGui implements IModule {
 
         try {
 
-            FancyGui.Companion.drawStringWithBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD + "Warlords" + EnumChatFormatting.RED + "Plus" + EnumChatFormatting.WHITE + " SNAPSHOT_61ecf3b", new Color(34, 34, 39, 200), false);
+            FancyGui.Companion.drawStringWithBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD + "Warlords" + EnumChatFormatting.RED + "Plus" + EnumChatFormatting.WHITE + " SNAPSHOT_fdce8fe", new Color(34, 34, 39, 200), false);
             yStart += height;
 
             for(AbstractHudElement element : hudElements){
