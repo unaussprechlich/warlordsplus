@@ -74,7 +74,7 @@ object WhoIsWinningComponent : AbstractRenderComponent(), IUpdateConsumer {
             }
 
         } catch (e : Exception){
-            println(e)
+
         }
 
 

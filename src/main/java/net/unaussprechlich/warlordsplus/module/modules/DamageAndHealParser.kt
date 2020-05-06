@@ -19,12 +19,13 @@ object DamageAndHealParser : IModule {
 
     @SubscribeEvent
     fun onChatMessage(e: ClientChatReceivedEvent) {
-        if(GameStateManager.notIngame) return
+        if(GameStateManager.notIngame || e.type == 2.toByte()) return
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
 
+
             var otherPlayer = ""
-            var amount : Int = 0;
+            var amount = 0
 
             if (textMessage.contains(take)) {
                 amount = getDamageOrHealthValue(textMessage)
@@ -35,7 +36,7 @@ object DamageAndHealParser : IModule {
                 } else {
                     otherPlayer = textMessage.substring(0, textMessage.indexOf(" hit"))
                 }
-                println(otherPlayer)
+                //println(otherPlayer)
             } else if (textMessage.contains(give)) {
 
             }

@@ -29,21 +29,25 @@ class HudElementPing : AbstractHudElement() {
 
     companion object {
         private val serverPinger = OldServerPinger()
-        private const val pingCooldwonMs = 500
+        private const val pingCooldwonMs = 1000
         private var nextTimeStamp: Long = 0
 
         private fun updatePing() {
             nextTimeStamp = System.currentTimeMillis() + pingCooldwonMs
+            if (Minecraft.getMinecraft().currentServerData == null)  return
 
-            GlobalScope.launch {
-                try {
-                    if (Minecraft.getMinecraft()
-                            .currentServerData != null
-                    ) serverPinger.ping(Minecraft.getMinecraft().currentServerData)
-                } catch (e: UnknownHostException) {
-                    //ignore
+            try {
+                GlobalScope.launch {
+                    try {
+                        serverPinger.ping(Minecraft.getMinecraft().currentServerData)
+                    } catch (e: Exception) {
+                        //ignore
+                    }
                 }
+            } catch (e : Exception){
+                //Ignore
             }
+
         }
     }
 }

@@ -52,7 +52,7 @@ object HealthComponent : AbstractRenderComponent(), IChatConsumer {
             maxHp = msg.substring(msg.indexOf("/") + 1).toInt()
 
         } catch (e : Exception){
-            println(e)
+
         }
     }
 
