@@ -29,7 +29,6 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
     public static boolean showEnergyStolen = false;
     @ConfigPropertyBoolean(category = CCategory.HUD, id = "showEnergyLost", comment = "Enable or disable the Energy Lost counter", def = true)
     public static boolean showEnergyLost = false;
-    //Todo make config for all the values
 
     @Override
     public String[] getRenderString() {
@@ -38,14 +37,23 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
 
         ArrayList<String> renderStrings = new ArrayList<>();
 
-        renderStrings.add(EnumChatFormatting.RED + "Damage: " + Player.INSTANCE.getDamageDoneCounter());
-        renderStrings.add(EnumChatFormatting.GREEN + "Healing: " + Player.INSTANCE.getHealingGivenCounter());
-        renderStrings.add(EnumChatFormatting.YELLOW + "Energy Given: " + Player.INSTANCE.getEnergyGivenCounter());
-        renderStrings.add(EnumChatFormatting.YELLOW + "Energy Received: " + Player.INSTANCE.getEnergyReceivedCounter());
-        renderStrings.add(EnumChatFormatting.DARK_GREEN + "Healing Received: " + Player.INSTANCE.getHealingReceivedCounter());
-        renderStrings.add(EnumChatFormatting.DARK_RED + "Damage Taken: " + Player.INSTANCE.getDamageTakenCounter());
-        renderStrings.add(EnumChatFormatting.YELLOW + "Energy Stolen: " + Player.INSTANCE.getEnergyStolenCounter());
-        renderStrings.add(EnumChatFormatting.YELLOW + "Energy Lost: " + Player.INSTANCE.getEnergyLostCounter());
+        if (showDamageDone)
+            renderStrings.add(EnumChatFormatting.RED + "Damage: " + Player.INSTANCE.getDamageDoneCounter());
+        if (showHealingDone)
+            renderStrings.add(EnumChatFormatting.GREEN + "Healing: " + Player.INSTANCE.getHealingGivenCounter());
+        if (showDamageTaken)
+            renderStrings.add(EnumChatFormatting.DARK_RED + "Damage Taken: " + Player.INSTANCE.getDamageTakenCounter());
+        if (showHealingReceived)
+            renderStrings.add(EnumChatFormatting.DARK_GREEN + "Healing Received: " + Player.INSTANCE.getHealingReceivedCounter());
+        if (showEnergyGiven)
+            renderStrings.add(EnumChatFormatting.YELLOW + "Energy Given: " + Player.INSTANCE.getEnergyGivenCounter());
+        if (showEnergyReceived)
+            renderStrings.add(EnumChatFormatting.YELLOW + "Energy Received: " + Player.INSTANCE.getEnergyReceivedCounter());
+        if (showEnergyLost)
+            renderStrings.add(EnumChatFormatting.YELLOW + "Energy Lost: " + Player.INSTANCE.getEnergyLostCounter());
+        if (showEnergyStolen)
+            renderStrings.add(EnumChatFormatting.YELLOW + "Energy Stolen: " + Player.INSTANCE.getEnergyStolenCounter());
+
 
         return renderStrings.toArray(new String[0]);
     }

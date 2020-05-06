@@ -18,6 +18,7 @@ object ModuleManager {
         with(modules){
             add(EasyConfigHandler)
             add(ScoreboardManager)
+            add(ClassManager)
             add(GameStateManager)
             add(DamageAndHealParser)
             add(KillAssistParser)

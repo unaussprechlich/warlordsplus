@@ -24,11 +24,14 @@ object Player {
     var energyLostCounter = 0
         private set;
 
+    enum class Classes {
+        AVENGER, CRUSADER, PROTECTOR,
+        BERSERKER, DEFENDER, REVENANT,
+        PYROMANCER, CRYOMANCER, AQUAMANCER,
+        THUNDERLORD, SPIRITGUARD, EARTHWARDEN
+    }
+
     init {
-
-        EventBus.register<HealingGivenEvent> {
-
-        }
 
         EventBus.register<ResetEvent> {
             healingGivenCounter = 0
