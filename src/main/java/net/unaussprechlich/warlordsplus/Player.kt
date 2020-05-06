@@ -22,13 +22,17 @@ object Player {
     var energyStolenCounter = 0
         private set
     var energyLostCounter = 0
-        private set;
+        private set
 
-    enum class Classes(val classname : String) {
-        AVENGER("Avenger"), CRUSADER("Crusader"), PROTECTOR,
-        BERSERKER, DEFENDER, REVENANT,
-        PYROMANCER, CRYOMANCER, AQUAMANCER,
-        THUNDERLORD, SPIRITGUARD, EARTHWARDEN
+    var specialization = Classes.NONE
+        private set
+
+    enum class Classes(val classname: String) {
+        AVENGER("Avenger"), CRUSADER("Crusader"), PROTECTOR("Protector"),
+        BERSERKER("Berserker"), DEFENDER("Defender"), REVENANT("Revenant"),
+        PYROMANCER("Pyromancer"), CRYOMANCER("Cryomancer"), AQUAMANCER("Aquamancer"),
+        THUNDERLORD("Thunderlord"), SPIRITGUARD("Spiritguard"), EARTHWARDEN("Earthwarden"),
+        NONE("NONE"),
     }
 
     init {
@@ -42,6 +46,8 @@ object Player {
             energyGivenCounter = 0
             energyStolenCounter = 0
             energyLostCounter = 0
+
+            specialization = Classes.NONE
         }
 
         EventBus.register<HealingGivenEvent> {
@@ -67,6 +73,10 @@ object Player {
         }
         EventBus.register<EnergyLostEvent> {
             energyLostCounter += it.amount
+        }
+
+        EventBus.register<ClassChangedEvent> {
+            specialization = it.spec
         }
     }
 

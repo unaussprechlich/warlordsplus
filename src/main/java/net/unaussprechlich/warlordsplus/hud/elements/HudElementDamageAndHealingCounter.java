@@ -45,13 +45,13 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement {
             renderStrings.add(EnumChatFormatting.DARK_RED + "Damage Taken: " + Player.INSTANCE.getDamageTakenCounter());
         if (showHealingReceived)
             renderStrings.add(EnumChatFormatting.DARK_GREEN + "Healing Received: " + Player.INSTANCE.getHealingReceivedCounter());
-        if (showEnergyGiven)
+        if (showEnergyGiven && Player.INSTANCE.getSpecialization() == Player.Classes.CRUSADER)
             renderStrings.add(EnumChatFormatting.YELLOW + "Energy Given: " + Player.INSTANCE.getEnergyGivenCounter());
         if (showEnergyReceived)
             renderStrings.add(EnumChatFormatting.YELLOW + "Energy Received: " + Player.INSTANCE.getEnergyReceivedCounter());
         if (showEnergyLost)
             renderStrings.add(EnumChatFormatting.YELLOW + "Energy Lost: " + Player.INSTANCE.getEnergyLostCounter());
-        if (showEnergyStolen)
+        if (showEnergyStolen && Player.INSTANCE.getSpecialization() == Player.Classes.AVENGER)
             renderStrings.add(EnumChatFormatting.YELLOW + "Energy Stolen: " + Player.INSTANCE.getEnergyStolenCounter());
 
 
