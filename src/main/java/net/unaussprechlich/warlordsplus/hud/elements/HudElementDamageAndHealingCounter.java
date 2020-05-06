@@ -1,11 +1,15 @@
 package net.unaussprechlich.warlordsplus.hud.elements;
 
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.event.world.NoteBlockEvent;
+import net.unaussprechlich.warlordsplus.Player;
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager;
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager;
 import net.unaussprechlich.warlordsplus.config.CCategory;
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
+
+import java.util.ArrayList;
 
 public class HudElementDamageAndHealingCounter extends AbstractHudElement{
 
@@ -19,19 +23,15 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement{
 
         //Todo add all the values
 
-        if (ScoreboardManager.INSTANCE.getScoreboardNames().get(4).contains("Crusade")) {
-            String[] damageHealingAndEnergy = new String[3];
-            damageHealingAndEnergy[0] = EnumChatFormatting.RED + "Damage: " + damageCounter;
-            damageHealingAndEnergy[1] = EnumChatFormatting.GREEN + "Healing: " + healingCounter;
-            damageHealingAndEnergy[2] = EnumChatFormatting.YELLOW + "Energy Given: " + energyCounter;
-            //damageAndHealing[3] = EnumChatFormatting.GRAY + "DHP: " + DHP;
-            return damageHealingAndEnergy;
-        } else {
-            String[] damageAndHealing = new String[2];
-            damageAndHealing[0] = EnumChatFormatting.RED + "Damage: " + damageCounter;
-            damageAndHealing[1] = EnumChatFormatting.GREEN + "Healing: " + healingCounter;
-            return damageAndHealing;
-        }
+        ArrayList<String> renderStrings = new ArrayList<>();
+
+        renderStrings.add(EnumChatFormatting.RED + "Damage: " + Player.INSTANCE.getEnergyTakenCounter());
+        renderStrings.add(EnumChatFormatting.GREEN + "Healing: " + Player.INSTANCE.getHealingGivenCounter());
+
+        if (ScoreboardManager.INSTANCE.getScoreboardNames().get(4).contains("Crusade"))
+            renderStrings.add(EnumChatFormatting.YELLOW + "Energy Given: " + Player.INSTANCE.getEnergyGivenCounter());
+
+        return (String[]) renderStrings.toArray();
     }
 
     @Override

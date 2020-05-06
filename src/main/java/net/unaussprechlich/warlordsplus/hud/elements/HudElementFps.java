@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
 
+import java.util.ArrayList;
+
 /**
  * HudElementFps Created by Alexander on 03.05.2020.
  * Description:

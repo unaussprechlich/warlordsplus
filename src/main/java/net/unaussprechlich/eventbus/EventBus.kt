@@ -1,8 +1,5 @@
 package net.unaussprechlich.eventbus
 
-import kotlin.reflect.KClass
-
-
 interface IEvent
 
 

@@ -22,6 +22,10 @@ object Player {
 
     init {
 
+        EventBus.register<HealingGivenEvent> {
+
+        }
+
         EventBus.register<ResetEvent> {
             healingGivenCounter = 0
             damageGivenCounter = 0
