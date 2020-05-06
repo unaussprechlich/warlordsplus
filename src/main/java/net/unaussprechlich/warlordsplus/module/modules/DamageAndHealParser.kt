@@ -24,9 +24,10 @@ object DamageAndHealParser : IModule {
             val textMessage: String = e.message.unformattedText.removeFormatting()
 
             var otherPlayer = ""
+            var amount : Int = 0;
 
             if (textMessage.contains(take)) {
-                val amount = getDamageOrHealthValue(textMessage)
+                amount = getDamageOrHealthValue(textMessage)
                 if (textMessage.contains("'s")) {
                     otherPlayer = textMessage.substring(0, textMessage.indexOf("'s"))
                 } else if (textMessage.contains("You took")) {
