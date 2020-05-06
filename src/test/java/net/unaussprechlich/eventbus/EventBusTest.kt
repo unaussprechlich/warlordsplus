@@ -21,10 +21,10 @@ class EventBusTest {
             println(it)
         }
 
-        EventBus.post(TestEvent(true))
-        EventBus.post(MyThing("Hello"))
+        //EventBus.post(TestEvent(true))
+        //EventBus.post(MyThing("Hello"))
 
-        assertEquals(true  , test)
+        assertEquals(true, test)
     }
 
 }
