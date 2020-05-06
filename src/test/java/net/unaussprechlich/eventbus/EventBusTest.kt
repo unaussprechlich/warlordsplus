@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test
 class EventBusTest {
 
     data class TestEvent(val bool : Boolean) : IEvent
+    data class TestEvent2(val bool : Boolean) : IEvent
 
     @Test
     fun test(){
@@ -14,6 +15,10 @@ class EventBusTest {
 
         EventBus.register<TestEvent> {
             test = it.bool
+        }
+
+        EventBus.register<TestEvent2> {
+            test = false
         }
 
         EventBus.post(TestEvent(true))

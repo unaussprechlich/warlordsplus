@@ -39,7 +39,6 @@ object HealthComponent : AbstractRenderComponent(), IChatConsumer {
 
         drawString(xRight - w + 10, yBottom - 25 - h + 7, "$currentHp/$maxHp")
 
-
         mc.mcProfiler.endSection()
     }
 

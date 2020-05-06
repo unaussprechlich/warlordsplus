@@ -1,56 +1,49 @@
-package net.unaussprechlich.warlordsplus.hud.elements;
+package net.unaussprechlich.warlordsplus.hud.elements
 
-import net.minecraft.client.Minecraft;
-import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
-import net.minecraft.client.network.OldServerPinger;
+import net.minecraft.client.Minecraft
+import net.minecraft.client.network.OldServerPinger
+import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
+import java.net.UnknownHostException
 
-import java.net.UnknownHostException;
-
-public class HudElementPing extends AbstractHudElement {
-
-    private static OldServerPinger serverPinger = new OldServerPinger();
-    private static final int pingCooldwonMs = 1000;
-    private static long nextTimeStamp;
-    private int lastValidPing;
+import kotlinx.coroutines.*
 
 
-    @Override
-    public String[] getRenderString() {
-        if (System.currentTimeMillis() >= nextTimeStamp)
-            updatePing();
-        if (Minecraft.getMinecraft().getCurrentServerData().pingToServer > 0)
-            lastValidPing = (int) Minecraft.getMinecraft().getCurrentServerData().pingToServer;
 
-        return new String[]{"Ping: " + lastValidPing};
+class HudElementPing : AbstractHudElement() {
+    private var lastValidPing = 0
+
+    override fun getRenderString(): Array<String> {
+        if (System.currentTimeMillis() >= nextTimeStamp) updatePing()
+        if (Minecraft.getMinecraft().currentServerData.pingToServer > 0) lastValidPing =
+            Minecraft.getMinecraft().currentServerData.pingToServer.toInt()
+        return arrayOf("Ping: $lastValidPing")
     }
-    //https://github.com/HudPixel/HudPixel/blob/1.8.9_SNAPSHOT/src/main/java/eladkay/hudpixel/modulargui/components/PingAndFpsModularGuiProvider.java
 
-    private static void updatePing() {
+    override fun isVisible(): Boolean {
+        return true
+    }
 
-        nextTimeStamp = System.currentTimeMillis() + pingCooldwonMs;
+    override fun isEnabled(): Boolean {
+        return true
+    }
 
-        //starting external Thread to not block the mainthread
-        new Thread("pingThread") {
-            @Override
-            public void run() {
+    companion object {
+        private val serverPinger = OldServerPinger()
+        private const val pingCooldwonMs = 500
+        private var nextTimeStamp: Long = 0
+
+        private fun updatePing() {
+            nextTimeStamp = System.currentTimeMillis() + pingCooldwonMs
+
+            GlobalScope.launch {
                 try {
-                    if (Minecraft.getMinecraft().getCurrentServerData() != null)
-                        serverPinger.ping(Minecraft.getMinecraft().getCurrentServerData());
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
+                    if (Minecraft.getMinecraft()
+                            .currentServerData != null
+                    ) serverPinger.ping(Minecraft.getMinecraft().currentServerData)
+                } catch (e: UnknownHostException) {
+                    e.printStackTrace()
                 }
             }
-        }.start();
-
-    }
-
-    @Override
-    public boolean isVisible() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+        }
     }
 }

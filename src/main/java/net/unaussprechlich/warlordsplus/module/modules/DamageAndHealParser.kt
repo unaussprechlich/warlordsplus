@@ -34,6 +34,7 @@ object DamageAndHealParser : IModule {
                 you can post it on the EventBus:
                     EventBus.post(HealingTakenEvent(1341, true, "AquaMain"))
                     EventBus.post(EnergyTakenEvent(21, "CrusaderMain"))
+                    JAVA: EventBus.INSTANCE.post(EnergyTakenEvent.class, new EnergyTakenEvent(21, "CrusaderMain"))
                 If you wanna subscribe to a event in any other class just do:
                     EventBus.register<HealingTakenEvent>{
                         // "it" represents the data object
@@ -41,6 +42,12 @@ object DamageAndHealParser : IModule {
                         println(it.isCrit) //true
                         println(it.player) //AquaMain
                     }
+                    JAVA: EventBus.INSTANCE.register(HealingTakenEvent.class, event -> {
+                        println(event.getAmount()); //1341
+                        println(event.isCrit()); //true
+                        println(event.getPlayer()); //AquaMain
+                        return null:
+                    })
 
              */
 

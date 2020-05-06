@@ -36,10 +36,6 @@ public class HudManager extends FancyGui implements IModule {
         hudElements.add(new HudElementKillParticipation());
         hudElements.add(new HudElementTotalKills());
 
-        EventBus.INSTANCE.register(ResetEvent.class, t -> {
-
-            return null;
-        });
     }
 
     public static HudManager INSTANCE(){
