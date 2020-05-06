@@ -23,7 +23,6 @@ object DamageAndHealParser : IModule {
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
 
-
             var otherPlayer = ""
             var amount = 0
 
@@ -36,7 +35,7 @@ object DamageAndHealParser : IModule {
                 } else {
                     otherPlayer = textMessage.substring(0, textMessage.indexOf(" hit"))
                 }
-                //println(otherPlayer)
+
             } else if (textMessage.contains(give)) {
 
             }
@@ -72,7 +71,7 @@ object DamageAndHealParser : IModule {
             //    EventBus.post(HealingGivenEvent(1243, false, "Test"))
 
         } catch (throwable: Throwable) {
-            throwable.printStackTrace()
+
         }
     }
 
@@ -82,7 +81,7 @@ object DamageAndHealParser : IModule {
             if (!m.find()) return 0
             return m.group().replace(" ", "").toInt()
         } catch (e: Exception) {
-            print("Failed to extract damage from this message: $message")
+           println("Failed to extract damage from this message: $message")
         }
         return 0
     }
