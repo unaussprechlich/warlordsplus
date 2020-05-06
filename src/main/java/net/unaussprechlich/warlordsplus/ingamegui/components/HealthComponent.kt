@@ -3,7 +3,9 @@ package net.unaussprechlich.warlordsplus.ingamegui.components
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
+import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
+import net.unaussprechlich.warlordsplus.module.ResetEvent
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import net.unaussprechlich.warlordsplus.util.fdiv
 import net.unaussprechlich.warlordsplus.util.removeFormatting
@@ -15,6 +17,13 @@ object HealthComponent : AbstractRenderComponent(), IChatConsumer {
 
     private var maxHp = 0
     private var currentHp = 0
+
+    init {
+        EventBus.register<ResetEvent> {
+            maxHp = 0
+            currentHp = 0
+        }
+    }
 
     override fun render(e: RenderGameOverlayEvent.Post){
         val mc = Minecraft.getMinecraft()
