@@ -31,7 +31,7 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement{
         if (ScoreboardManager.INSTANCE.getScoreboardNames().get(4).contains("Crusade"))
             renderStrings.add(EnumChatFormatting.YELLOW + "Energy Given: " + Player.INSTANCE.getEnergyGivenCounter());
 
-        return (String[]) renderStrings.toArray();
+        return renderStrings.toArray(new String[0]);
     }
 
     @Override

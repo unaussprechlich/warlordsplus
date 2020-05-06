@@ -23,15 +23,14 @@ object KillAssistParser : IModule {
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
 
-            println()
-
-            EventBus.post(KillEvent("unaussprechlich", "sumSmash"))
-
             /* TODO @ebic
-                Extract from each textMessage:
+                [ ] Extract from each textMessage:
                     - Kills
                     - assists
                     - deaths
+                [ ] Make Events
+                [ ] Add a Hud
+                [ ] Add options for Hud
              */
 
         } catch (throwable: Throwable) {
