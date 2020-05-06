@@ -69,6 +69,13 @@ public class HudElementTotalKills extends AbstractHudElement implements IUpdateC
             else if (team == TeamEnum.BLUE)
                 redKills++;
         }
+
+        if (message.contains("You assisted in killing")) {
+            if (team == TeamEnum.RED)
+                redKills++;
+            else if (team == TeamEnum.BLUE)
+                blueKills++;
+        }
     }
 
     @Override

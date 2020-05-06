@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.hud;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -31,6 +32,7 @@ public class HudManager extends FancyGui implements IModule, IResetConsumer {
         hudElements.add(new HudElementFps());
         hudElements.add(new HudElementPing());
         hudElements.add(new HudElementRespawnTimer());
+        hudElements.add(new HudElementRegenTimer());
         hudElements.add(new HudElementDamageAndHealingCounter());
         hudElements.add(new HudElementKillParticipation());
         hudElements.add(new HudElementTotalKills());
@@ -85,9 +87,9 @@ public class HudManager extends FancyGui implements IModule, IResetConsumer {
         }
 
     }
-
     @Override
     public void reset() {
+
         for (AbstractHudElement hudElement : hudElements) {
             if(hudElement instanceof IResetConsumer){
                 ((IResetConsumer) hudElement).reset();
