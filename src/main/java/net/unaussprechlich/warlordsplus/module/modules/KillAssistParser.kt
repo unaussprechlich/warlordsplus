@@ -29,30 +29,9 @@ object KillAssistParser : IModule {
 
             /* TODO @ebic
                 Extract from each textMessage:
-                    - if it was given or taken
-                    - the amount
-                    - the other player
-                    - OPTIONAL: also add what damaged you: wounding strike, ...
-                Also account for the void, intervene, spritshit, ...
-                If a event does't exist yet, you can create a new data class extending IEvent below
-                If you have successfully extracted all the required data,
-                you can post it on the EventBus:
-                    EventBus.post(HealingTakenEvent(1341, true, "AquaMain"))
-                    EventBus.post(EnergyTakenEvent(21, "CrusaderMain"))
-                    JAVA: EventBus.INSTANCE.post(EnergyTakenEvent.class, new EnergyTakenEvent(21, "CrusaderMain"))
-                If you wanna subscribe to a event in any other class just do:
-                    EventBus.register<HealingTakenEvent>{
-                        // "it" represents the data object
-                        println(it.amount) //1341
-                        println(it.isCrit) //true
-                        println(it.player) //AquaMain
-                    }
-                    JAVA: EventBus.INSTANCE.register(HealingTakenEvent.class, event -> {
-                        println(event.getAmount()); //1341
-                        println(event.isCrit()); //true
-                        println(event.getPlayer()); //AquaMain
-                        return null:
-                    })
+                    - Kills
+                    - assists
+                    - deaths
              */
 
         } catch (throwable: Throwable) {
