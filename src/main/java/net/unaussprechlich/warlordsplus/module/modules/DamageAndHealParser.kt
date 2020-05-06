@@ -21,15 +21,28 @@ object DamageAndHealParser : IModule {
     fun onChatMessage(e: ClientChatReceivedEvent) {
         if(GameStateManager.notIngame) return
         try {
-
-
             val textMessage: String = e.message.unformattedText.removeFormatting()
 
+            var otherPlayer = ""
+
+            if (textMessage.contains(take)) {
+                val amount = getDamageOrHealthValue(textMessage)
+                if (textMessage.contains("'s")) {
+                    otherPlayer = textMessage.substring(0, textMessage.indexOf("'s"))
+                } else if (textMessage.contains("You took")) {
+                    otherPlayer = "EXTERNAL"
+                } else {
+                    otherPlayer = textMessage.substring(0, textMessage.indexOf(" hit"))
+                }
+                println(otherPlayer)
+            } else if (textMessage.contains(give)) {
+
+            }
             /* TODO @ebic
                 Extract from each textMessage:
-                    - if it was given or taken
-                    - the amount
-                    - the other player
+                    + if it was given or taken
+                    + the amount
+                    + the other player
                     - OPTIONAL: also add what damaged you: wounding strike, ...
                 Also account for the void, intervene, spritshit, ...
                 If a event does't exist yet, you can create a new data class extending IEvent below
@@ -53,8 +66,8 @@ object DamageAndHealParser : IModule {
                     })
              */
 
-            if(true)
-                EventBus.post(HealingGivenEvent(1243, false, "Test"))
+            //if(true)
+            //    EventBus.post(HealingGivenEvent(1243, false, "Test"))
 
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
