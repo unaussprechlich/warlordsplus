@@ -1,72 +1,23 @@
 package net.unaussprechlich.warlordsplus.hud.elements;
 
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.unaussprechlich.eventbus.EventBus;
-import net.unaussprechlich.warlordsplus.module.ResetEvent;
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager;
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager;
 import net.unaussprechlich.warlordsplus.config.CCategory;
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
-import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
 
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class HudElementDamageAndHealingCounter extends AbstractHudElement implements IChatConsumer{
-
-    public static final String take = "\u00AB";
-    public static final String give = "\u00BB";
-    public static final String healing = " healed ";
-    public static final String absorption = " absorbed ";
-    public static final String energy = " energy.";
-    private int DHP = 0;
-    private int healingCounter = 0;
-    private int damageCounter = 0;
-    private int energyCounter = 0;
+public class HudElementDamageAndHealingCounter extends AbstractHudElement{
 
     @ConfigPropertyBoolean(category = CCategory.HUD, id = "showDHCounter", comment = "Enable or disable the Healing counter", def = true)
     public static boolean enabled = false;
 
-    public HudElementDamageAndHealingCounter(){
-        EventBus.INSTANCE.register(ResetEvent.class, resetEvent -> {
-            damageCounter = 0;
-            healingCounter = 0;
-            energyCounter = 0;
-            return null;
-        });
-    }
-
-    public static int getDamageOrHealthValue(String message) {
-        //OG HudPixel CODE :)
-        try {
-            message = message.replace("!", "");
-
-            Pattern p = Pattern.compile("\\s[0-9]+\\s");
-            Matcher m = p.matcher(message);
-
-            if (!m.find()) {
-                return 0;
-            }
-
-            String result = m.group();
-
-            if (m.find()) {
-                result = m.group();
-            }
-
-            return Integer.parseInt(result.replace(" ", ""));
-        } catch (Exception e) {
-            System.out.print("Failed to extract damage from this message: " + message);
-        }
-
-        return 0;
-    }
+    //Todo make config for all the values
 
     @Override
     public String[] getRenderString() {
+
+        //Todo add all the values
 
         if (ScoreboardManager.INSTANCE.getScoreboardNames().get(4).contains("Crusade")) {
             String[] damageHealingAndEnergy = new String[3];
@@ -80,31 +31,6 @@ public class HudElementDamageAndHealingCounter extends AbstractHudElement implem
             damageAndHealing[0] = EnumChatFormatting.RED + "Damage: " + damageCounter;
             damageAndHealing[1] = EnumChatFormatting.GREEN + "Healing: " + healingCounter;
             return damageAndHealing;
-        }
-    }
-
-    @Override
-    public void onChat(ClientChatReceivedEvent e) {
-
-        String textMessage = e.message.getUnformattedText();
-
-        if (textMessage.contains("Your Crusader's Strike gave ")) {
-            int pos = textMessage.indexOf(" energy") - 2;
-            String energyAmount = textMessage.substring(pos, pos + 2);
-            this.energyCounter += Integer.parseInt(energyAmount);
-        }
-
-        if (textMessage.startsWith(give)) {
-
-            if (textMessage.contains(healing)) {
-                this.healingCounter += getDamageOrHealthValue(textMessage);
-                this.DHP += getDamageOrHealthValue(textMessage);
-            }
-
-            if (!textMessage.contains(absorption) && !textMessage.contains(healing)) {
-                this.damageCounter += getDamageOrHealthValue(textMessage);
-                this.DHP += getDamageOrHealthValue(textMessage);
-            }
         }
     }
 

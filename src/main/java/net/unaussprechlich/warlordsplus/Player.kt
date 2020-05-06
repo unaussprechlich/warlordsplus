@@ -29,11 +29,10 @@ object Player {
             //...
         }
 
+        //Todo subscribe to all the Damage Events
         EventBus.register<HealingGivenEvent> {
             healingGivenCounter += it.amount
         }
-
-
     }
 
 
