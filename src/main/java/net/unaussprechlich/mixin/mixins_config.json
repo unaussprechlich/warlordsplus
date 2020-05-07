@@ -1,7 +1,0 @@
-{
-  "package": "net.unaussprechlich.asm",
-  "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "MixinMinecraft"
-  ]
-}
