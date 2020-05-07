@@ -9,7 +9,7 @@ import net.unaussprechlich.warlordsplus.util.*
 import java.util.*
 import java.util.regex.Pattern
 
-
+//TODO [ ] find out/think about what spec they are playing :) Just write a comment with some ideas
 open class Player(val name: String, val uuid : UUID) {
 
     var kills: Int = 0
@@ -28,33 +28,10 @@ open class Player(val name: String, val uuid : UUID) {
 
     var level = 0
 
-
-    /*
-    TODO
-     [ ] add a bunch of fields like
-        - kills
-        - deaths
-        - healingProvided
-        - damageDoneToYou
-        - energyGiven
-        - killedYouXTimes
-        - ...
-     [ ] make a enum to determine their Team and store it in a field
-     */
-
-    //TODO(BONUS) [ ] find out/think about what spec they are playing :)
-
-    init{
-        /*
-    TODO
-     [ ] register the KillEvent and check it against this Player
-     [ ] register the Damage/Healing/... Event and check it against this Player
-     */
-
-    }
 }
 
 private val numberPattern = Pattern.compile("[0-9]{2}")
+
 
 object Players : IModule{
 
@@ -117,8 +94,7 @@ object Players : IModule{
             player.warlord = WarlordsEnum.values().first { w -> it.playerTeam.colorPrefix has w.shortName }
 
             val m = numberPattern.matcher(it.playerTeam.colorSuffix.removeFormatting())
-            player.level = if (!m.find()) 0
-            else  m.group().toInt()
+            player.level = if (!m.find()) 0 else m.group().toInt()
 
             player.team = TeamEnum.values().first{ t -> it.playerTeam.colorPrefix.contains(t.color.toString())}
 

@@ -31,8 +31,6 @@ object ScoreboardComponent : AbstractRenderComponent(){
         val yStart = 30
         val xStart = xCenter - (w /2)
 
-
-
         drawRect(xStart, yStart, w, 13, Color(34, 34, 39, 200))
         drawCenteredString(xStart, 30, w, "Scoreboard")
 

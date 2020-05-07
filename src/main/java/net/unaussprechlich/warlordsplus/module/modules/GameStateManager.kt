@@ -18,6 +18,10 @@ object GameStateManager : IModule{
         get() = !isIngame
         private set
 
+    init {
+
+    }
+
     @SubscribeEvent
     fun onClientTick(event: ClientTickEvent) {
         val ingame = (scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))

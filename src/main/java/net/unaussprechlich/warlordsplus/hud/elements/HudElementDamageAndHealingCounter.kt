@@ -18,7 +18,6 @@ import java.util.*
 class HudElementDamageAndHealingCounter : AbstractHudElement() {
     override fun getRenderString(): Array<String> {
 
-        //Todo add all the values
         val renderStrings = ArrayList<String>()
         if (showDamageDone)
             renderStrings.add(EnumChatFormatting.RED.toString() + "Damage: " + damageDoneCounter)
