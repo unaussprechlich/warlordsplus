@@ -21,7 +21,7 @@ object WhoIsWinningComponent : AbstractRenderComponent(), IUpdateConsumer {
     var redFlag = ""
     var blueFlag = ""
 
-    override fun render(e: RenderGameOverlayEvent.Post){
+    override fun render(e: RenderGameOverlayEvent.Pre){
 
         val vsWidth = getTextWidth(timeToWin) + 12
         val pWidth  = getTextWidth(pointsToWin.toString()) + 20

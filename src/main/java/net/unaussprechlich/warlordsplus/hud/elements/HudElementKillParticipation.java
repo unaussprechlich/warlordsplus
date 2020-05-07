@@ -6,6 +6,7 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager;
+import net.unaussprechlich.warlordsplus.util.TeamEnum;
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer;
 
@@ -26,10 +27,6 @@ public class HudElementKillParticipation extends AbstractHudElement implements I
                 team = TeamEnum.NONE;
             }
         }
-    }
-
-    enum TeamEnum {
-        BLUE, RED, NONE
     }
 
     @Override

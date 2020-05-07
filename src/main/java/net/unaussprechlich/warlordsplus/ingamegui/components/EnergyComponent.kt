@@ -19,7 +19,7 @@ object EnergyComponent : AbstractRenderComponent(),  IUpdateConsumer {
         }
     }
 
-    override fun render(e: RenderGameOverlayEvent.Post) {
+    override fun render(e: RenderGameOverlayEvent.Pre) {
         mc.mcProfiler.startSection("expBar")
 
         val h = 20

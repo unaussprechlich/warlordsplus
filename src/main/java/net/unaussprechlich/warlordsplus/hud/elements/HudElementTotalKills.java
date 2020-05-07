@@ -6,6 +6,7 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager;
+import net.unaussprechlich.warlordsplus.util.TeamEnum;
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer;
 
@@ -14,11 +15,6 @@ public class HudElementTotalKills extends AbstractHudElement implements IUpdateC
     TeamEnum team = TeamEnum.NONE;
     private int redKills = 0;
     private int blueKills = 0;
-
-
-    enum TeamEnum {
-        BLUE, RED, NONE
-    }
 
     @Override
     public String[] getRenderString() {

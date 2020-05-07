@@ -2,15 +2,16 @@ package net.unaussprechlich.warlordsplus.ingamegui
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiChat
-import net.minecraftforge.client.GuiIngameForge
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.*
 import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.warlordsplus.ingamegui.components.EnergyComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.HealthComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.WhoIsWinningComponent
+import net.unaussprechlich.warlordsplus.ingamegui.components.scoreboard.ScoreboardComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.skills.*
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
@@ -33,6 +34,7 @@ object IngameGuiManager : IModule{
             add(YellowThingyComponent)
             add(HorseComponent)
             add(WhoIsWinningComponent)
+            add(ScoreboardComponent)
         }
 
     }
@@ -40,50 +42,63 @@ object IngameGuiManager : IModule{
     @SubscribeEvent
     fun onTick(e : TickEvent.ClientTickEvent){
         if(GameStateManager.isIngame){
-
             components.filter { it is IUpdateConsumer }.forEach{
                 (it as IUpdateConsumer).update()
             }
-
-            GuiIngameForge.renderHelmet = false
-            GuiIngameForge.renderPortal = false
-            GuiIngameForge.renderHotbar = false
-            GuiIngameForge.renderBossHealth = false
-            GuiIngameForge.renderHealth = false
-            GuiIngameForge.renderArmor = false
-            GuiIngameForge.renderFood = false
-            GuiIngameForge.renderHealthMount = false
-            GuiIngameForge.renderExperiance = false
-            GuiIngameForge.renderJumpBar = false
-            GuiIngameForge.renderObjective = false
-
-        } else {
-            GuiIngameForge.renderHelmet = true
-            GuiIngameForge.renderPortal = true
-            GuiIngameForge.renderHotbar = true
-            GuiIngameForge.renderBossHealth = true
-            GuiIngameForge.renderHealth = true
-            GuiIngameForge.renderArmor = true
-            GuiIngameForge.renderFood = true
-            GuiIngameForge.renderHealthMount = true
-            GuiIngameForge.renderExperiance = true
-            GuiIngameForge.renderJumpBar = true
-            GuiIngameForge.renderObjective = true
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGH, receiveCanceled = true)
+    fun render(e : RenderGameOverlayEvent.Pre){
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    fun render(e : RenderGameOverlayEvent.Post) : Boolean{
-        if(GameStateManager.notIngame) return false
-        if(Minecraft.getMinecraft().currentScreen is GuiChat) return false
+        if(GameStateManager.notIngame) return
+        if(Minecraft.getMinecraft().currentScreen is GuiChat) return
 
-        if(e.type == RenderGameOverlayEvent.ElementType.ALL)
-            components.forEach{
-                it.render(e)
+        when(e.type){
+            PLAYER_LIST -> {
+                ScoreboardComponent.render(e)
+                e.isCanceled = true
+            }
+            BOSSHEALTH -> {
+                //e.isCanceled = true
+            }
+            ARMOR -> {
+                //e.isCanceled = true
+            }
+            HEALTH -> {
+                //e.isCanceled = true
+            }
+            FOOD -> {
+                //e.isCanceled = true
+            }
+            HOTBAR -> {
+                //RedThingyComponent.render(e)
+                //PurpleThingyComponent.render(e)
+                //BlueThingyComponent.render(e)
+                //YellowThingyComponent.render(e)
+                //e.isCanceled = true
+            }
+            EXPERIENCE -> {
+                //EnergyComponent.render(e)
+                //e.isCanceled = true
+            }
+            TEXT -> {
+                //e.isCanceled = true
+            }
+            HEALTHMOUNT -> {
+                //e.isCanceled = true
+            }
+            JUMPBAR -> {
+                //e.isCanceled = true
+            }
+            CHAT -> {
+                //e.isCanceled = true
             }
 
-        return false
+            else -> return
+        }
+
+        return
     }
 
     @SubscribeEvent

@@ -1,11 +1,13 @@
 package net.unaussprechlich.warlordsplus
 
+import net.minecraft.client.Minecraft
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.module.ResetEvent
 import net.unaussprechlich.warlordsplus.module.modules.*
+import net.unaussprechlich.warlordsplus.util.SpecsEnum
 
 
-object Player {
+object ThePlayer{
 
     var healingGivenCounter = 0
         private set
@@ -24,16 +26,8 @@ object Player {
     var energyLostCounter = 0
         private set
 
-    var specialization = Classes.NONE
-        private set
+    var spec : SpecsEnum = SpecsEnum.NONE
 
-    enum class Classes(val classname: String) {
-        AVENGER("Avenger"), CRUSADER("Crusader"), PROTECTOR("Protector"),
-        BERSERKER("Berserker"), DEFENDER("Defender"), REVENANT("Revenant"),
-        PYROMANCER("Pyromancer"), CRYOMANCER("Cryomancer"), AQUAMANCER("Aquamancer"),
-        THUNDERLORD("Thunderlord"), SPIRITGUARD("Spiritguard"), EARTHWARDEN("Earthwarden"),
-        NONE("NONE"),
-    }
 
     init {
 
@@ -47,7 +41,7 @@ object Player {
             energyStolenCounter = 0
             energyLostCounter = 0
 
-            specialization = Classes.NONE
+            spec = SpecsEnum.NONE
         }
 
         EventBus.register<HealingGivenEvent> {
@@ -76,7 +70,7 @@ object Player {
         }
 
         EventBus.register<ClassChangedEvent> {
-            specialization = it.spec
+            spec = it.spec
         }
     }
 

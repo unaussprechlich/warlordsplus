@@ -1,16 +1,14 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraft.util.EnumChatFormatting
-import net.unaussprechlich.warlordsplus.Player
-import net.unaussprechlich.warlordsplus.Player.damageDoneCounter
-import net.unaussprechlich.warlordsplus.Player.damageTakenCounter
-import net.unaussprechlich.warlordsplus.Player.energyGivenCounter
-import net.unaussprechlich.warlordsplus.Player.energyLostCounter
-import net.unaussprechlich.warlordsplus.Player.energyReceivedCounter
-import net.unaussprechlich.warlordsplus.Player.energyStolenCounter
-import net.unaussprechlich.warlordsplus.Player.healingGivenCounter
-import net.unaussprechlich.warlordsplus.Player.healingReceivedCounter
-import net.unaussprechlich.warlordsplus.Player.specialization
+import net.unaussprechlich.warlordsplus.ThePlayer.damageDoneCounter
+import net.unaussprechlich.warlordsplus.ThePlayer.damageTakenCounter
+import net.unaussprechlich.warlordsplus.ThePlayer.energyGivenCounter
+import net.unaussprechlich.warlordsplus.ThePlayer.energyLostCounter
+import net.unaussprechlich.warlordsplus.ThePlayer.energyReceivedCounter
+import net.unaussprechlich.warlordsplus.ThePlayer.energyStolenCounter
+import net.unaussprechlich.warlordsplus.ThePlayer.healingGivenCounter
+import net.unaussprechlich.warlordsplus.ThePlayer.healingReceivedCounter
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement

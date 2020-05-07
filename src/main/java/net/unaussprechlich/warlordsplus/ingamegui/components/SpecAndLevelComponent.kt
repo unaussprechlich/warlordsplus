@@ -6,7 +6,7 @@ import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
 
 object SpecAndLevelComponent : AbstractRenderComponent() {
 
-    override fun render(e: RenderGameOverlayEvent.Post) {
+    override fun render(e: RenderGameOverlayEvent.Pre) {
         //TODO("Render What spec you are Playing and What level You are")
     }
 

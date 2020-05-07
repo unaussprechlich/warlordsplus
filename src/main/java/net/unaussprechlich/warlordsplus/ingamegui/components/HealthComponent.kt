@@ -25,7 +25,7 @@ object HealthComponent : AbstractRenderComponent(), IChatConsumer {
         }
     }
 
-    override fun render(e: RenderGameOverlayEvent.Post){
+    override fun render(e: RenderGameOverlayEvent.Pre){
         val mc = Minecraft.getMinecraft()
         mc.mcProfiler.startSection("health")
 

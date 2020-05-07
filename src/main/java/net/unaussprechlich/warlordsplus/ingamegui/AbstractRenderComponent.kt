@@ -6,6 +6,6 @@ import net.unaussprechlich.warlordsplus.util.FancyGui
 
 abstract class AbstractRenderComponent : FancyGui() {
 
-    abstract fun render(e: RenderGameOverlayEvent.Post)
+    abstract fun render(e: RenderGameOverlayEvent.Pre)
 
 }

@@ -23,7 +23,7 @@ abstract class AbstractSkillComponent(
         if (meta > 0) itemStack.itemDamage = meta
     }
 
-    override fun render(e: RenderGameOverlayEvent.Post) {
+    override fun render(e: RenderGameOverlayEvent.Pre) {
 
         if(thePlayer!!.inventory == null || thePlayer!!.inventory.getStackInSlot(slot) == null) return
 

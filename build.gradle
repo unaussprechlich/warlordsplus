@@ -9,9 +9,14 @@ buildscript {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
+        maven {
+            name = 'sponge'
+            url = 'https://repo.spongepowered.org/maven'
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -24,6 +29,7 @@ configurations {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'kotlin'
 apply plugin: 'java'
+apply plugin: 'org.spongepowered.mixin'
 
 sourceCompatibility = targetCompatibility = "1.8"
 compileJava.options.encoding = 'UTF-8'
@@ -43,6 +49,13 @@ minecraft {
 dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
 
+    embed('org.spongepowered:mixin:0.8-SNAPSHOT') {
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+    }
+
     embed "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     embed "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     embed "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5"
@@ -54,6 +67,10 @@ dependencies {
 repositories {
     mavenCentral()
     jcenter()
+    maven {
+        name = 'sponge'
+        url = 'https://repo.spongepowered.org/maven/'
+    }
 }
 
 test {
@@ -91,13 +108,22 @@ processResources {
 
 jar {
     dependsOn configurations.compile
+
+    manifest {
+        attributes 'FMLCorePlugin': 'net.unaussprechlich.mixin.MixinLoadingPlugin'
+        attributes 'FMLCorePluginContainsMod': 'true'
+        attributes 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker'
+        attributes 'TweakOrder': 0
+        attributes 'MixinConfigs': 'net/unaussprechlich/mixin/mixins_config.json'
+    }
+
     from {
         configurations.embed.collect {
             it.isDirectory() ? it : zipTree(it)
         }
     }
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
 idea { module { inheritOutputDirs = true; } }

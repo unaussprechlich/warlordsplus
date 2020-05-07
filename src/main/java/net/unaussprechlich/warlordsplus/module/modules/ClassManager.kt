@@ -2,9 +2,10 @@ package net.unaussprechlich.warlordsplus.module.modules
 
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
-import net.unaussprechlich.warlordsplus.Player
+import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.ResetEvent
+import net.unaussprechlich.warlordsplus.util.SpecsEnum
 import net.unaussprechlich.warlordsplus.util.has
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
@@ -14,7 +15,7 @@ object ClassManager : IModule {
         EventBus.register<ResetEvent> {
 
             ScoreboardManager.scoreboardNames.forEach { sc ->
-                Player.Classes.values().forEach {
+                SpecsEnum.values().forEach {
                     if(sc.removeFormatting() has it.classname){
                         EventBus.post(ClassChangedEvent(it))
                         return@register
@@ -26,5 +27,5 @@ object ClassManager : IModule {
 }
 
 data class ClassChangedEvent(
-    val spec: Player.Classes
+    val spec: SpecsEnum
 ) : IEvent

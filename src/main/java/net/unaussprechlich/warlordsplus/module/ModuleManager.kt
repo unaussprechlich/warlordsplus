@@ -7,6 +7,7 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler
 import net.unaussprechlich.warlordsplus.hud.HudManager
+import net.unaussprechlich.warlordsplus.ingamegui.IngameGuiManager
 import net.unaussprechlich.warlordsplus.module.modules.*
 
 
@@ -24,7 +25,7 @@ object ModuleManager {
             add(KillAssistParser)
             add(Meme)
             add(HudManager.INSTANCE())
-            //add(IngameGuiManager)
+            add(IngameGuiManager)
         }
     }
 

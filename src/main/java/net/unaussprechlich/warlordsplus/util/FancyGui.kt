@@ -43,6 +43,11 @@ open class FancyGui : Gui() {
                 else scale
             }
 
+        val Gui.width: Int
+            get() = scaledMcWidth
+        val Gui.height: Int
+            get() = scaledMcHeight
+
         val Gui.displayWith: Int
             get() = mc.displayWidth
 
@@ -93,18 +98,22 @@ open class FancyGui : Gui() {
             GlStateManager.disableBlend()
         }
 
-        fun Gui.drawRectangle(xStart : Int, yStart : Int, size : Int, color : Color){
+        fun Gui.drawRectangle(xStart : Int, yStart : Int, size : Int, color : Color) =
             drawRect(xStart, yStart, size, size, color)
-        }
 
-        fun Gui.drawRect(xStart : Int, yStart : Int, width : Int, height : Int, color : Color){
+
+        fun Gui.drawRect(xStart : Int, yStart : Int, width : Int, height : Int, color : Color) =
             Gui.drawRect(xStart, yStart, xStart + width, yStart + height, color.convertToArgb())
+
+
+        fun Gui.drawCenteredString(xStart: Int, yStart: Int, width: Int, text : String, shadow: Boolean = false){
+            if(shadow) fontRenderer.drawStringWithShadow(text, xStart + ((width - getTextWidth(text)) / 2) + 0f, yStart + 3f, 0xffffff)
+            fontRenderer.drawString(text, xStart + ((width - getTextWidth(text)) / 2), yStart + 3, 0xffffff)
         }
 
         fun Gui.drawCenteredStringWithBox(xStart: Int, yStart: Int, width: Int, text : String, color : Color, shadow: Boolean = false){
             drawRect(xStart, yStart, width, 13, color)
-            if(shadow) fontRenderer.drawStringWithShadow(text, xStart + ((width - getTextWidth(text)) / 2) + 0f, yStart + 3f, 0xffffff)
-            fontRenderer.drawString(text, xStart + ((width - getTextWidth(text)) / 2), yStart + 3, 0xffffff)
+            drawCenteredString(xStart, yStart, width, text, shadow)
         }
 
         fun Gui.drawStringWithBox(xStart: Int, yStart: Int, text : String, color : Color, shadow: Boolean = false){
