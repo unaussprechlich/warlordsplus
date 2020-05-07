@@ -1,11 +1,13 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
+import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.removeFormatting
+import scala.collection.parallel.ParIterableLike
 import java.util.regex.Pattern
 
 private const val take = "\u00AB"
@@ -22,6 +24,20 @@ object KillAssistParser : IModule {
         if(GameStateManager.notIngame) return
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
+            var player: String = "";
+            var deathPlayer: String = "";
+
+            if (textMessage.contains("was killed by")) {
+                player = textMessage.substring(textMessage.indexOf("by") + 3);
+                deathPlayer = textMessage.substring(0, textMessage.indexOf("was") - 1);
+            }
+
+            if (textMessage.contains("You were killed")) {
+                player = textMessage.substring(textMessage.indexOf("by" + 3))
+                deathPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
+            }
+
+            EventBus.post(KillEvent(player, deathPlayer));
 
             /* TODO @ebic
                 [ ] Extract from each textMessage:
