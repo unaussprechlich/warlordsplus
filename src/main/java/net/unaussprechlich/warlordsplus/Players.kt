@@ -94,7 +94,9 @@ object Players : IModule{
             player.warlord = WarlordsEnum.values().first { w -> it.playerTeam.colorPrefix has w.shortName }
 
             val m = numberPattern.matcher(it.playerTeam.colorSuffix.removeFormatting())
-            player.level = if (!m.find()) 0 else m.group().toInt()
+            player.level = if (!m.find()) 0 else {
+                m.group().toInt()
+            }
 
             player.team = TeamEnum.values().first{ t -> it.playerTeam.colorPrefix.contains(t.color.toString())}
 

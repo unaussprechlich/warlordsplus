@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.ingamegui.components.scoreboard
 
+import net.minecraft.client.Minecraft
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.unaussprechlich.warlordsplus.Players
@@ -8,12 +9,14 @@ import net.unaussprechlich.warlordsplus.util.TeamEnum
 import org.lwjgl.util.Color
 
 
-object ScoreboardComponent : AbstractRenderComponent(){
+object ScoreboardComponent : AbstractRenderComponent() {
+
+    var team = TeamEnum.NONE
 
     override fun render(e: RenderGameOverlayEvent.Pre) {
-        try{
+        try {
             renderPlayerlist()
-        } catch( e : Throwable){
+        } catch (e: Throwable) {
             e.printStackTrace()
         }
 
@@ -21,49 +24,95 @@ object ScoreboardComponent : AbstractRenderComponent(){
 
     fun renderPlayerlist() {
 
-        if(thePlayer == null) return
+        if (thePlayer == null) return
+
+        if (Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A7c")) {
+            team = TeamEnum.RED
+        } else if (Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A79")) {
+            team = TeamEnum.BLUE
+        } else {
+            team = TeamEnum.NONE
+        }
 
         val players = Players.getPlayersForNetworkPlayers(thePlayer!!.sendQueue.playerInfoMap)
         val teamBlue = players.filter { it.team == TeamEnum.BLUE }
         val teamRed = players.filter { it.team == TeamEnum.RED }
 
-        val w = 450
-        val yStart = 30
-        val xStart = xCenter - (w /2)
+        val spacing = 40
+
+        val w = 400
+
+        val yStart = 20
+        val xStart = xCenter - (w / 2)
+        val w2 = xCenter - 10
+
+        val xLevel = xStart + 2
+        val xKills = w2
+        val xDeaths = w2 + spacing
+        //val xRatio = w2 + spacing/3
+        val xDone = w2 + spacing * 2
+        val xReceived = w2 + spacing * 3
+        //val xHealingDone = w2 + spacing * 2
+        //val xHealingReceived = w2 + spacing * 3
+        //val xDamageDone =w2 + spacing * 4
+        //val xDamageReceived = w2 + spacing * 5
 
         drawRect(xStart, yStart, w, 13, Color(34, 34, 39, 200))
-        drawCenteredString(xStart, 30, w, "Scoreboard")
+        //drawCenteredString(xStart, 30, w, "Scoreboard")
+        drawString(xLevel, yStart + 3, "Class Lvl  Name", false)
+        drawString(xKills - spacing / 5, yStart + 3, "Kills", false)
+        drawString(xDeaths - spacing / 4, yStart + 3, "Deaths", false)
+        drawString(xDone - spacing / 5, yStart + 3, "Given", false)
+        drawString(xReceived - spacing / 3, yStart + 3, "Received", false)
+
 
         var offset = 0
-        val spacing = 35
 
-        drawRect(xStart, yStart + 15, w, 12 * teamBlue.size, Color(34, 34, 39, 100) )
-        for (p in teamBlue){
 
-            drawString(xStart + 2, yStart + 17 + offset,
-                    "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
-                            "${p.warlord.shortName + EnumChatFormatting.RESET} Lv${p.level}  " +
-                            "${p.team.color}${p.name} "
+
+        drawRect(xStart, yStart + 15, w, 12 * teamBlue.size, Color(34, 34, 39, 100))
+        for (p in teamBlue) {
+
+            drawString(
+                xLevel, yStart + 17 + offset,
+                "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
+                        "${p.warlord.shortName + EnumChatFormatting.RESET}  Lv${p.level}  " +
+                        "${p.team.color}${p.name} "
             )
-            drawString(xStart + 150 , yStart + 17 + offset,
-                    "${p.kills}"
+            drawString(
+                xKills, yStart + 17 + offset,
+                "${p.kills}"
             )
-            drawString(xStart + 170, yStart + 17 + offset,
-                    "${p.deaths}"
+
+            drawString(
+                xDeaths, yStart + 17 + offset,
+                "${p.deaths}"
             )
-            drawString(xStart + 190, yStart + 17 + offset,
+
+            //if player is on blue display only healing
+            if (team == TeamEnum.BLUE) {
+                drawString(
+                    xDone, yStart + 17 + offset,
                     "${EnumChatFormatting.GREEN}${p.healingDone}"
-            )
+                )
 
-            drawString(xStart + 190 + spacing, yStart + 17 + offset,
+                drawString(
+                    xReceived, yStart + 17 + offset,
                     "${EnumChatFormatting.DARK_GREEN}${p.healingReceived}"
-            )
-            drawString(xStart + 190 + spacing * 2, yStart + 17 + offset,
+                )
+            }
+
+            //if player is on red display only dmg
+            else if (team == TeamEnum.RED) {
+                drawString(
+                    xDone, yStart + 17 + offset,
                     "${EnumChatFormatting.RED}${p.damageDone}"
-            )
-            drawString(xStart + 190 + spacing * 3, yStart + 17 + offset,
+                )
+                drawString(
+                    xReceived, yStart + 17 + offset,
                     "${EnumChatFormatting.DARK_RED}${p.damageReceived}"
-            )
+                )
+            }
             offset += 12
         }
 
@@ -73,30 +122,44 @@ object ScoreboardComponent : AbstractRenderComponent(){
 
         for (p in teamRed){
 
-            drawString(xStart + 2, yStart + 17 + offset,
-                    "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
-                            "${p.warlord.shortName + EnumChatFormatting.RESET} Lv${p.level}  " +
-                            "${p.team.color}${p.name} "
+            drawString(
+                xLevel, yStart + 17 + offset,
+                "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
+                        "${p.warlord.shortName + EnumChatFormatting.RESET}  Lv${p.level}  " +
+                        "${p.team.color}${p.name} "
             )
-            drawString(xStart + 150 , yStart + 17 + offset,
-                    "${p.kills}"
+            drawString(
+                xKills, yStart + 17 + offset,
+                "${p.kills}"
             )
-            drawString(xStart + 170, yStart + 17 + offset,
-                    "${p.deaths}"
-            )
-            drawString(xStart + 190, yStart + 17 + offset,
-                    "${EnumChatFormatting.GREEN}${p.healingDone}"
+            drawString(
+                xDeaths, yStart + 17 + offset,
+                "${p.deaths}"
             )
 
-            drawString(xStart + 190 + spacing, yStart + 17 + offset,
+            //if player is on red display only healing
+            if (team == TeamEnum.RED) {
+                drawString(
+                    xDone, yStart + 17 + offset,
+                    "${EnumChatFormatting.GREEN}${p.healingDone}"
+                )
+                drawString(
+                    xReceived, yStart + 17 + offset,
                     "${EnumChatFormatting.DARK_GREEN}${p.healingReceived}"
-            )
-            drawString(xStart + 190 + spacing * 2, yStart + 17 + offset,
+                )
+            }
+
+            //if player is on blue display only dmg
+            else if (team == TeamEnum.BLUE) {
+                drawString(
+                    xDone, yStart + 17 + offset,
                     "${EnumChatFormatting.RED}${p.damageDone}"
-            )
-            drawString(xStart + 190 + spacing * 3, yStart + 17 + offset,
+                )
+                drawString(
+                    xReceived, yStart + 17 + offset,
                     "${EnumChatFormatting.DARK_RED}${p.damageReceived}"
-            )
+                )
+            }
             offset += 12
         }
 
