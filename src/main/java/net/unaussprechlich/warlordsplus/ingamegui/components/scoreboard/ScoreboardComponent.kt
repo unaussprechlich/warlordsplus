@@ -4,7 +4,9 @@ import net.minecraft.client.Minecraft
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.unaussprechlich.warlordsplus.Players
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
+import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 import org.lwjgl.util.Color
 
@@ -12,6 +14,7 @@ import org.lwjgl.util.Color
 object ScoreboardComponent : AbstractRenderComponent() {
 
     var team = TeamEnum.NONE
+
 
     override fun render(e: RenderGameOverlayEvent.Pre) {
         try {
@@ -37,6 +40,18 @@ object ScoreboardComponent : AbstractRenderComponent() {
         val players = Players.getPlayersForNetworkPlayers(thePlayer!!.sendQueue.playerInfoMap)
         val teamBlue = players.filter { it.team == TeamEnum.BLUE }
         val teamRed = players.filter { it.team == TeamEnum.RED }
+
+        var mostDeathsRed = teamRed.get(0).deaths
+        var mostDeathsRedPlayer = teamRed.get(0)
+
+        var mostDeathsBlue = teamBlue.get(0).deaths
+        var mostDeathsBluePlayer = teamBlue.get(0)
+
+        var mostKillsRed = teamRed.get(0).kills
+        var mostKillsRedPlayer = teamRed.get(0)
+
+        var mostKillsBlue = teamBlue.get(0).kills
+        var mostKillsBluePlayer = teamBlue.get(0)
 
         val spacing = 40
 
@@ -72,6 +87,15 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
         drawRect(xStart, yStart + 15, w, 12 * teamBlue.size, Color(34, 34, 39, 100))
         for (p in teamBlue) {
+
+            if (p.deaths > mostDeathsBlue) {
+                mostDeathsBlue = p.deaths
+                mostDeathsBluePlayer = p
+            }
+            if (p.kills > mostKillsBlue) {
+                mostKillsBlue = p.kills
+                mostKillsBluePlayer = p
+            }
 
             drawString(
                 xLevel, yStart + 17 + offset,
@@ -120,7 +144,16 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
         drawRect(xStart, yStart + 15 + offset, w, 12 * teamBlue.size, Color(34, 34, 39, 100))
 
-        for (p in teamRed){
+        for (p in teamRed) {
+
+            if (p.deaths > mostDeathsRed) {
+                mostDeathsRed = p.deaths
+                mostDeathsRedPlayer = p
+            }
+            if (p.kills > mostKillsRed) {
+                mostKillsRed = p.kills
+                mostKillsRedPlayer = p
+            }
 
             drawString(
                 xLevel, yStart + 17 + offset,
@@ -163,31 +196,39 @@ object ScoreboardComponent : AbstractRenderComponent() {
             offset += 12
         }
 
+        if (ScoreboardManager.scoreboardNames[11].contains("1000") || ScoreboardManager.scoreboardNames[12].contains("1000")) {
+            Minecraft.getMinecraft().thePlayer.sendChatMessage("MOST DEATHS IN BLUE: " + mostDeathsBluePlayer.name + "-" + mostDeathsBlue)
+            Minecraft.getMinecraft().thePlayer.sendChatMessage("MOST KILLS IN BLUE: " + mostKillsBluePlayer.name + "-" + mostKillsBlue)
+            Minecraft.getMinecraft().thePlayer.sendChatMessage("MOST DEATHS IN RED: " + mostDeathsRedPlayer.name + "-" + mostDeathsRed)
+            Minecraft.getMinecraft().thePlayer.sendChatMessage("MOST KILLS IN RED: " + mostKillsRedPlayer.name + "-" + mostKillsRed)
+        }
 
-            /*
+        /*
 
-            GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
-            GlStateManager.enableAlpha()
-            GlStateManager.enableBlend()
-            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0)
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
+        GlStateManager.enableAlpha()
+        GlStateManager.enableBlend()
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0)
 
-            if (k4 < players.size) {
-                val networkplayerinfo1 = players[k4] as NetworkPlayerInfo
+        if (k4 < players.size) {
+            val networkplayerinfo1 = players[k4] as NetworkPlayerInfo
 
-                if (flag) {
-                    mc.textureManager.bindTexture(networkplayerinfo1.locationSkin)
-                    drawScaledCustomSizeModalRect(j2, k2, 8.0f, 8f, 8, 8, 8, 8, 64.0f, 64.0f)
-                    j2 += 9
-                }
+            if (flag) {
+                mc.textureManager.bindTexture(networkplayerinfo1.locationSkin)
+                drawScaledCustomSizeModalRect(j2, k2, 8.0f, 8f, 8, 8, 8, 8, 64.0f, 64.0f)
+                j2 += 9
+            }
 
-                val text = if (networkplayerinfo1.displayName != null) networkplayerinfo1.displayName.formattedText
-                else getPlayerName(networkplayerinfo1)
+            val text = if (networkplayerinfo1.displayName != null) networkplayerinfo1.displayName.formattedText
+            else getPlayerName(networkplayerinfo1)
 
-                this.mc.fontRendererObj.drawStringWithShadow(text, j2.toFloat(), k2.toFloat(), -1)
-            }*/
+            this.mc.fontRendererObj.drawStringWithShadow(text, j2.toFloat(), k2.toFloat(), -1)
+        }*/
 
 
 
 
     }
+
+
 }

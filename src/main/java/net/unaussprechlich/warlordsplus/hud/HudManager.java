@@ -36,6 +36,7 @@ public class HudManager extends FancyGui implements IModule {
         hudElements.add(new HudElementDamageAndHealingCounter());
         hudElements.add(new HudElementKillParticipation());
         hudElements.add(new HudElementTotalKills());
+        hudElements.add(new HudElementSpiked());
 
     }
 
@@ -72,7 +73,7 @@ public class HudManager extends FancyGui implements IModule {
         try {
 
             FancyGui.Companion.drawStringWithBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD + "Warlords" + EnumChatFormatting.RED + "Plus" + EnumChatFormatting.WHITE + " SNAPSHOT_" +
-                    EnumChatFormatting.ITALIC + "3d99f4c", new Color(34, 34, 39, 200), false);
+                    EnumChatFormatting.ITALIC + "fa75f1a", new Color(34, 34, 39, 200), false);
             yStart += height;
 
             for(AbstractHudElement element : hudElements){
