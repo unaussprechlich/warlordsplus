@@ -3,7 +3,6 @@ jdk:
   - openjdk8
 os:
   - linux
-sudo: required
 
 git:
   quiet: true
@@ -15,6 +14,11 @@ before_install:
   - ./gradlew wrapper --gradle-version 4.10.3
   - echo $TRAVIS_BUILD_NUMBER > $TRAVIS_BUILD_DIR/src/main/resources/build_number.txt
 
+before_deploy:
+  - git config --local user.name "Travis"
+  - git config --local user.email "github@unaussprechlich.net"
+  - git tag -a SNAPSHOT_$TRAVIS_COMMIT -m "Automated snapshot build. Download and run the above .jar to install and use this snapshot build!"
+
 deploy:
   - provider: releases
     token: $GIT_TOKEN
@@ -25,11 +29,3 @@ deploy:
     prerelease: true
     on:
       branch: SNAPSHOT
-  - provider: releases
-    token: $GIT_TOKEN
-    skip_cleanup: true
-    file_glob: true
-    release_number: RELEASE_TODO
-    file: $TRAVIS_BUILD_DIR/build/libs/*
-    on:
-      branch: master
