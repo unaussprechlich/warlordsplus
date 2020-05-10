@@ -3,16 +3,11 @@ jdk:
   - openjdk8
 os:
   - linux
-sudo: required
 
 git:
   quiet: true
 notifications:
   email: false
-
-branches:
-  only:
-    - SNAPSHOT
 
 before_install:
   - chmod +x gradlew
@@ -22,15 +17,14 @@ before_install:
 before_deploy:
   - git config --local user.name "Travis"
   - git config --local user.email "github@unaussprechlich.net"
-  - git tag -a $TRAVIS_BUILD_NUMBER -m "Automated snapshot build. Download and run the above .jar to install and use this snapshot build!"
+  - git tag -a SNAPSHOT_$TRAVIS_BUILD_NUMBER -m "Automated snapshot build. Download and run the above .jar to install and use this snapshot build!"
 
 deploy:
-  provider: releases
-  api_key: $GIT_TOKEN
-  skip_cleanup: true
-  file_glob: true
-  file: $TRAVIS_BUILD_DIR/build/libs/*
-  on:
-    repo: unaussprechlich/warlordsplus
+  - provider: releases
+    token: $GIT_TOKEN
+    skip_cleanup: true
+    file_glob: true
+    file: $TRAVIS_BUILD_DIR/build/libs/*
     prerelease: true
-if: tag IS blank
+    on:
+      branch: SNAPSHOT
