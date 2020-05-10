@@ -17,7 +17,7 @@ before_install:
 before_deploy:
   - git config --local user.name "Travis"
   - git config --local user.email "github@unaussprechlich.net"
-  - git tag -a SNAPSHOT_$TRAVIS_COMMIT -m "Automated snapshot build. Download and run the above .jar to install and use this snapshot build!"
+  - git tag -a SNAPSHOT_$TRAVIS_BUILD_NUMBER -m "Automated snapshot build. Download and run the above .jar to install and use this snapshot build!"
 
 deploy:
   - provider: releases
