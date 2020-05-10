@@ -22,12 +22,12 @@ before_deploy:
 
 deploy:
   provider: releases
-  api_key: $GIT_TOKEN
+  token: $GIT_TOKEN
   skip_cleanup: true
   file_glob: true
   file: $TRAVIS_BUILD_DIR/build/libs/*
+  prerelease: true
   on:
     repo: unaussprechlich/warlordsplus
-    prerelease: true
     all_branches: true
     condition: $TRAVIS_BRANCH =~ ^(master|SNAPSHOT)$
