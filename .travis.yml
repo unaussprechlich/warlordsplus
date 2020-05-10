@@ -10,10 +10,6 @@ git:
 notifications:
   email: false
 
-branches:
-  only:
-    - SNAPSHOT
-
 before_install:
   - chmod +x gradlew
   - ./gradlew wrapper --gradle-version 4.10.3
@@ -33,4 +29,5 @@ deploy:
   on:
     repo: unaussprechlich/warlordsplus
     prerelease: true
-if: tag IS blank
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ ^(master|SNAPSHOT)$
