@@ -40,7 +40,7 @@ object IngameGuiManager : IModule{
     }
 
     @SubscribeEvent
-    fun onTick(e : TickEvent.ClientTickEvent){
+    fun onTick(@Suppress("UNUSED_PARAMETER") e : TickEvent.ClientTickEvent){
         if(GameStateManager.isIngame){
             components.filter { it is IUpdateConsumer }.forEach{
                 (it as IUpdateConsumer).update()

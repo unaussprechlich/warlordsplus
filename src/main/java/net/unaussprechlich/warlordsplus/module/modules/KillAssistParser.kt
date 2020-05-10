@@ -17,23 +17,21 @@ object KillAssistParser : IModule {
         if(GameStateManager.notIngame) return
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
-            var player = ""
-            var deathPlayer = ""
 
             when {
                 textMessage.contains("was killed by") -> {
-                    player = textMessage.substring(textMessage.indexOf("by") + 3)
-                    deathPlayer = textMessage.substring(0, textMessage.indexOf("was") - 1)
+                    val player = textMessage.substring(textMessage.indexOf("by") + 3)
+                    val deathPlayer = textMessage.substring(0, textMessage.indexOf("was") - 1)
                     EventBus.post(KillEvent(player, deathPlayer));
                 }
                 textMessage.contains("You were killed") -> {
-                    player = textMessage.substring(textMessage.indexOf("by ") + 3)
-                    deathPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
+                    val player = textMessage.substring(textMessage.indexOf("by ") + 3)
+                    val deathPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
                     EventBus.post(KillEvent(player, deathPlayer));
                 }
                 textMessage.contains("You killed") -> {
-                    deathPlayer = textMessage.substring(textMessage.indexOf("killed ") + 7)
-                    player = Minecraft.getMinecraft().thePlayer.displayNameString
+                    val deathPlayer = textMessage.substring(textMessage.indexOf("killed ") + 7)
+                    val player = Minecraft.getMinecraft().thePlayer.displayNameString
                     EventBus.post(KillEvent(player, deathPlayer))
                 }
             }

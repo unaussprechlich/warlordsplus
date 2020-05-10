@@ -72,8 +72,6 @@ object Players : IModule{
 
     fun getPlayersForNetworkPlayers(networkPlayers : Collection<NetworkPlayerInfo>): Collection<Player> {
 
-        val names = networkPlayers.map { it.gameProfile.name }
-
         //Filter out if we already have the Player stored
         networkPlayers.filter {
 
