@@ -13,7 +13,13 @@ import net.unaussprechlich.warlordsplus.module.ModuleManager;
 
 
 @SideOnly(Side.CLIENT)
-@Mod(modid = WarlordsPlus.MODID, version = WarlordsPlus.VERSION, name = WarlordsPlus.MODID, guiFactory = "net.unaussprechlich.warlordsplus.config.ModConfigGuiFactory", acceptedMinecraftVersions = "1.8.9")
+@Mod(
+        modid = WarlordsPlus.MODID,
+        version = WarlordsPlus.VERSION,
+        name = WarlordsPlus.MODID,
+        guiFactory = "net.unaussprechlich.warlordsplus.config.ModConfigGuiFactory",
+        acceptedMinecraftVersions = "1.8.9"
+)
 public class WarlordsPlus {
 
     public static final String MODID = "warlordsplus";

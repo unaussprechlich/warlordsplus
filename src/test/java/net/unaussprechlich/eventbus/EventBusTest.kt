@@ -1,8 +1,7 @@
 package net.unaussprechlich.eventbus
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-
+import org.junit.Test
+import kotlin.test.assertEquals
 
 class EventBusTest {
 
@@ -18,13 +17,13 @@ class EventBusTest {
         }
 
         EventBus.register<MyThing> {
-            println(it)
+            it
         }
 
-        //EventBus.post(TestEvent(true))
-        //EventBus.post(MyThing("Hello"))
+        EventBus.post(TestEvent(true))
+        EventBus.post(MyThing("Hello"))
 
-        //assertEquals(true, test)
+        assertEquals(true, test)
     }
 
 }

@@ -19,7 +19,7 @@ object ScoreboardManager : IModule{
     val scoreboardNames = ArrayList<String>()
 
     @SubscribeEvent
-    fun onClientTick(event: ClientTickEvent?) {
+    fun onClientTick(@Suppress("UNUSED_PARAMETER") event: ClientTickEvent?) {
         if (scoreboardNames.isNotEmpty()) scoreboardNames.clear()
         scoreboardTitle = ""
         try {

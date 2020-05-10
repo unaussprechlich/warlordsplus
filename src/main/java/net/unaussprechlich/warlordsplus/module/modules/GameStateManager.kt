@@ -23,7 +23,7 @@ object GameStateManager : IModule{
     }
 
     @SubscribeEvent
-    fun onClientTick(event: ClientTickEvent) {
+    fun onClientTick(@Suppress("UNUSED_PARAMETER") e: ClientTickEvent) {
         val ingame = (scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))
                 && (scoreboardNames.size == 15  || scoreboardNames.size == 12)
                 && (scoreboardNames[9].contains("Wins in:")

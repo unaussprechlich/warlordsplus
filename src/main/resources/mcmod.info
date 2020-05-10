@@ -5,8 +5,8 @@
   "description": "warlords+",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "https://github.com/unaussprechlich/inviteroni",
-  "authorList": ["unaussprechlich"],
+  "url": "https://github.com/unaussprechlich/warlordsplus",
+  "authorList": ["unaussprechlich", "ebicep"],
   "credits": "Created by unaussprechlich"
 }
 ]

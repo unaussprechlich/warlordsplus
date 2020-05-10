@@ -113,6 +113,7 @@ object AnnotationHelper {
      * Find all annotated classes of super-type [superClass] with annotation [annotationClass] from data table [table]
      * and send them to the callback [callback].
      */
+    @Suppress("UNCHECKED_CAST")
     fun <T> findAnnotatedClasses(table: ASMDataTable?, superClass: Class<T>, annotationClass: Class<*>, callback: (Class<T>, AnnotationInfo) -> Unit) {
         if (table == null) return
         for (data in table.getAll(annotationClass.name)) {
