@@ -196,12 +196,15 @@ object ScoreboardComponent : AbstractRenderComponent() {
             offset += 12
         }
 
+        /*
         if (ScoreboardManager.scoreboardNames[11].contains("1000") || ScoreboardManager.scoreboardNames[12].contains("1000")) {
             Minecraft.getMinecraft().thePlayer.sendChatMessage("MOST DEATHS IN BLUE: " + mostDeathsBluePlayer.name + "-" + mostDeathsBlue)
             Minecraft.getMinecraft().thePlayer.sendChatMessage("MOST KILLS IN BLUE: " + mostKillsBluePlayer.name + "-" + mostKillsBlue)
             Minecraft.getMinecraft().thePlayer.sendChatMessage("MOST DEATHS IN RED: " + mostDeathsRedPlayer.name + "-" + mostDeathsRed)
             Minecraft.getMinecraft().thePlayer.sendChatMessage("MOST KILLS IN RED: " + mostKillsRedPlayer.name + "-" + mostKillsRed)
         }
+
+         */
 
         /*
 
