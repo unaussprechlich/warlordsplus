@@ -28,4 +28,3 @@ deploy:
     prerelease: true
     on:
       branch: SNAPSHOT
-      tags: true
