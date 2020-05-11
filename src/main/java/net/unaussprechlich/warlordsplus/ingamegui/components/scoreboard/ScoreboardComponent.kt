@@ -3,12 +3,12 @@ package net.unaussprechlich.warlordsplus.ingamegui.components.scoreboard
 import net.minecraft.client.Minecraft
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderGameOverlayEvent
+import net.unaussprechlich.warlordsplus.Player
 import net.unaussprechlich.warlordsplus.Players
-import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 import org.lwjgl.util.Color
+import java.util.*
 
 
 object ScoreboardComponent : AbstractRenderComponent() {
@@ -38,20 +38,14 @@ object ScoreboardComponent : AbstractRenderComponent() {
         }
 
         val players = Players.getPlayersForNetworkPlayers(thePlayer!!.sendQueue.playerInfoMap)
-        val teamBlue = players.filter { it.team == TeamEnum.BLUE }
-        val teamRed = players.filter { it.team == TeamEnum.RED }
+        val teamBlue = players.filter { it.team == TeamEnum.BLUE }.sortedByDescending { it.level }
+        val teamRed = players.filter { it.team == TeamEnum.RED }.sortedByDescending { it.level }
 
-        var mostDeathsRed = teamRed.get(0).deaths
-        var mostDeathsRedPlayer = teamRed.get(0)
 
-        var mostDeathsBlue = teamBlue.get(0).deaths
-        var mostDeathsBluePlayer = teamBlue.get(0)
-
-        var mostKillsRed = teamRed.get(0).kills
-        var mostKillsRedPlayer = teamRed.get(0)
-
-        var mostKillsBlue = teamBlue.get(0).kills
-        var mostKillsBluePlayer = teamBlue.get(0)
+        var mostDeathsRed = 0
+        var mostDeathsBlue = 0
+        var mostKillsRed = 0
+        var mostKillsBlue = 0
 
         val spacing = 40
 
@@ -90,27 +84,25 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
             if (p.deaths > mostDeathsBlue) {
                 mostDeathsBlue = p.deaths
-                mostDeathsBluePlayer = p
             }
             if (p.kills > mostKillsBlue) {
                 mostKillsBlue = p.kills
-                mostKillsBluePlayer = p
             }
 
             drawString(
                 xLevel, yStart + 17 + offset,
                 "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
-                        "${p.warlord.shortName + EnumChatFormatting.RESET}  Lv${p.level}  " +
+                        "${p.warlord.shortName + EnumChatFormatting.RESET}  ${if (p.prestiged) EnumChatFormatting.GOLD else ""}Lv${if (p.level < 10) "0${p.level}" else p.level}  " +
                         "${p.team.color}${p.name} "
             )
             drawString(
                 xKills, yStart + 17 + offset,
-                "${p.kills}"
+                "${if (p.kills == mostKillsBlue) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}"
             )
 
             drawString(
                 xDeaths, yStart + 17 + offset,
-                "${p.deaths}"
+                "${if (p.deaths == mostDeathsBlue) EnumChatFormatting.DARK_RED else EnumChatFormatting.RESET}${p.deaths}"
             )
 
             //if player is on blue display only healing
@@ -148,26 +140,24 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
             if (p.deaths > mostDeathsRed) {
                 mostDeathsRed = p.deaths
-                mostDeathsRedPlayer = p
             }
             if (p.kills > mostKillsRed) {
                 mostKillsRed = p.kills
-                mostKillsRedPlayer = p
             }
 
             drawString(
                 xLevel, yStart + 17 + offset,
                 "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
-                        "${p.warlord.shortName + EnumChatFormatting.RESET}  Lv${p.level}  " +
+                        "${p.warlord.shortName + EnumChatFormatting.RESET}  ${if (p.prestiged) EnumChatFormatting.GOLD else ""}Lv${if (p.level < 10) "0${p.level}" else p.level}  " +
                         "${p.team.color}${p.name} "
             )
             drawString(
                 xKills, yStart + 17 + offset,
-                "${p.kills}"
+                "${if (p.kills == mostKillsRed) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}"
             )
             drawString(
                 xDeaths, yStart + 17 + offset,
-                "${p.deaths}"
+                "${if (p.deaths == mostDeathsRed) EnumChatFormatting.DARK_RED else EnumChatFormatting.RESET}${p.deaths}"
             )
 
             //if player is on red display only healing
