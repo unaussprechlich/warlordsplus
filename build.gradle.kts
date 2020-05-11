@@ -10,12 +10,8 @@ val targetCompatibility = JavaVersion.VERSION_1_8
 var modVersion = "DEV_${System.currentTimeMillis().hashCode()}"
 
 //Getting the Version if we Build on Travis
-if (System.getenv()["TRAVIS_BUILD_NUMBER"] != null) {
-    if(System.getenv()["IS_SNAPSHOT"]  != null ){
-        modVersion = "SNAPSHOT_${System.getenv()["TRAVIS_BUILD_NUMBER"]}"
-    } else if (System.getenv()["RELEASE_VERSION"] != null) {
-        modVersion = "V${System.getenv()["RELEASE_VERSION"]}"
-    }
+if(System.getenv()["RELEASE_VERSION"]  != null ){
+    modVersion = "${System.getenv()["RELEASE_VERSION"]}"
 }
 
 buildscript {

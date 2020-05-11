@@ -4,7 +4,7 @@ sudo: required
 jdk: openjdk8
 
 env:
-  - RELEASE_VERSION="1.0.0"
+  - RELEASE_VERSION="V1.0.0"
 
 git:
   quiet: true
@@ -25,6 +25,7 @@ before_install:
   - chmod +x gradlew
   - if [[ $TRAVIS_BRANCH == "SNAPSHOT" ]]; then
       export IS_SNAPSHOT=true;
+      export RELEASE_VERSION=SNAPSHOT_$TRAVIS_BUILD_NUMBER;
     fi
 
 install:
@@ -33,12 +34,7 @@ install:
 before_deploy:
   - git config --local user.name "Travis"
   - git config --local user.email "github@unaussprechlich.net"
-  - if [ $TRAVIS_BRANCH == "SNAPSHOT"]; then
-      git tag -a SNAPSHOT_$TRAVIS_BUILD_NUMBER -m "Automated snapshot build. Download and run the .jar to install and use the latest snapshot build!";
-    fi
-  - if [ $TRAVIS_BRANCH == "master"]; then
-      git tag -a $RELEASE_VERSION -m "Automated release build. Download and run the .jar to install and use the latest release build!";
-    fi
+  - git tag -a $RELEASE_VERSION -m "Automated build. Download and run the .jar to install and use the latest build!"
 
 deploy:
   - provider: releases
