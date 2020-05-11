@@ -1,0 +1,57 @@
+language: java
+dist: xenial
+sudo: required
+jdk: openjdk8
+
+env:
+  - RELEASE_VERSION="V1.0.0"
+
+git:
+  quiet: true
+notifications:
+  email: false
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  $HOME/.gradle/caches/minecraft/deobfedDeps/providedDummy.jar
+  - rm -f  $HOME/.gradle/caches/minecraft/deobfedDeps/compileDummy.jar
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+before_install:
+  - chmod +x gradlew
+  - if [[ $TRAVIS_BRANCH == "SNAPSHOT" ]]; then
+      export IS_SNAPSHOT=true;
+      export RELEASE_VERSION=SNAPSHOT_$TRAVIS_BUILD_NUMBER;
+    fi
+  - echo $RELEASE_VERSION
+
+install:
+  - ./gradlew setupCIWorkspace build -s --refresh-dependencies
+
+before_deploy:
+  - git config --local user.name "Travis"
+  - git config --local user.email "github@unaussprechlich.net"
+  - git tag -a $RELEASE_VERSION -m "Automated build. Download and run the .jar to install and use the latest build!"
+
+deploy:
+  - provider: releases
+    name: $RELEASE_VERSION
+    token: $GIT_TOKEN
+    skip_cleanup: true
+    file_glob: true
+    file: $TRAVIS_BUILD_DIR/build/libs/*
+    prerelease: true
+    on:
+      branch: SNAPSHOT
+  - provider: releases
+    name: $RELEASE_VERSION
+    token: $GIT_TOKEN
+    skip_cleanup: true
+    file_glob: true
+    file: $TRAVIS_BUILD_DIR/build/libs/*
+    on:
+      branch: master
