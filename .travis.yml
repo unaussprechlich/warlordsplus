@@ -34,7 +34,7 @@ install:
 before_deploy:
   - git config --local user.name "Travis"
   - git config --local user.email "github@unaussprechlich.net"
-  - git tag -a $RELEASE_VERSION -m "Automated release build. Download and run the .jar to install and use the latest release build!"
+  - git tag -a $RELEASE_VERSION -m "Automated build. Download and run the .jar to install and use the latest build!"
 
 deploy:
   - provider: releases
