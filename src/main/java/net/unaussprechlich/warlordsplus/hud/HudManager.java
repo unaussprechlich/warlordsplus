@@ -8,6 +8,7 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.unaussprechlich.eventbus.EventBus;
+import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.hud.elements.*;
 import net.unaussprechlich.warlordsplus.module.ResetEvent;
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
@@ -72,8 +73,11 @@ public class HudManager extends FancyGui implements IModule {
 
         try {
 
-            FancyGui.Companion.drawStringWithBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD + "Warlords" + EnumChatFormatting.RED + "Plus" + EnumChatFormatting.WHITE + " SNAPSHOT_" +
-                    EnumChatFormatting.ITALIC + "fa75f1a", new Color(34, 34, 39, 200), false);
+            FancyGui.Companion.drawStringWithBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD
+                    + "Warlords" + EnumChatFormatting.RED + "Plus " + EnumChatFormatting.WHITE + WarlordsPlus.VERSION,
+                    new Color(34, 34, 39, 200),
+                    false
+            );
             yStart += height;
 
             for(AbstractHudElement element : hudElements){

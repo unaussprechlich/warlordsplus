@@ -1,23 +1,44 @@
 language: java
-jdk:
-  - openjdk8
-os:
-  - linux
+dist: xenial
+sudo: required
+jdk: openjdk8
+
+env:
+  - RELEASE_VERSION="1.0.0"
 
 git:
   quiet: true
 notifications:
   email: false
 
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  $HOME/.gradle/caches/minecraft/deobfedDeps/providedDummy.jar
+  - rm -f  $HOME/.gradle/caches/minecraft/deobfedDeps/compileDummy.jar
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
 before_install:
   - chmod +x gradlew
-  - ./gradlew wrapper --gradle-version 4.10.3
-  - echo $TRAVIS_BUILD_NUMBER > $TRAVIS_BUILD_DIR/src/main/resources/build_number.txt
+  - if [[ $TRAVIS_BRANCH == "SNAPSHOT" ]]; then
+      export IS_SNAPSHOT=true;
+    fi
+
+install:
+  - ./gradlew setupCIWorkspace build -s --refresh-dependencies
 
 before_deploy:
   - git config --local user.name "Travis"
   - git config --local user.email "github@unaussprechlich.net"
-  - git tag -a SNAPSHOT_$TRAVIS_BUILD_NUMBER -m "Automated snapshot build. Download and run the above .jar to install and use this snapshot build!"
+  - if [ $TRAVIS_BRANCH == "SNAPSHOT"]; then
+      git tag -a SNAPSHOT_$TRAVIS_BUILD_NUMBER -m "Automated snapshot build. Download and run the .jar to install and use the latest snapshot build!"
+    fi
+  - if [ $TRAVIS_BRANCH == "master"]; then
+    git tag -a $RELEASE_VERSION -m "Automated release build. Download and run the .jar to install and use the latest release build!"
+    fi
 
 deploy:
   - provider: releases
@@ -28,3 +49,10 @@ deploy:
     prerelease: true
     on:
       branch: SNAPSHOT
+  - provider: releases
+    token: $GIT_TOKEN
+    skip_cleanup: true
+    file_glob: true
+    file: $TRAVIS_BUILD_DIR/build/libs/*
+    on:
+      branch: master

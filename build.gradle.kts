@@ -1,18 +1,22 @@
-import net.minecraftforge.gradle.user.UserBaseExtension
 import org.gradle.jvm.tasks.Jar
 import net.minecraftforge.gradle.user.patcherUser.forge.ForgeExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-// gradle.properties
-val modGroup: String by extra
-val modVersion: String by extra
-val modBaseName: String by extra
-val forgeVersion: String by extra
-val forgeMappings: String by extra
-val mcVersion: String by extra
 val kotlinVersion: String by extra
+
 val sourceCompatibility = JavaVersion.VERSION_1_8
-val targetCompatibility = sourceCompatibility
+val targetCompatibility = JavaVersion.VERSION_1_8
+
+var modVersion = "DEV_${System.currentTimeMillis().hashCode()}"
+
+//Getting the Version if we Build on Travis
+if (System.getenv()["TRAVIS_BUILD_NUMBER"] != null) {
+    if(System.getenv()["IS_SNAPSHOT"]  != null ){
+        modVersion = "SNAPSHOT_${System.getenv()["TRAVIS_BUILD_NUMBER"]}"
+    } else if (System.getenv()["RELEASE_VERSION"] != null) {
+        modVersion = "V${System.getenv()["RELEASE_VERSION"]}"
+    }
+}
 
 buildscript {
     repositories {
@@ -34,13 +38,16 @@ plugins{
 apply(plugin = "net.minecraftforge.gradle.forge")
 
 version = modVersion
-group = modGroup
+group = "net.unaussprechlich"
 
 configure<ForgeExtension> {
     version = "1.8.9-11.15.1.2318-1.8.9"
     runDir = "run"
-    mappings = forgeMappings
+    mappings = "stable_22"
     makeObfSourceJar = false
+
+    replace("@VERSION@", modVersion)
+
 }
 
 tasks.withType<KotlinCompile> {
