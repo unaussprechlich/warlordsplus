@@ -1,6 +1,7 @@
 package net.unaussprechlich.warlordsplus
 
 import net.minecraft.client.network.NetworkPlayerInfo
+import net.minecraft.util.EnumChatFormatting
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.ResetEvent
@@ -17,8 +18,8 @@ open class Player(val name: String, val uuid : UUID) {
 
     var damageDone : Int = 0
     var damageReceived : Int = 0
-    var healingDone : Int = 0
-    var healingReceived : Int = 0
+    var healingDone: Int = 0
+    var healingReceived: Int = 0
 
     var warlord = WarlordsEnum.NONE
 
@@ -27,6 +28,8 @@ open class Player(val name: String, val uuid : UUID) {
     var team = TeamEnum.NONE
 
     var level = 0
+
+    var prestiged: Boolean = false
 
 }
 
@@ -77,7 +80,7 @@ object Players : IModule{
 
             !playersMap.containsKey(it.gameProfile.name)
 
-        //Filter out any strange "Players" appearing in the Scoreboard, by assuming they must have a Spec
+            //Filter out any strange "Players" appearing in the Scoreboard, by assuming they must have a class
         }.filter { player ->
 
             WarlordsEnum.values().any {
@@ -89,14 +92,20 @@ object Players : IModule{
 
             val player = Player(it.gameProfile.name, it.gameProfile.id)
 
+            //getting player class
             player.warlord = WarlordsEnum.values().first { w -> it.playerTeam.colorPrefix has w.shortName }
 
+            //getting player level
             val m = numberPattern.matcher(it.playerTeam.colorSuffix.removeFormatting())
             player.level = if (!m.find()) 0 else {
                 m.group().toInt()
             }
 
-            player.team = TeamEnum.values().first{ t -> it.playerTeam.colorPrefix.contains(t.color.toString())}
+            //getting player team
+            player.team = TeamEnum.values().first { t -> it.playerTeam.colorPrefix.contains(t.color.toString()) }
+
+            //checking if player is prestige
+            player.prestiged = it.playerTeam.colorSuffix.contains("${EnumChatFormatting.GOLD}")
 
             return@map player
 
