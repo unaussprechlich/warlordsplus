@@ -34,10 +34,10 @@ before_deploy:
   - git config --local user.name "Travis"
   - git config --local user.email "github@unaussprechlich.net"
   - if [ $TRAVIS_BRANCH == "SNAPSHOT"]; then
-      git tag -a SNAPSHOT_$TRAVIS_BUILD_NUMBER -m "Automated snapshot build. Download and run the .jar to install and use the latest snapshot build!"
+      git tag -a SNAPSHOT_$TRAVIS_BUILD_NUMBER -m "Automated snapshot build. Download and run the .jar to install and use the latest snapshot build!";
     fi
   - if [ $TRAVIS_BRANCH == "master"]; then
-    git tag -a $RELEASE_VERSION -m "Automated release build. Download and run the .jar to install and use the latest release build!"
+      git tag -a $RELEASE_VERSION -m "Automated release build. Download and run the .jar to install and use the latest release build!";
     fi
 
 deploy:
