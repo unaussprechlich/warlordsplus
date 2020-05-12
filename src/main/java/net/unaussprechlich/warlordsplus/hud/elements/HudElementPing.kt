@@ -6,7 +6,8 @@ import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import java.net.UnknownHostException
 
 import kotlinx.coroutines.*
-
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 
 
 class HudElementPing : AbstractHudElement() {
@@ -16,7 +17,11 @@ class HudElementPing : AbstractHudElement() {
         if (System.currentTimeMillis() >= nextTimeStamp) updatePing()
         if (Minecraft.getMinecraft().currentServerData.pingToServer > 0) lastValidPing =
             Minecraft.getMinecraft().currentServerData.pingToServer.toInt()
-        return arrayOf("Ping: $lastValidPing")
+
+        val renderStrings = ArrayList<String>()
+        if (showPing)
+            renderStrings.add("Ping: $lastValidPing")
+        return renderStrings.toTypedArray()
     }
 
     override fun isVisible(): Boolean {
@@ -44,10 +49,18 @@ class HudElementPing : AbstractHudElement() {
                         //ignore
                     }
                 }
-            } catch (e : Exception){
+            } catch (e: Exception) {
                 //Ignore
             }
 
         }
+
+        @ConfigPropertyBoolean(
+            category = CCategory.HUD,
+            id = "showPing",
+            comment = "Enable or disable the Ping counter",
+            def = true
+        )
+        var showPing = false
     }
 }
