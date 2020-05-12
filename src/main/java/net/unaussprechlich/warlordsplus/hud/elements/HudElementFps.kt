@@ -1,29 +1,41 @@
-package net.unaussprechlich.warlordsplus.hud.elements;
+package net.unaussprechlich.warlordsplus.hud.elements
 
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
-
-import java.util.ArrayList;
+import net.minecraft.client.Minecraft
+import net.minecraft.util.EnumChatFormatting
+import net.unaussprechlich.warlordsplus.ThePlayer
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
+import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
+import scala.collection.parallel.ParIterableLike
 
 /**
  * HudElementFps Created by Alexander on 03.05.2020.
  * Description:
- **/
-public class HudElementFps extends AbstractHudElement {
+ */
+class HudElementFps : AbstractHudElement() {
+    override fun getRenderString(): Array<String> {
+        val renderStrings = ArrayList<String>()
+        if (showFPS)
+            renderStrings.add("FPS: " + Minecraft.getDebugFPS())
 
-    @Override
-    public String[] getRenderString() {
-        return new String[]{"FPS: " + Minecraft.getDebugFPS()};
+        return renderStrings.toTypedArray()
     }
 
-    @Override
-    public boolean isVisible() {
-        return true;
+    override fun isVisible(): Boolean {
+        return true
     }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
+    override fun isEnabled(): Boolean {
+        return true
+    }
+
+    companion object {
+        @ConfigPropertyBoolean(
+            category = CCategory.HUD,
+            id = "showFPS",
+            comment = "Enable or disable the FPS counter",
+            def = true
+        )
+        var showFPS = false
     }
 }

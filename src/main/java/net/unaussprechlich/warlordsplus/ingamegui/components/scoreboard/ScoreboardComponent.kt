@@ -29,6 +29,7 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
         if (thePlayer == null) return
 
+
         if (Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A7c")) {
             team = TeamEnum.RED
         } else if (Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A79")) {
@@ -44,7 +45,6 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
         val mostDeathsRed = teamRed.map { it.deaths }.sorted().reversed()[0]
         val mostDeathsBlue = teamBlue.map { it.deaths }.sorted().reversed()[0]
-
         val mostKillsRed = teamRed.map { it.kills }.sorted().reversed()[0]
         val mostKillsBlue = teamBlue.map { it.kills }.sorted().reversed()[0]
 
@@ -73,8 +73,11 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
         var offset = 0
 
+
+
         drawRect(xStart, yStart + 15, w, 12 * teamBlue.size, Color(34, 34, 39, 100))
         for (p in teamBlue) {
+
 
             drawString(
                     xLevel, yStart + 17 + offset,
