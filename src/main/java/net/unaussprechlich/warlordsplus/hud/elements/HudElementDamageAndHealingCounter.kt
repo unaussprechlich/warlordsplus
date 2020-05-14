@@ -1,6 +1,8 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
+import ibxm.Player
 import net.minecraft.util.EnumChatFormatting
+import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.ThePlayer.damageDoneCounter
 import net.unaussprechlich.warlordsplus.ThePlayer.damageTakenCounter
 import net.unaussprechlich.warlordsplus.ThePlayer.energyGivenCounter
@@ -9,10 +11,12 @@ import net.unaussprechlich.warlordsplus.ThePlayer.energyReceivedCounter
 import net.unaussprechlich.warlordsplus.ThePlayer.energyStolenCounter
 import net.unaussprechlich.warlordsplus.ThePlayer.healingGivenCounter
 import net.unaussprechlich.warlordsplus.ThePlayer.healingReceivedCounter
+import net.unaussprechlich.warlordsplus.ThePlayer.spec
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
+import net.unaussprechlich.warlordsplus.util.SpecsEnum
 import java.util.*
 
 class HudElementDamageAndHealingCounter : AbstractHudElement() {
@@ -29,13 +33,13 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
             renderStrings.add(EnumChatFormatting.DARK_RED.toString() + "Damage Taken: " + damageTakenCounter)
         if (showHealingReceived)
             renderStrings.add(EnumChatFormatting.DARK_GREEN.toString() + "Healing Received: " + healingReceivedCounter)
-        if (showEnergyGiven && energyGivenCounter > 0) //specialization === Player.Classes.CRUSADER
+        if (showEnergyGiven && spec == SpecsEnum.CRUSADER) //specialization === Player.Classes.CRUSADER
             renderStrings.add(EnumChatFormatting.YELLOW.toString() + "Energy Given: " + energyGivenCounter)
         if (showEnergyReceived && energyReceivedCounter > 0)
             renderStrings.add(EnumChatFormatting.YELLOW.toString() + "Energy Received: " + energyReceivedCounter)
         if (showEnergyLost && energyLostCounter > 0)
             renderStrings.add(EnumChatFormatting.YELLOW.toString() + "Energy Lost: " + energyLostCounter)
-        if (showEnergyStolen && energyStolenCounter > 0) //specialization === Player.Classes.AVENGER &&
+        if (showEnergyStolen && spec == SpecsEnum.AVENGER) //specialization === Player.Classes.AVENGER &&
             renderStrings.add(EnumChatFormatting.YELLOW.toString() + "Energy Stolen: " + energyStolenCounter)
 
         return renderStrings.toTypedArray()
