@@ -21,6 +21,8 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
     var team = TeamEnum.NONE
     private var redKills = 0
     private var blueKills = 0
+    private var debtDamageCounter = 0
+
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
         renderStrings.add(EnumChatFormatting.RED.toString() + "Red Kills: " + redKills)
@@ -38,6 +40,13 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
                 TeamEnum.NONE
             }
         }
+        if (debtDamageCounter < 6) {
+            debtDamageCounter = 0
+            if (team == TeamEnum.BLUE)
+                redKills++
+            else if (team == TeamEnum.RED)
+                blueKills++
+        }
     }
 
     init {
@@ -54,6 +63,10 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
     }
 
     override fun onChat(e: ClientChatReceivedEvent) {
+        val message = e.message.formattedText
+        if (message.contains("You took") && message.contains("melee damage")) {
+            debtDamageCounter++;
+        }
 
     }
 
