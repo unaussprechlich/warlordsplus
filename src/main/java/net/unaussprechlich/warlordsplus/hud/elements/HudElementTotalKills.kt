@@ -22,6 +22,7 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
     private var redKills = 0
     private var blueKills = 0
     private var debtDamageCounter = 0
+    private var futureTime = -1L
 
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
@@ -40,7 +41,7 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
                 TeamEnum.NONE
             }
         }
-        if (debtDamageCounter < 6) {
+        if (System.currentTimeMillis() == futureTime) {
             debtDamageCounter = 0
             if (team == TeamEnum.BLUE)
                 redKills++
@@ -64,9 +65,10 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
 
     override fun onChat(e: ClientChatReceivedEvent) {
         val message = e.message.formattedText
-        if (message.contains("You took") && message.contains("melee damage")) {
+        if (message.contains("You may not escape"))
+            futureTime = System.currentTimeMillis() + 7000
+        if (message.contains("You took") && message.contains("melee damage"))
             debtDamageCounter++;
-        }
 
     }
 
