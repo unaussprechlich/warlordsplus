@@ -42,11 +42,14 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
             }
         }
         if (System.currentTimeMillis() == futureTime) {
+            if (debtDamageCounter < 6) {
+                debtDamageCounter = 0
+                if (team == TeamEnum.BLUE)
+                    redKills++
+                else if (team == TeamEnum.RED)
+                    blueKills++
+            }
             debtDamageCounter = 0
-            if (team == TeamEnum.BLUE)
-                redKills++
-            else if (team == TeamEnum.RED)
-                blueKills++
         }
     }
 
