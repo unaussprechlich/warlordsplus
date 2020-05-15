@@ -1,6 +1,8 @@
 import org.gradle.jvm.tasks.Jar
 import net.minecraftforge.gradle.user.patcherUser.forge.ForgeExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.language.jvm.tasks.ProcessResources
+
 
 val kotlinVersion: String by extra
 
@@ -80,3 +82,30 @@ tasks.withType<Jar> {
     from(embed.map { if (it.isDirectory) it else zipTree(it) })
     setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }
+
+/*
+Minecraft.getMinecraft().ingameGUI.PRIVATEFIELD
+
+// I DONT KNOW WHAT IM DOING
+configure<ProcessResources>("processResources") {
+    filesMatching("application.properties") {
+        expand(project.properties)
+    }
+}
+
+inline fun <reified C> Project.configure(name: String, configuration: C.() -> Unit) {
+    (this.tasks.getByName(name) as C).configuration()
+}
+
+rename '(.+_at.cfg)', 'META-INF/$1'
+
+jar {
+
+    manifest {
+
+        attributes 'FMLAT': 'MODID_at.cfg'
+    }
+}
+
+ */
+
