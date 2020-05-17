@@ -91,13 +91,14 @@ object DamageAndHealParser : IModule {
         }
     }
 
-    private fun getDamageOrHealthValue(message: String): Int {
+    private fun getDamageOrHealthValue(inputMessage: String): Int {
         try {
+            val message = inputMessage.substring(inputMessage.indexOf("for"));
             val m = numberPattern.matcher(message.replace("!", ""))
             if (!m.find()) return 0
             return m.group().trim().toInt()
         } catch (e: Exception) {
-            println("Failed to extract damage from this message: $message")
+            println("Failed to extract damage from this message: $inputMessage")
             e.printStackTrace()
         }
         return 0

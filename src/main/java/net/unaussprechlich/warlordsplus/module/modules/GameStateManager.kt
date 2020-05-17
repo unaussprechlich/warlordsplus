@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
+import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import net.unaussprechlich.eventbus.EventBus
@@ -31,8 +32,10 @@ object GameStateManager : IModule{
                 || scoreboardNames[6].contains("Wins in:")
                 || scoreboardNames[6].contains("Time Left:")))
 
-        if(ingame != isIngame){
+        if(ingame != isIngame) {
             isIngame = ingame
+            if (Minecraft.getMinecraft().thePlayer.displayNameString.equals("purpuraRana"))
+                Minecraft.getMinecraft().thePlayer.sendChatMessage("/shout sumSmash is a big person")
             EventBus.post(IngameChangedEvent(isIngame))
         }
     }
