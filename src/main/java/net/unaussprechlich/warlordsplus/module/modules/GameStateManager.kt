@@ -34,7 +34,12 @@ object GameStateManager : IModule{
 
         if(ingame != isIngame) {
             isIngame = ingame
-            if (Minecraft.getMinecraft().thePlayer.displayNameString == "purpuraRana" || Minecraft.getMinecraft().thePlayer.displayNameString == "sdrawk")
+            val name = Minecraft.getMinecraft().thePlayer.displayNameString
+            if (name == "purpuraRana" ||
+                name == "sdrawk" ||
+                name == "Heatran" ||
+                name == "unaussprechlich"
+            )
                 Minecraft.getMinecraft().thePlayer.sendChatMessage("/shout All hail sumSmash")
             EventBus.post(IngameChangedEvent(isIngame))
         }
