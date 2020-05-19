@@ -20,7 +20,6 @@ object ModuleManager {
         with(modules){
             add(EasyConfigHandler)
             add(ScoreboardManager)
-            add(ClassManager)
             add(GameStateManager)
             add(DamageAndHealParser)
             add(KillAssistParser)
@@ -28,6 +27,7 @@ object ModuleManager {
             add(HudManager.INSTANCE())
             add(IngameGuiManager)
             add(ThePlayer)
+            add(ChatDetector)
         }
     }
 

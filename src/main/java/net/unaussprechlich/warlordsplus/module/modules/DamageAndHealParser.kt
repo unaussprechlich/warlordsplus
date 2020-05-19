@@ -4,16 +4,15 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
+import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.util.has
+import net.unaussprechlich.warlordsplus.util.contain
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import java.util.regex.Pattern
 
 private const val SOMEBODY_DID = "\u00AB"
 private const val YOU_DID = "\u00BB"
-private const val healing = " healed "
-private const val absorption = " absorbed "
-private const val energy = " energy."
+
 private val numberPattern = Pattern.compile("\\s[0-9]+\\s")
 
 object DamageAndHealParser : IModule {
@@ -24,17 +23,17 @@ object DamageAndHealParser : IModule {
         try {
             val msg: String = e.message.unformattedText.removeFormatting()
 
-            if(!(msg has SOMEBODY_DID || msg has YOU_DID )) return
+            if (!(msg contain SOMEBODY_DID || msg contain YOU_DID)) return
 
             var otherPlayer = ""
-            var amount = getDamageOrHealthValue(msg)
-            var crit = msg has "!"
+            val amount = getDamageOrHealthValue(msg)
+            val crit = msg contain "!"
 
-            if (msg has SOMEBODY_DID) {
+            if (e.message.unformattedText contain SOMEBODY_DID) {
 
                 when {
                     //PLAYER's ability hit you
-                    msg has "'s" -> {
+                    msg contain "'s" -> {
                         otherPlayer = msg.substring(2, msg.indexOf("'s"))
                     }
                     //You took 500 dmg (revenant)
@@ -64,7 +63,7 @@ object DamageAndHealParser : IModule {
                     }
                 }
 
-            } else if (msg.contains(YOU_DID)) {
+            } else if (e.message.unformattedText contain YOU_DID) {
 
                 when {
                     msg.contains("health") -> {
@@ -76,7 +75,7 @@ object DamageAndHealParser : IModule {
                         EventBus.post(DamageDoneEvent(amount, crit, otherPlayer))
 
                         //Player's Avenger's Strike stole energy from otherPlayer
-                        if(msg.contains("Avenger's Strike"))
+                        if (msg.contains("Avenger's Strike"))
                             EventBus.post(EnergyStolenEvent(6, otherPlayer))
                     }
                     msg.contains("energy") -> {
@@ -86,6 +85,45 @@ object DamageAndHealParser : IModule {
 
                 }
             }
+
+            if ("Your" in msg) {
+                when {
+                    "strike" in msg -> ThePlayer.strikeCounter++
+                    "Consecrate" in msg -> ThePlayer.consecrateCounter++
+                    "Infusion" in msg -> ThePlayer.infusionCounter++
+                    "Holy" in msg -> ThePlayer.holyCounter++
+                    "Slam" in msg -> ThePlayer.slamCounter++
+                    "Wave " in msg -> ThePlayer.waveCounter++
+                    "intervene" in msg -> ThePlayer.interveneCounter++
+                    "Charge" in msg -> ThePlayer.chargeCounter++
+                    "Orb" in msg -> ThePlayer.orbCounter++
+                    "Warp" in msg -> ThePlayer.warpCounter++
+                    "Bolt" in msg -> ThePlayer.boltCounter++
+                    "Breath" in msg -> ThePlayer.breathCounter++
+                    "ball" in msg -> ThePlayer.ballCounter++
+                    "Flame" in msg -> ThePlayer.burstCounter++
+                    "Rain" in msg -> ThePlayer.rainCounter++
+                    "Chain" in msg -> ThePlayer.chainCounter++
+                    "Totem" in msg -> ThePlayer.totemCounter++
+                    "Lightning" in msg -> ThePlayer.lightningBoltCounter++
+                    "Windfury" in msg -> ThePlayer.furyCounter++
+                    "Rod" in msg -> ThePlayer.rodCounter++
+                    "Soul" in msg -> ThePlayer.soulsCounter++
+                    "Soulbinding" in msg -> ThePlayer.bindingCounter++
+                    "Spike" in msg -> ThePlayer.spikeCounter++
+                    "Boulder" in msg -> ThePlayer.boulderCounter++
+                    "Earthliving" in msg -> ThePlayer.earthlivingCounter++
+                    "Debt" in msg -> {
+                        if ("healed" in msg) ThePlayer.debtHealedCounter++ else ThePlayer.debtDamagedCounter++
+                    }
+                    "Army" in msg -> {
+                        ThePlayer.undyingCounter += msg.substring(msg.indexOf("allies") - 3)
+                                .toInt(msg.indexOf("allies")) //TODO
+                    }
+                }
+            }
+
+
         } catch (throwable: Throwable) {
 
         }

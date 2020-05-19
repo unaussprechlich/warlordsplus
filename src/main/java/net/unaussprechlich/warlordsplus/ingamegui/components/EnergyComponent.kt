@@ -5,6 +5,7 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
 import net.unaussprechlich.warlordsplus.module.ResetEvent
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
+import net.unaussprechlich.warlordsplus.util.convertToArgb
 import net.unaussprechlich.warlordsplus.util.fdiv
 import org.lwjgl.util.Color
 
@@ -27,8 +28,8 @@ object EnergyComponent : AbstractRenderComponent(),  IUpdateConsumer {
 
         val ew = (w * (mc.thePlayer.experienceLevel fdiv maxEnergy)).toInt()
 
-        drawRect(xRight - w - 5, yBottom - 5 - h, w, h, Color(0, 0, 0, 50))
-        drawRect(xRight - w - 5, yBottom - 5 - h, ew, h, Color(20, 0, 255, 200))
+        drawBackgroundRect(xRight - w - 5, yBottom - 5 - h, w, h)
+        drawRect(xRight - w - 5, yBottom - 5 - h, ew, h, Color(20, 0, 255, 200).convertToArgb())
 
         drawString(xRight - w + 10, yBottom - 5 - h + 7, thePlayer?.experienceLevel.toString())
 
