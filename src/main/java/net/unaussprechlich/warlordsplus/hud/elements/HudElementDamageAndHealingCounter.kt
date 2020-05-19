@@ -21,7 +21,6 @@ import java.util.*
 
 class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
-    var showHealingDone = false
     override fun getRenderString(): Array<String> {
 
         val renderStrings = ArrayList<String>()
