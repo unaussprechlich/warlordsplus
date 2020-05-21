@@ -32,6 +32,8 @@ open class Player(val name: String, val uuid : UUID) {
 
     var prestiged: Boolean = false
 
+    var hasFlag: Boolean = false
+
 }
 
 private val numberPattern = Pattern.compile("[0-9]{2}")
@@ -73,6 +75,10 @@ object OtherPlayers : IModule {
         EventBus.register<DamageDoneEvent> {
             if (it.player in playersMap)
                 playersMap[it.player]!!.damageReceived += it.amount
+        }
+
+        EventBus.register<FlagTakenEvent> {
+            playersMap[it.playerWithFlag]!!.hasFlag = it.playerWithFlag in playersMap && it.hasFlag
         }
     }
 

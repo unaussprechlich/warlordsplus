@@ -190,3 +190,4 @@ data class EnergyLostEvent(
         val amount: Int,
         val player: String
 ) : IEvent
+

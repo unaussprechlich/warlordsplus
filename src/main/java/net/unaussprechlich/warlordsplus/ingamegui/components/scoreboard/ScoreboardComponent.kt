@@ -49,7 +49,7 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
 
         drawHeaderRect(xStart, yStart, w, 13)
-        drawString(xLevel, yStart + 3, "Class Lvl  Name", false)
+        drawString(xLevel, yStart + 3, "Class Lvl   Name", false)
         drawString(xKills - spacing / 5, yStart + 3, "Kills", false)
         drawString(xDeaths - spacing / 4, yStart + 3, "Deaths", false)
         drawString(xDone - spacing / 5, yStart + 3, "Given", false)
@@ -63,10 +63,10 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
             drawString(
                     xLevel, yStart + 15 + offset,
-                    "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
-                            "${p.warlord.shortName + EnumChatFormatting.RESET}  ${if (p.prestiged) EnumChatFormatting.GOLD else ""}" +
-                            "Lv${if (p.level < 10) "0${p.level}" else p.level}  " +
-                            "${p.team.color}${p.name} "
+                "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
+                        "${p.warlord.shortName + EnumChatFormatting.RESET}  ${if (p.prestiged) EnumChatFormatting.GOLD else ""}" +
+                        "Lv${if (p.level < 10) "0${p.level}" else p.level}  " + (if (p.hasFlag) "${EnumChatFormatting.RED}F" else "") +
+                        "${p.team.color}${p.name} "
             )
             drawString(
                     xKills, yStart + 15 + offset,
@@ -113,10 +113,10 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
             drawString(
                     xLevel, yStart + 15 + offset,
-                    "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
-                            "${p.warlord.shortName + EnumChatFormatting.RESET}  ${if (p.prestiged) EnumChatFormatting.GOLD else ""}" +
-                            "Lv${if (p.level < 10) "0${p.level}" else p.level}  " +
-                            "${p.team.color}${p.name} "
+                "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
+                        "${p.warlord.shortName + EnumChatFormatting.RESET}  ${if (p.prestiged) EnumChatFormatting.GOLD else ""}" +
+                        "Lv${if (p.level < 10) "0${p.level}" else p.level}" + "F" +
+                        "${p.team.color}${p.name} "
             )
             drawString(
                     xKills, yStart + 15 + offset,

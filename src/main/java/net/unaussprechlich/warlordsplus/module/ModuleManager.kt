@@ -23,6 +23,7 @@ object ModuleManager {
             add(GameStateManager)
             add(DamageAndHealParser)
             add(KillAssistParser)
+            add(FlagTakenDetector)
             add(Meme)
             add(HudManager.INSTANCE())
             add(IngameGuiManager)
