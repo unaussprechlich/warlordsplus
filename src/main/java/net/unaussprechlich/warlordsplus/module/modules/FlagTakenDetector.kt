@@ -22,6 +22,12 @@ object FlagTakenDetector : IModule {
             } else if (textMessage.contains("has dropped the")) {
                 var player = textMessage.substring(0, textMessage.indexOf("has") - 1)
                 EventBus.post(FlagTakenEvent(player, false))
+            } else if (textMessage.contains("captured")) {
+                var player = textMessage.substring(0, textMessage.indexOf("captured") - 1)
+                EventBus.post(FlagTakenEvent(player, false))
+            } else if (textMessage.contains("Sending you to")) {
+                var player = Minecraft.getMinecraft().thePlayer.displayNameString;
+                EventBus.post(FlagTakenEvent(player, false));
             }
 
         } catch (throwable: Throwable) {

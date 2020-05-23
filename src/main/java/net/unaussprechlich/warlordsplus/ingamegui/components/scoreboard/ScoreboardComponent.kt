@@ -65,7 +65,7 @@ object ScoreboardComponent : AbstractRenderComponent() {
                     xLevel, yStart + 15 + offset,
                 "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
                         "${p.warlord.shortName + EnumChatFormatting.RESET}  ${if (p.prestiged) EnumChatFormatting.GOLD else ""}" +
-                        "Lv${if (p.level < 10) "0${p.level}" else p.level}  " + (if (p.hasFlag) "${EnumChatFormatting.RED}F" else "") +
+                        "Lv${if (p.level < 10) "0${p.level}" else p.level}  " + (if (p.hasFlag) "${EnumChatFormatting.RED}F-" else "") +
                         "${p.team.color}${p.name} "
             )
             drawString(
@@ -115,7 +115,7 @@ object ScoreboardComponent : AbstractRenderComponent() {
                     xLevel, yStart + 15 + offset,
                 "${EnumChatFormatting.GOLD}${EnumChatFormatting.BOLD}" +
                         "${p.warlord.shortName + EnumChatFormatting.RESET}  ${if (p.prestiged) EnumChatFormatting.GOLD else ""}" +
-                        "Lv${if (p.level < 10) "0${p.level}" else p.level}" + "F" +
+                        "Lv${if (p.level < 10) "0${p.level}" else p.level}  " + (if (p.hasFlag) "${EnumChatFormatting.BLUE}F-" else "") +
                         "${p.team.color}${p.name} "
             )
             drawString(
