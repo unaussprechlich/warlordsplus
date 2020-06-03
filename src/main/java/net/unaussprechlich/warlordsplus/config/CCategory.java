@@ -58,7 +58,8 @@ public enum CCategory {
     ENUM_UNKNOWN("Unknown", EnumChatFormatting.BLACK),
     ENUM_WARLORDS("Warlords", EnumChatFormatting.GOLD),
     ENUM_GENERAL("General", EnumChatFormatting.GOLD),
-    ENUM_HUD("Hud", EnumChatFormatting.GOLD);
+    ENUM_HUD("Hud", EnumChatFormatting.GOLD),
+    ENUM_CHAT("Hud", EnumChatFormatting.WHITE);
 
     //CAN'T CAST ENUMS IN @ConfigProperty<T> SO HERE ARE SOME STATIC FINALS, WE ALL LOVE STATIC FINALS!!!
     //ALSO ADD HERE >>
@@ -67,6 +68,7 @@ public enum CCategory {
     public static final String WARLORDS = "Warlords";
     public static final String GENERAL = "General";
     public static final String HUD = "Hud";
+    public static final String CHAT = "Chat";
 
     private final String name;
     private final EnumChatFormatting enumChatFormatting;

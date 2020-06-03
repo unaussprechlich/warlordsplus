@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus
 
+import net.minecraft.client.Minecraft
 import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.util.EnumChatFormatting
 import net.unaussprechlich.eventbus.EventBus
@@ -31,45 +32,53 @@ open class Player(val name: String, val uuid : UUID) {
 
     var prestiged: Boolean = false
 
+    var hasFlag: Boolean = false
+
 }
 
 private val numberPattern = Pattern.compile("[0-9]{2}")
 
+object OtherPlayers : IModule {
 
-object Players : IModule{
+    private val playersMap: MutableMap<String, Player> = mutableMapOf()
 
-    private val playersMap : MutableMap<String, Player> = mutableMapOf()
-
-    init{
+    init {
         EventBus.register<ResetEvent> {
             playersMap.clear()
+
+            val players = getPlayersForNetworkPlayers(Minecraft.getMinecraft().thePlayer!!.sendQueue.playerInfoMap)
+            println("[WarlordsPlus|OtherPlayers] found ${players.size} players!")
         }
 
         EventBus.register<KillEvent> {
-            if(playersMap.contains(it.deathPlayer))
+            if (it.deathPlayer in playersMap)
                 playersMap[it.deathPlayer]!!.deaths++
-            if(playersMap.contains(it.player))
+            if (it.player in playersMap)
                 playersMap[it.player]!!.kills++
         }
 
         EventBus.register<HealingReceivedEvent> {
-            if(playersMap.contains(it.player))
+            if (it.player in playersMap)
                 playersMap[it.player]!!.healingDone += it.amount
         }
 
         EventBus.register<HealingGivenEvent> {
-            if(playersMap.contains(it.player))
+            if (it.player in playersMap)
                 playersMap[it.player]!!.healingReceived += it.amount
         }
 
         EventBus.register<DamageTakenEvent> {
-            if(playersMap.contains(it.player))
+            if (it.player in playersMap)
                 playersMap[it.player]!!.damageDone += it.amount
         }
 
         EventBus.register<DamageDoneEvent> {
-            if(playersMap.contains(it.player))
+            if (it.player in playersMap)
                 playersMap[it.player]!!.damageReceived += it.amount
+        }
+
+        EventBus.register<FlagTakenEvent> {
+            playersMap[it.playerWithFlag]!!.hasFlag = it.playerWithFlag in playersMap && it.hasFlag
         }
     }
 
@@ -84,7 +93,7 @@ object Players : IModule{
         }.filter { player ->
 
             WarlordsEnum.values().any {
-                    player.playerTeam.colorPrefix has it.shortName
+                player.playerTeam.colorPrefix contain it.shortName
             }
 
         //Create the Player
@@ -93,7 +102,7 @@ object Players : IModule{
             val player = Player(it.gameProfile.name, it.gameProfile.id)
 
             //getting player class
-            player.warlord = WarlordsEnum.values().first { w -> it.playerTeam.colorPrefix has w.shortName }
+            player.warlord = WarlordsEnum.values().first { w -> it.playerTeam.colorPrefix contain w.shortName }
 
             //getting player level
             val m = numberPattern.matcher(it.playerTeam.colorSuffix.removeFormatting())

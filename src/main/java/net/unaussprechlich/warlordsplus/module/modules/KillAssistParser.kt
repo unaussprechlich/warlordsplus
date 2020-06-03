@@ -7,14 +7,12 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.removeFormatting
-import scala.collection.parallel.ParIterableLike
-import java.util.regex.Pattern
 
 object KillAssistParser : IModule {
 
     @SubscribeEvent
     fun onChatMessage(e: ClientChatReceivedEvent) {
-        if(GameStateManager.notIngame) return
+        if (GameStateManager.notIngame || e.type == 2.toByte()) return
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
 
@@ -35,11 +33,6 @@ object KillAssistParser : IModule {
                     EventBus.post(KillEvent(player, deathPlayer))
                 }
             }
-
-            /* TODO @ebic
-                    [ ] Add a Hud
-                    [ ] Add options for Hud
-                 */
 
         } catch (throwable: Throwable) {
             throwable.printStackTrace()

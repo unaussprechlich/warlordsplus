@@ -1,6 +1,5 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
-import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import net.unaussprechlich.eventbus.EventBus
@@ -8,7 +7,6 @@ import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardNames
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardTitle
-import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object GameStateManager : IModule{
 
@@ -18,10 +16,6 @@ object GameStateManager : IModule{
     var notIngame : Boolean = true
         get() = !isIngame
         private set
-
-    init {
-
-    }
 
     @SubscribeEvent
     fun onClientTick(@Suppress("UNUSED_PARAMETER") e: ClientTickEvent) {
@@ -34,13 +28,6 @@ object GameStateManager : IModule{
 
         if(ingame != isIngame) {
             isIngame = ingame
-            val name = Minecraft.getMinecraft().thePlayer.displayNameString
-            if (name == "purpuraRana" ||
-                name == "sdrawk" ||
-                name == "Heatran" ||
-                name == "unaussprechlich"
-            )
-                Minecraft.getMinecraft().thePlayer.sendChatMessage("/shout All hail sumSmash")
             EventBus.post(IngameChangedEvent(isIngame))
         }
     }

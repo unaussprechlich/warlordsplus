@@ -4,18 +4,15 @@ import net.minecraft.client.Minecraft
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
-import net.unaussprechlich.warlordsplus.Players
+import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
-import net.unaussprechlich.warlordsplus.ingamegui.components.HealthComponent
 import net.unaussprechlich.warlordsplus.module.ResetEvent
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
 import net.unaussprechlich.warlordsplus.module.modules.KillEvent
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
-import net.unaussprechlich.warlordsplus.util.removeFormatting
-import net.unaussprechlich.warlordsplus.util.removeSpaces
-import java.util.ArrayList
+import java.util.*
 
 class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsumer {
     var team = TeamEnum.NONE
@@ -59,9 +56,9 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
             blueKills = 0
         }
         EventBus.register<KillEvent> {
-            if (Players.getPlayerForName(it.player)!!.team == TeamEnum.BLUE)
+            if (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.BLUE)
                 blueKills++
-            else if (Players.getPlayerForName(it.player)!!.team == TeamEnum.RED)
+            else if (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.RED)
                 redKills++;
         }
     }

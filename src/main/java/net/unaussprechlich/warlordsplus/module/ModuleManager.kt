@@ -20,14 +20,15 @@ object ModuleManager {
         with(modules){
             add(EasyConfigHandler)
             add(ScoreboardManager)
-            add(ClassManager)
             add(GameStateManager)
             add(DamageAndHealParser)
             add(KillAssistParser)
+            add(FlagTakenDetector)
             add(Meme)
             add(HudManager.INSTANCE())
             add(IngameGuiManager)
             add(ThePlayer)
+            add(ChatDetector)
         }
     }
 

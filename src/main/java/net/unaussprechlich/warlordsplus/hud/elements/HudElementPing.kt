@@ -1,13 +1,12 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
 import net.minecraft.client.network.OldServerPinger
-import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
-import java.net.UnknownHostException
-
-import kotlinx.coroutines.*
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
+import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 
 
 class HudElementPing : AbstractHudElement() {
@@ -34,7 +33,7 @@ class HudElementPing : AbstractHudElement() {
 
     companion object {
         private val serverPinger = OldServerPinger()
-        private const val pingCooldwonMs = 1000
+        private const val pingCooldwonMs = 2000
         private var nextTimeStamp: Long = 0
 
         private fun updatePing() {
