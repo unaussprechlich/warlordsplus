@@ -3,7 +3,8 @@
     "category": "player",
     "sounds": [
       {
-        "name": "SUCTION"
+        "name": "SUCTION",
+        "stream": "true"
       }
     ]
   }

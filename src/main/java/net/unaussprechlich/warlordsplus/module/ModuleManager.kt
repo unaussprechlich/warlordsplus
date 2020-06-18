@@ -21,13 +21,13 @@ object ModuleManager {
             add(EasyConfigHandler)
             add(ScoreboardManager)
             add(GameStateManager)
+            add(Meme)
             add(DamageAndHealParser)
             add(KillAssistParser)
             add(FlagTakenDetector)
-            add(Meme)
+            add(ThePlayer)
             add(HudManager.INSTANCE())
             add(IngameGuiManager)
-            add(ThePlayer)
             add(ChatDetector)
         }
     }

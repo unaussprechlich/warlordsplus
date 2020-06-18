@@ -34,6 +34,7 @@ open class Player(val name: String, val uuid : UUID) {
 
     var hasFlag: Boolean = false
 
+    var died: Int = 0
 }
 
 private val numberPattern = Pattern.compile("[0-9]{2}")
@@ -79,6 +80,10 @@ object OtherPlayers : IModule {
 
         EventBus.register<FlagTakenEvent> {
             playersMap[it.playerWithFlag]!!.hasFlag = it.playerWithFlag in playersMap && it.hasFlag
+        }
+
+        EventBus.register<KillRatioEvent> {
+            playersMap[it.otherPlayer]!!.died += 1
         }
     }
 
