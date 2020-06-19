@@ -1,5 +1,7 @@
 package net.unaussprechlich.eventbus
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -24,6 +26,24 @@ class EventBusTest {
         EventBus.post(MyThing("Hello"))
 
         assertEquals(true, test)
+    }
+
+    @Test
+    fun testest() {
+
+        //ASYNC
+
+        suspend fun getStatsForName(name: String) {
+
+        }
+
+        GlobalScope.launch {
+            getStatsForName("test")
+        }
+
+
+
+        assertEquals("sumSmash", response.data.name)
     }
 
 }

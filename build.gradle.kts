@@ -68,12 +68,17 @@ configurations.compile.extendsFrom(embed)
 repositories {
     jcenter()
     mavenCentral()
-    maven(url = "http://maven.shadowfacts.net/")
+    maven(url = "https://dl.bintray.com/kotlin/ktor")
+    maven(url = "https://dl.bintray.com/kotlin/kotlinx")
 }
 
 dependencies {
     embed(kotlin("stdlib-jdk8"))
-    embed("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.6")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.6")
+    implementation("io.ktor:ktor-client-cio:1.3.2")
+    implementation("io.ktor:ktor-client-serialization-jvm:1.3.2")
+    implementation("io.ktor:ktor-client-serialization:1.3.2")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
