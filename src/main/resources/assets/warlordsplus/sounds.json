@@ -1,11 +1,8 @@
 {
-  "SUCTION": {
+  "meme.suction": {
     "category": "player",
     "sounds": [
-      {
-        "name": "SUCTION",
-        "stream": "true"
-      }
+      "warlordsplus:meme/suction"
     ]
   }
 }

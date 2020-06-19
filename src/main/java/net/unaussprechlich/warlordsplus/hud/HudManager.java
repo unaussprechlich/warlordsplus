@@ -34,7 +34,6 @@ public class HudManager extends FancyGui implements IModule {
         hudElements.add(new HudElementTotalKills());
         hudElements.add(new HighestWindfury());
         hudElements.add(new TotalPlayerKills());
-        hudElements.add(new WarpLeave());
         hudElements.add(HudElementSpec.INSTANCE);
 
     }

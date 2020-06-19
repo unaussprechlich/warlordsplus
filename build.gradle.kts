@@ -7,7 +7,7 @@ val kotlinVersion: String by extra
 val sourceCompatibility = JavaVersion.VERSION_1_8
 val targetCompatibility = JavaVersion.VERSION_1_8
 
-var modVersion = "DEV_${System.currentTimeMillis().hashCode()}"
+var modVersion = "DEV_${Math.abs(System.currentTimeMillis().hashCode())}"
 
 //Getting the Version if we Build on Travis
 if(System.getenv()["RELEASE_VERSION"]  != null ){
@@ -26,15 +26,23 @@ buildscript {
     }
 }
 
-plugins{
+plugins {
     java
     kotlin("jvm") version "1.3.50"
+    idea
+}
+
+idea {
+    module {
+        inheritOutputDirs = true
+    }
 }
 
 apply(plugin = "net.minecraftforge.gradle.forge")
 
 version = modVersion
 group = "net.unaussprechlich"
+
 
 configure<ForgeExtension> {
     version = "1.8.9-11.15.1.2318-1.8.9"
@@ -43,7 +51,6 @@ configure<ForgeExtension> {
     makeObfSourceJar = false
 
     replace("@VERSION@", modVersion)
-
 }
 
 tasks.withType<KotlinCompile> {
@@ -61,9 +68,8 @@ configurations.compile.extendsFrom(embed)
 repositories {
     jcenter()
     mavenCentral()
-    maven (url = "http://maven.shadowfacts.net/")
+    maven(url = "http://maven.shadowfacts.net/")
 }
-
 
 dependencies {
     embed(kotlin("stdlib-jdk8"))
@@ -72,6 +78,14 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
 }
+
+tasks.withType<ProcessResources> {
+    copy {
+        from("src/main/resources")
+        into("build/classes/java/main")
+    }
+}
+
 
 tasks.withType<Jar> {
     manifest {
