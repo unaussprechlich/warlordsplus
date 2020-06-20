@@ -4,12 +4,14 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.hud.elements.*;
 import net.unaussprechlich.warlordsplus.module.IModule;
 import net.unaussprechlich.warlordsplus.util.FancyGui;
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
+import net.unaussprechlich.warlordsplus.util.consumers.IKeyEventConsumer;
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer;
 
 import java.util.ArrayList;
@@ -55,14 +57,22 @@ public class HudManager extends FancyGui implements IModule {
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
-        for(AbstractHudElement element : hudElements){
-            if(element instanceof IChatConsumer && element.isEnabled())
+        for (AbstractHudElement element : hudElements) {
+            if (element instanceof IChatConsumer && element.isEnabled())
                 ((IChatConsumer) element).onChat(event);
         }
     }
 
     @SubscribeEvent
-    public void onRender(RenderGameOverlayEvent.Text event){
+    public void onKeyInput(InputEvent.KeyInputEvent event) {
+        for (AbstractHudElement element : hudElements) {
+            if (element instanceof IKeyEventConsumer && element.isEnabled())
+                ((IKeyEventConsumer) element).onKeyInput(event);
+        }
+    }
+
+    @SubscribeEvent
+    public void onRender(RenderGameOverlayEvent.Text event) {
 
         final int height = 12;
         int yStart = 4;

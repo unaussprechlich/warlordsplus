@@ -32,11 +32,14 @@ plugins {
     idea
 }
 
+/*
 idea {
     module {
         inheritOutputDirs = true
     }
 }
+
+ */
 
 apply(plugin = "net.minecraftforge.gradle.forge")
 

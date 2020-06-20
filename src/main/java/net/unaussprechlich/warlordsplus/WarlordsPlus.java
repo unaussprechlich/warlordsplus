@@ -33,12 +33,14 @@ public class WarlordsPlus {
         CONFIG = new Configuration(event.getSuggestedConfigurationFile());
         CONFIG.load();
         EasyConfigHandler.INSTANCE.init(event.getAsmData());
+
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         ModuleManager.INSTANCE.register();
+
     }
 
 }
