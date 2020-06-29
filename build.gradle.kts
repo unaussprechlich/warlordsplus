@@ -2,8 +2,6 @@ import net.minecraftforge.gradle.user.patcherUser.forge.ForgeExtension
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotlinVersion: String by extra
-
 val sourceCompatibility = JavaVersion.VERSION_1_8
 val targetCompatibility = JavaVersion.VERSION_1_8
 
@@ -15,33 +13,36 @@ if(System.getenv()["RELEASE_VERSION"]  != null ){
 }
 
 buildscript {
+
     repositories {
         jcenter()
         maven { url = uri("http://files.minecraftforge.net/maven") }
+        maven { url = uri("https://plugins.gradle.org/m2") }
     }
     dependencies {
-        classpath("net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"){
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72")
+        classpath("net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT") {
             exclude(group = "net.sf.trove4j", module = "trove4j")
         }
     }
 }
 
+apply(plugin = "kotlin")
+apply(plugin = "net.minecraftforge.gradle.forge")
+
 plugins {
     java
-    kotlin("jvm") version "1.3.50"
+    kotlin("jvm") version "1.3.72"
+    kotlin("plugin.serialization") version "1.3.72"
     idea
 }
 
-/*
 idea {
     module {
         inheritOutputDirs = true
     }
 }
 
- */
-
-apply(plugin = "net.minecraftforge.gradle.forge")
 
 version = modVersion
 group = "net.unaussprechlich"
@@ -56,11 +57,7 @@ configure<ForgeExtension> {
     replace("@VERSION@", modVersion)
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
-java{
+java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
@@ -76,30 +73,41 @@ repositories {
 }
 
 dependencies {
-    embed(kotlin("stdlib-jdk8"))
+    implementation(kotlin("stdlib-jdk8", "1.3.72"))
+    implementation(kotlin("stdlib-jdk7", "1.3.72"))
+    implementation(kotlin("reflect", "1.3.72"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.6")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.7")
+
     implementation("io.ktor:ktor-client-cio:1.3.2")
     implementation("io.ktor:ktor-client-serialization-jvm:1.3.2")
     implementation("io.ktor:ktor-client-serialization:1.3.2")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.3.72")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.3.72")
 }
 
-tasks.withType<ProcessResources> {
-    copy {
-        from("src/main/resources")
-        into("build/classes/java/main")
+tasks {
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.includeRuntime = true
     }
-}
 
-
-tasks.withType<Jar> {
-    manifest {
-        attributes("ModSide" to "CLIENT")
+    withType<ProcessResources> {
+        copy {
+            from("src/main/resources")
+            into("build/classes/java/main")
+        }
     }
-    from(embed.map { if (it.isDirectory) it else zipTree(it) })
 
-    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    withType<Jar> {
+
+        manifest {
+            attributes("ModSide" to "CLIENT")
+        }
+        from(embed.map { if (it.isDirectory) it else zipTree(it) })
+
+        setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    }
 }

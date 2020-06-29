@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.module
 
+import io.ktor.util.KtorExperimentalAPI
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -10,8 +11,10 @@ import net.unaussprechlich.warlordsplus.config.EasyConfigHandler
 import net.unaussprechlich.warlordsplus.hud.HudManager
 import net.unaussprechlich.warlordsplus.ingamegui.IngameGuiManager
 import net.unaussprechlich.warlordsplus.module.modules.*
+import net.unaussprechlich.warlordsplus.stats.WarlordsSrApi
 
 
+@KtorExperimentalAPI
 object ModuleManager {
 
     private val modules = ArrayList<IModule>()
@@ -29,6 +32,7 @@ object ModuleManager {
             add(HudManager.INSTANCE())
             add(IngameGuiManager)
             add(ChatDetector)
+            add(WarlordsSrApi)
         }
     }
 
@@ -45,6 +49,7 @@ object ModuleManager {
             if (event.message.formattedText == "§r§eThe gates will fall in §r§c5 §r§eseconds!§r") {
                 EventBus.post(ResetEvent())
             }
+
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
         }

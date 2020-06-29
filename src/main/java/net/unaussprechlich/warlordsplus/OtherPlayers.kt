@@ -35,6 +35,11 @@ open class Player(val name: String, val uuid : UUID) {
     var hasFlag: Boolean = false
 
     var died: Int = 0
+
+
+    suspend fun getStats() {
+        //get stats from api
+    }
 }
 
 private val numberPattern = Pattern.compile("[0-9]{2}")
@@ -107,8 +112,6 @@ object OtherPlayers : IModule {
             val player = Player(it.gameProfile.name, it.gameProfile.id)
 
             //getting player class
-            player.warlord = WarlordsEnum.values().first { w -> it.playerTeam.colorPrefix contain w.shortName }
-
             //getting player level
             val m = numberPattern.matcher(it.playerTeam.colorSuffix.removeFormatting())
             player.level = if (!m.find()) 0 else {

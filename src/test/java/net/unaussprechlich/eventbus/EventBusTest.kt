@@ -1,19 +1,6 @@
 package net.unaussprechlich.eventbus
 
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.Json
-import net.unaussprechlich.warlordsplus.PlayerStats
 import org.junit.Test
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.net.URL
-import java.net.URLConnection
 import kotlin.test.assertEquals
 
 
@@ -40,7 +27,7 @@ class EventBusTest {
         assertEquals(true, test)
     }
 
-    @Test
+    /*
     fun testest() {
 
         //call name ASYNC + parse json
@@ -75,6 +62,6 @@ class EventBusTest {
 
         //assertEquals(true,true)
         //assertEquals(0, playerStats.sr)
-    }
+    }*/
 
 }
