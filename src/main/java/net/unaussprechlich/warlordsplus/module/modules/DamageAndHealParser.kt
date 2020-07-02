@@ -1,6 +1,9 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.FontRenderer
 import net.minecraftforge.client.event.ClientChatReceivedEvent
+import net.minecraftforge.fml.client.FMLClientHandler
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
@@ -8,6 +11,7 @@ import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.contain
 import net.unaussprechlich.warlordsplus.util.removeFormatting
+import org.lwjgl.opengl.GL11
 import java.util.regex.Pattern
 
 private const val SOMEBODY_DID = "\u00AB"
@@ -66,13 +70,16 @@ object DamageAndHealParser : IModule {
             } else if (e.message.unformattedText contain YOU_DID) {
 
                 when {
+
                     msg.contains("health") -> {
                         otherPlayer = msg.substring(msg.indexOf("healed ") + 7, msg.indexOf("for") - 1)
                         EventBus.post(HealingGivenEvent(amount, crit, otherPlayer))
+                        EventBus.post(DamageHealingEvent(amount, otherPlayer, false, crit, false))
                     }
                     msg.contains("damage") -> {
                         otherPlayer = msg.substring(msg.indexOf("hit ") + 4, msg.indexOf("for") - 1)
                         EventBus.post(DamageDoneEvent(amount, crit, otherPlayer))
+                        EventBus.post(DamageHealingEvent(amount, otherPlayer, true, crit, false))
 
                         //Player's Avenger's Strike stole energy from otherPlayer
                         if (msg.contains("Avenger's Strike"))
@@ -80,9 +87,12 @@ object DamageAndHealParser : IModule {
                     }
                     msg.contains("energy") -> {
                         otherPlayer = msg.substring(msg.indexOf("gave") + 5, msg.indexOf("energy") - 4)
-                        EventBus.post(EnergyGivenEvent(amount, otherPlayer));
+                        EventBus.post(EnergyGivenEvent(amount, otherPlayer))
                     }
-
+                    msg.contains("absorbed") -> {
+                        otherPlayer = msg.substring(msg.indexOf("by") + 3)
+                        EventBus.post(DamageHealingEvent(amount, otherPlayer, true, crit, true))
+                    }
                 }
             }
 
@@ -131,7 +141,12 @@ object DamageAndHealParser : IModule {
 
     private fun getDamageOrHealthValue(inputMessage: String): Int {
         try {
-            val message = inputMessage.substring(inputMessage.indexOf("for"));
+            var message: String = ""
+            if (inputMessage.contain("for"))
+                message = inputMessage.substring(inputMessage.indexOf("for"))
+            //giving energy
+            else if (inputMessage.contain("Crusader"))
+                message = inputMessage.substring(inputMessage.indexOf("energy") - 4)
             val m = numberPattern.matcher(message.replace("!", ""))
             if (!m.find()) return 0
             return m.group().trim().toInt()
@@ -182,12 +197,20 @@ data class EnergyGivenEvent(
 ) : IEvent
 
 data class EnergyStolenEvent(
-        val amount: Int,
-        val player: String
+    val amount: Int,
+    val player: String
 ) : IEvent
 
 data class EnergyLostEvent(
-        val amount: Int,
-        val player: String
+    val amount: Int,
+    val player: String
+) : IEvent
+
+data class DamageHealingEvent(
+    val amount: Int,
+    val player: String,
+    val damage: Boolean,
+    val crit: Boolean,
+    val absorbed: Boolean
 ) : IEvent
 
