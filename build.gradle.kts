@@ -5,10 +5,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val sourceCompatibility = JavaVersion.VERSION_1_8
 val targetCompatibility = JavaVersion.VERSION_1_8
 
+val kotlinVersion = "1.3.72"
+
 var modVersion = "DEV_${Math.abs(System.currentTimeMillis().hashCode())}"
 
 //Getting the Version if we Build on Travis
-if(System.getenv()["RELEASE_VERSION"]  != null ){
+if (System.getenv()["RELEASE_VERSION"] != null) {
     modVersion = "${System.getenv()["RELEASE_VERSION"]}"
 }
 
@@ -16,24 +18,23 @@ buildscript {
 
     repositories {
         jcenter()
+        mavenCentral()
         maven { url = uri("http://files.minecraftforge.net/maven") }
-        maven { url = uri("https://plugins.gradle.org/m2") }
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72")
+        classpath(kotlin("gradle-plugin", version = "1.3.72"))
         classpath("net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT") {
             exclude(group = "net.sf.trove4j", module = "trove4j")
         }
     }
 }
 
-apply(plugin = "kotlin")
 apply(plugin = "net.minecraftforge.gradle.forge")
 
 plugins {
     java
     kotlin("jvm") version "1.3.72"
-    kotlin("plugin.serialization") version "1.3.72"
+    //kotlin("plugin.serialization") version "1.3.72"
     idea
 }
 
@@ -68,30 +69,21 @@ configurations.compile.extendsFrom(embed)
 repositories {
     jcenter()
     mavenCentral()
-    maven(url = "https://dl.bintray.com/kotlin/ktor")
-    maven(url = "https://dl.bintray.com/kotlin/kotlinx")
+    maven(url = "https://kotlin.bintray.com/kotlinx")
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8", "1.3.72"))
-    implementation(kotlin("stdlib-jdk7", "1.3.72"))
-    implementation(kotlin("reflect", "1.3.72"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.7")
 
-    implementation("io.ktor:ktor-client-cio:1.3.2")
-    implementation("io.ktor:ktor-client-serialization-jvm:1.3.2")
-    implementation("io.ktor:ktor-client-serialization:1.3.2")
-
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.3.72")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.3.72")
+    implementation("io.ktor:ktor-client-cio:1.3.1")
+    implementation("io.ktor:ktor-client-serialization-jvm:1.3.1")
 }
 
 tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
-        kotlinOptions.includeRuntime = true
     }
 
     withType<ProcessResources> {
@@ -108,6 +100,6 @@ tasks {
         }
         from(embed.map { if (it.isDirectory) it else zipTree(it) })
 
-        setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+        //setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     }
 }
