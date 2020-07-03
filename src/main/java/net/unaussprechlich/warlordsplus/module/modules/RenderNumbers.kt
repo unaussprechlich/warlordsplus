@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modules.renderer
+package net.unaussprechlich.warlordsplus.module.modules
 
 
 import net.minecraft.client.renderer.GlStateManager.*
@@ -14,8 +14,6 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.module.modules.DamageHealingEvent
-import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import org.lwjgl.opengl.GL11
 
 object RenderNumbers : IModule {
@@ -50,7 +48,9 @@ object RenderNumbers : IModule {
             if (player.event.player == e.entityPlayer.displayNameString) {
                 renderName(
                     e.renderer,
-                    getRenderString(player),
+                    getRenderString(
+                        player
+                    ),
                     e.entityPlayer,
                     e.x + player.position,
                     e.y - 1.2 + player.positionY,
