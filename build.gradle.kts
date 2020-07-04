@@ -80,14 +80,14 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation(kotlin("reflect"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    embed(kotlin("stdlib-jdk8"))
+    embed(kotlin("reflect"))
+    embed("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 
-    implementation(ktor("client-apache")) {
+    embed(ktor("client-apache")) {
         exclude(group = "org.jetbrains.kotlin")
     }
-    implementation(ktor("client-serialization-jvm")) {
+    embed(ktor("client-serialization-jvm")) {
         exclude(group = "org.jetbrains.kotlin")
     }
 
