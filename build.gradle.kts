@@ -2,10 +2,15 @@ import net.minecraftforge.gradle.user.patcherUser.forge.ForgeExtension
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val kotlinVersion = "1.3.50"
+val ktorVersion = "1.2.5"
+val coroutinesVersion = "1.3.2"
+
+fun ktor(module: String) = "io.ktor:ktor-$module:$ktorVersion"
+fun ktor() = "io.ktor:ktor:$ktorVersion"
+
 val sourceCompatibility = JavaVersion.VERSION_1_8
 val targetCompatibility = JavaVersion.VERSION_1_8
-
-val kotlinVersion = "1.3.72"
 
 var modVersion = "DEV_${Math.abs(System.currentTimeMillis().hashCode())}"
 
@@ -18,11 +23,10 @@ buildscript {
 
     repositories {
         jcenter()
-        mavenCentral()
         maven { url = uri("http://files.minecraftforge.net/maven") }
     }
     dependencies {
-        classpath(kotlin("gradle-plugin", version = "1.3.72"))
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50")
         classpath("net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT") {
             exclude(group = "net.sf.trove4j", module = "trove4j")
         }
@@ -30,11 +34,12 @@ buildscript {
 }
 
 apply(plugin = "net.minecraftforge.gradle.forge")
+apply(plugin = "kotlin")
 
 plugins {
+    kotlin("jvm") version "1.3.50"
+    kotlin("plugin.serialization") version "1.3.50"
     java
-    kotlin("jvm") version "1.3.72"
-    //kotlin("plugin.serialization") version "1.3.72"
     idea
 }
 
@@ -44,9 +49,8 @@ idea {
     }
 }
 
-
 version = modVersion
-group = "net.unaussprechlich"
+group = "net.unaussprechlich.warlordsplus"
 
 
 configure<ForgeExtension> {
@@ -69,21 +73,39 @@ configurations.compile.extendsFrom(embed)
 repositories {
     jcenter()
     mavenCentral()
-    maven(url = "https://kotlin.bintray.com/kotlinx")
+    "http://dl.bintray.com/kotlin".let {
+        maven { setUrl("$it/ktor") }
+        maven { setUrl("$it/kotlinx") }
+    }
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8", "1.3.72"))
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("reflect"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
+    implementation(ktor("client-apache")) {
+        exclude(group = "org.jetbrains.kotlin")
+    }
+    implementation(ktor("client-serialization-jvm")) {
+        exclude(group = "org.jetbrains.kotlin")
+    }
 
-    implementation("io.ktor:ktor-client-cio:1.3.1")
-    implementation("io.ktor:ktor-client-serialization-jvm:1.3.1")
+    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit"))
+
+}
+
+tasks.create<Delete>("kotlinCleanHotfix") {
+    delete = setOf(
+        "WarlordsPlus.kotlin_module"
+    )
 }
 
 tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.includeRuntime = true
     }
 
     withType<ProcessResources> {
@@ -100,6 +122,6 @@ tasks {
         }
         from(embed.map { if (it.isDirectory) it else zipTree(it) })
 
-        //setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+        setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     }
 }

@@ -1,9 +1,6 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.FontRenderer
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import net.minecraftforge.fml.client.FMLClientHandler
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
@@ -11,7 +8,6 @@ import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.contain
 import net.unaussprechlich.warlordsplus.util.removeFormatting
-import org.lwjgl.opengl.GL11
 import java.util.regex.Pattern
 
 private const val SOMEBODY_DID = "\u00AB"
@@ -52,10 +48,10 @@ object DamageAndHealParser : IModule {
 
                 when {
                     msg.contains("health") -> {
-                        EventBus.post(HealingReceivedEvent(amount, crit, otherPlayer))
+                        EventBus.post(HealingReceivedEvent(amount, otherPlayer, crit))
                     }
                     msg.contains("damage") -> {
-                        EventBus.post(DamageTakenEvent(amount, crit, otherPlayer))
+                        EventBus.post(DamageTakenEvent(amount, otherPlayer, crit))
 
                         //Player lost Energy from otherPlayer's Avenger's Strike
                         if (msg.contains("Avenger's Strike"))
@@ -73,16 +69,14 @@ object DamageAndHealParser : IModule {
 
                     msg.contains("health") -> {
                         otherPlayer = msg.substring(msg.indexOf("healed ") + 7, msg.indexOf("for") - 1)
-                        EventBus.post(HealingGivenEvent(amount, crit, otherPlayer))
-                        EventBus.post(DamageHealingEvent(amount, otherPlayer, false, crit, false))
+                        EventBus.post(HealingGivenEvent(amount, otherPlayer, crit))
                     }
                     msg.contains("damage") -> {
                         otherPlayer = msg.substring(msg.indexOf("hit ") + 4, msg.indexOf("for") - 1)
-                        EventBus.post(DamageDoneEvent(amount, crit, otherPlayer))
-                        EventBus.post(DamageHealingEvent(amount, otherPlayer, true, crit, false))
+                        EventBus.post(DamageDoneEvent(amount, otherPlayer, crit))
 
                         //Player's Avenger's Strike stole energy from otherPlayer
-                        if (msg.contains("Avenger's Strike"))
+                        if (msg.contains("Avengers Strike"))
                             EventBus.post(EnergyStolenEvent(6, otherPlayer))
                     }
                     msg.contains("energy") -> {
@@ -91,7 +85,7 @@ object DamageAndHealParser : IModule {
                     }
                     msg.contains("absorbed") -> {
                         otherPlayer = msg.substring(msg.indexOf("by") + 3)
-                        EventBus.post(DamageHealingEvent(amount, otherPlayer, true, crit, true))
+                        EventBus.post(DamageAbsorbedEvent(amount, otherPlayer, crit, true))
                     }
                 }
             }
@@ -162,55 +156,75 @@ object DamageAndHealParser : IModule {
  * A data class that can be Posted onto the EventBus
  * Must extend IEvent
  */
+
+abstract class AbstractDamageHealEvent : IEvent {
+    abstract val amount: Int
+    abstract val player: String
+    abstract val isCrit: Boolean
+    abstract val isAbsorbed: Boolean
+}
+
 data class HealingGivenEvent(
-    val amount: Int,
-    val isCrit: Boolean,
-    val player: String
-) : IEvent
+    override val amount: Int,
+    override val player: String,
+    override val isCrit: Boolean,
+    override val isAbsorbed: Boolean = false
+) : AbstractDamageHealEvent()
 
 data class DamageDoneEvent(
-    val amount: Int,
-    val isCrit: Boolean,
-    val player: String
-) : IEvent
-
-data class EnergyReceivedEvent(
-    val amount: Int,
-    val player: String
-) : IEvent
+    override val amount: Int,
+    override val player: String,
+    override val isCrit: Boolean,
+    override val isAbsorbed: Boolean = false
+) : AbstractDamageHealEvent()
 
 data class HealingReceivedEvent(
-    val amount: Int,
-    val isCrit: Boolean,
-    val player: String
-) : IEvent
+    override val amount: Int,
+    override val player: String,
+    override val isCrit: Boolean,
+    override val isAbsorbed: Boolean = false
+) : AbstractDamageHealEvent()
 
 data class DamageTakenEvent(
-    val amount: Int,
-    val isCrit: Boolean,
-    val player: String
-) : IEvent
+    override val amount: Int,
+    override val player: String,
+    override val isCrit: Boolean,
+    override val isAbsorbed: Boolean = false
+) : AbstractDamageHealEvent()
+
+data class EnergyReceivedEvent(
+    override val amount: Int,
+    override val player: String,
+    override val isCrit: Boolean = false,
+    override val isAbsorbed: Boolean = false
+) : AbstractDamageHealEvent()
 
 data class EnergyGivenEvent(
-    val amount: Int,
-    val player: String
-) : IEvent
+    override val amount: Int,
+    override val player: String,
+    override val isCrit: Boolean = false,
+    override val isAbsorbed: Boolean = false
+) : AbstractDamageHealEvent()
 
 data class EnergyStolenEvent(
-    val amount: Int,
-    val player: String
-) : IEvent
+    override val amount: Int,
+    override val player: String,
+    override val isCrit: Boolean = false,
+    override val isAbsorbed: Boolean = false
+) : AbstractDamageHealEvent()
 
 data class EnergyLostEvent(
-    val amount: Int,
-    val player: String
-) : IEvent
+    override val amount: Int,
+    override val player: String,
+    override val isCrit: Boolean = false,
+    override val isAbsorbed: Boolean = false
+) : AbstractDamageHealEvent()
 
-data class DamageHealingEvent(
-    val amount: Int,
-    val player: String,
-    val damage: Boolean,
-    val crit: Boolean,
-    val absorbed: Boolean
-) : IEvent
+data class DamageAbsorbedEvent(
+    override val amount: Int,
+    override val player: String,
+    override val isCrit: Boolean,
+    override val isAbsorbed: Boolean
+) : AbstractDamageHealEvent()
+
 

@@ -1,11 +1,10 @@
 package net.unaussprechlich.warlordsplus.stats
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
-import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.UnstableDefault
@@ -15,11 +14,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 
+
 @UnstableDefault
-@KtorExperimentalAPI
 object WarlordsSrApi : IModule {
 
-    val client = HttpClient(CIO) {
+    val client = HttpClient(Apache) {
         install(JsonFeature) {
             serializer = KotlinxSerializer(
                 Json(
