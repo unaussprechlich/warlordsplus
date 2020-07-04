@@ -1,10 +1,44 @@
 {
-  "SUCTION": {
+  "meme.suction": {
     "category": "player",
     "sounds": [
-      {
-        "name": "SUCTION"
-      }
+      "warlordsplus:meme/suction"
+    ]
+  },
+  "meme.t1BBC": {
+    "category": "player",
+    "sounds": [
+      "warlordsplus:meme/t1BBC"
+    ]
+  },
+  "meme.t1BeStrong": {
+    "category": "player",
+    "sounds": [
+      "warlordsplus:meme/t1BeStrong"
+    ]
+  },
+  "meme.t1Christmas": {
+    "category": "player",
+    "sounds": [
+      "warlordsplus:meme/t1Christmas"
+    ]
+  },
+  "meme.t1GTFO": {
+    "category": "player",
+    "sounds": [
+      "warlordsplus:meme/t1GTFO"
+    ]
+  },
+  "meme.t1KS": {
+    "category": "player",
+    "sounds": [
+      "warlordsplus:meme/t1KS"
+    ]
+  },
+  "meme.t1ThanksForGold": {
+    "category": "player",
+    "sounds": [
+      "warlordsplus:meme/t1ThanksForGold"
     ]
   }
 }

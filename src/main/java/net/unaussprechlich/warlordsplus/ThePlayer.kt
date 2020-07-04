@@ -111,12 +111,7 @@ object ThePlayer : IModule {
 
             ScoreboardManager.scoreboardNames.forEach { sc ->
                 val noFormatting = sc.removeFormatting()
-                SpecsEnum.values().forEach {
-                    if (noFormatting contain it.classname) {
-                        spec = it
-                        return@register
-                    }
-                }
+                spec = SpecsEnum.values().first { noFormatting contain it.classname }
             }
 
             team = when {

@@ -30,12 +30,16 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
 
     override fun update() {
         if (Minecraft.getMinecraft().thePlayer != null) {
-            team = if (Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A7c")) {
-                TeamEnum.RED
-            } else if (Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A79")) {
-                TeamEnum.BLUE
-            } else {
-                TeamEnum.NONE
+            team = when {
+                Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A7c") -> {
+                    TeamEnum.RED
+                }
+                Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A79") -> {
+                    TeamEnum.BLUE
+                }
+                else -> {
+                    TeamEnum.NONE
+                }
             }
         }
         if (System.currentTimeMillis() == futureTime) {

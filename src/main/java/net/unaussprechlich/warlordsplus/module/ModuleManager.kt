@@ -11,7 +11,6 @@ import net.unaussprechlich.warlordsplus.hud.HudManager
 import net.unaussprechlich.warlordsplus.ingamegui.IngameGuiManager
 import net.unaussprechlich.warlordsplus.module.modules.*
 
-
 object ModuleManager {
 
     private val modules = ArrayList<IModule>()
@@ -21,14 +20,15 @@ object ModuleManager {
             add(EasyConfigHandler)
             add(ScoreboardManager)
             add(GameStateManager)
+            add(Meme)
             add(DamageAndHealParser)
             add(KillAssistParser)
             add(FlagTakenDetector)
-            add(Meme)
+            add(ThePlayer)
             add(HudManager.INSTANCE())
             add(IngameGuiManager)
-            add(ThePlayer)
             add(ChatDetector)
+            add(RenderNumbers)
         }
     }
 
@@ -45,6 +45,7 @@ object ModuleManager {
             if (event.message.formattedText == "§r§eThe gates will fall in §r§c5 §r§eseconds!§r") {
                 EventBus.post(ResetEvent())
             }
+
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
         }
