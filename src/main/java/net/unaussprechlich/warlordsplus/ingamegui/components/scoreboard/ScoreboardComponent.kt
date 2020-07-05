@@ -8,7 +8,6 @@ import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 
-
 object ScoreboardComponent : AbstractRenderComponent() {
 
     override fun render(e: RenderGameOverlayEvent.Pre) {
@@ -28,10 +27,10 @@ object ScoreboardComponent : AbstractRenderComponent() {
         val teamBlue = players.filter { it.team == TeamEnum.BLUE }.sortedByDescending { it.level }
         val teamRed = players.filter { it.team == TeamEnum.RED }.sortedByDescending { it.level }
 
-        val mostDeathsRed = teamRed.map { it.deaths }.max()
-        val mostDeathsBlue = teamBlue.map { it.deaths }.max()
-        val mostKillsRed = teamRed.map { it.kills }.max()
-        val mostKillsBlue = teamBlue.map { it.kills }.max()
+        val mostDeathsRed = teamRed.map { it.deaths }.sorted().reversed()[0]
+        val mostDeathsBlue = teamBlue.map { it.deaths }.sorted().reversed()[0]
+        val mostKillsRed = teamRed.map { it.kills }.sorted().reversed()[0]
+        val mostKillsBlue = teamBlue.map { it.kills }.sorted().reversed()[0]
 
         var offset = 0
         val w = 420
@@ -78,7 +77,10 @@ object ScoreboardComponent : AbstractRenderComponent() {
                         "${p.warlord.shortName + EnumChatFormatting.RESET} ${if (p.prestiged) EnumChatFormatting.GOLD else ""}" +
                         "Lv${if (p.level < 10) "0${p.level}" else p.level}"
             )
-            drawString(xName, yStart + 15 + offset, "${p.team.color}${p.name}")
+            drawString(
+                xName, yStart + 15 + offset,
+                "${p.team.color}${p.name}"
+            )
             drawString(
                 xKills, yStart + 15 + offset,
                 "${if (hasMostKills(p)) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}"
@@ -117,13 +119,11 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
             offset += 10
         }
-
         teamBlue.forEach(renderLine)
 
         offset += 1
         drawBackgroundRect(xStart, yStart + 14 + offset, w, 10 * teamRed.size)
 
         teamRed.forEach(renderLine)
-
     }
 }

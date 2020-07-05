@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.module
 
+import kotlinx.serialization.UnstableDefault
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -10,7 +11,10 @@ import net.unaussprechlich.warlordsplus.config.EasyConfigHandler
 import net.unaussprechlich.warlordsplus.hud.HudManager
 import net.unaussprechlich.warlordsplus.ingamegui.IngameGuiManager
 import net.unaussprechlich.warlordsplus.module.modules.*
+import net.unaussprechlich.warlordsplus.stats.StatsRenderer
+import net.unaussprechlich.warlordsplus.stats.WarlordsSrApi
 
+@UnstableDefault
 object ModuleManager {
 
     private val modules = ArrayList<IModule>()
@@ -29,6 +33,8 @@ object ModuleManager {
             add(IngameGuiManager)
             add(ChatDetector)
             add(RenderNumbers)
+            add(WarlordsSrApi)
+            add(StatsRenderer)
         }
     }
 

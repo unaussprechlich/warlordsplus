@@ -107,17 +107,23 @@ object ThePlayer : IModule {
             energyStolenCounter = 0
             energyLostCounter = 0
 
-            //Todo @ebic reset all the counters
+            try {
 
-            ScoreboardManager.scoreboardNames.forEach { sc ->
-                val noFormatting = sc.removeFormatting()
-                spec = SpecsEnum.values().first { noFormatting contain it.classname }
-            }
+                spec = SpecsEnum.values().firstOrNull { spec ->
+                    ScoreboardManager.scoreboardNames.firstOrNull {
+                        it.removeFormatting() contain spec.classname
+                    } != null
+                } ?: SpecsEnum.NONE
 
-            team = when {
-                Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A7c") -> TeamEnum.RED
-                Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A79") -> TeamEnum.BLUE
-                else -> TeamEnum.NONE
+
+                team = when {
+                    Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A7c") -> TeamEnum.RED
+                    Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A79") -> TeamEnum.BLUE
+                    else -> TeamEnum.NONE
+                }
+            } catch (e: Exception) {
+                println("We are here")
+                e.printStackTrace()
             }
         }
 
