@@ -145,7 +145,7 @@ object WarlordsSrApi : IModule {
         if (playerCache.containsKey(name)) return
         GlobalScope.launch {
             try {
-                val result = client.get<WarlordsSrApiResponse>("http://localhost:3000/api/$name")
+                val result = client.get<WarlordsSrApiResponse>("https://warlordssr.unaussprechlich.net/api/$name")
                 println("Loaded results for $name")
                 playerCache[name] = PlayerCacheEntry(result.data!!)
             } catch (e: ServerResponseException) {
