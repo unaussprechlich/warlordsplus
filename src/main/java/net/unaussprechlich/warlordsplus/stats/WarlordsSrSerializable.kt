@@ -41,7 +41,7 @@ data class Ranking(
     @SerialName("mage")
     val mage: MageRank,
     @SerialName("overall")
-    val overall: Int,
+    val overall: Int?,
     @SerialName("paladin")
     val paladin: PaladinRank,
     @SerialName("shaman")
@@ -53,502 +53,502 @@ data class Ranking(
 @Serializable
 data class WarlordsHypixel(
     @SerialName("aquamancer_plays")
-    val aquamancerPlays: Int,
+    val aquamancerPlays: Int?,
     @SerialName("assists")
-    val assists: Int,
+    val assists: Int?,
     @SerialName("avenger_plays")
-    val avengerPlays: Int,
+    val avengerPlays: Int?,
     @SerialName("berserker_plays")
-    val berserkerPlays: Int,
+    val berserkerPlays: Int?,
     @SerialName("crusader_plays")
-    val crusaderPlays: Int,
+    val crusaderPlays: Int?,
     @SerialName("cryomancer_plays")
-    val cryomancerPlays: Int,
+    val cryomancerPlays: Int?,
     @SerialName("damage")
-    val damage: Int,
+    val damage: Int?,
     @SerialName("damage_aquamancer")
-    val damageAquamancer: Int,
+    val damageAquamancer: Int?,
     @SerialName("damage_avenger")
-    val damageAvenger: Int,
+    val damageAvenger: Int?,
     @SerialName("damage_berserker")
-    val damageBerserker: Int,
+    val damageBerserker: Int?,
     @SerialName("damage_crusader")
-    val damageCrusader: Int,
+    val damageCrusader: Int?,
     @SerialName("damage_cryomancer")
-    val damageCryomancer: Int,
+    val damageCryomancer: Int?,
     @SerialName("damage_defender")
-    val damageDefender: Int,
+    val damageDefender: Int?,
     @SerialName("damage_earthwarden")
-    val damageEarthwarden: Int,
+    val damageEarthwarden: Int?,
     @SerialName("damage_mage")
-    val damageMage: Int,
+    val damageMage: Int?,
     @SerialName("damage_paladin")
-    val damagePaladin: Int,
+    val damagePaladin: Int?,
     @SerialName("damage_prevented")
-    val damagePrevented: Int,
+    val damagePrevented: Int?,
     @SerialName("damage_prevented_aquamancer")
-    val damagePreventedAquamancer: Int,
+    val damagePreventedAquamancer: Int?,
     @SerialName("damage_prevented_avenger")
-    val damagePreventedAvenger: Int,
+    val damagePreventedAvenger: Int?,
     @SerialName("damage_prevented_berserker")
-    val damagePreventedBerserker: Int,
+    val damagePreventedBerserker: Int?,
     @SerialName("damage_prevented_crusader")
-    val damagePreventedCrusader: Int,
+    val damagePreventedCrusader: Int?,
     @SerialName("damage_prevented_cryomancer")
-    val damagePreventedCryomancer: Int,
+    val damagePreventedCryomancer: Int?,
     @SerialName("damage_prevented_defender")
-    val damagePreventedDefender: Int,
+    val damagePreventedDefender: Int?,
     @SerialName("damage_prevented_earthwarden")
-    val damagePreventedEarthwarden: Int,
+    val damagePreventedEarthwarden: Int?,
     @SerialName("damage_prevented_mage")
-    val damagePreventedMage: Int,
+    val damagePreventedMage: Int?,
     @SerialName("damage_prevented_paladin")
-    val damagePreventedPaladin: Int,
+    val damagePreventedPaladin: Int?,
     @SerialName("damage_prevented_protector")
-    val damagePreventedProtector: Int,
+    val damagePreventedProtector: Int?,
     @SerialName("damage_prevented_pyromancer")
-    val damagePreventedPyromancer: Int,
+    val damagePreventedPyromancer: Int?,
     @SerialName("damage_prevented_revenant")
-    val damagePreventedRevenant: Int,
+    val damagePreventedRevenant: Int?,
     @SerialName("damage_prevented_shaman")
-    val damagePreventedShaman: Int,
+    val damagePreventedShaman: Int?,
     @SerialName("damage_prevented_spiritguard")
-    val damagePreventedSpiritguard: Int,
+    val damagePreventedSpiritguard: Int?,
     @SerialName("damage_prevented_thunderlord")
-    val damagePreventedThunderlord: Int,
+    val damagePreventedThunderlord: Int?,
     @SerialName("damage_prevented_warrior")
-    val damagePreventedWarrior: Int,
+    val damagePreventedWarrior: Int?,
     @SerialName("damage_protector")
-    val damageProtector: Int,
+    val damageProtector: Int?,
     @SerialName("damage_pyromancer")
-    val damagePyromancer: Int,
+    val damagePyromancer: Int?,
     @SerialName("damage_revenant")
-    val damageRevenant: Int,
+    val damageRevenant: Int?,
     @SerialName("damage_shaman")
-    val damageShaman: Int,
+    val damageShaman: Int?,
     @SerialName("damage_spiritguard")
-    val damageSpiritguard: Int,
+    val damageSpiritguard: Int?,
     @SerialName("damage_taken")
-    val damageTaken: Int,
+    val damageTaken: Int?,
     @SerialName("damage_thunderlord")
-    val damageThunderlord: Int,
+    val damageThunderlord: Int?,
     @SerialName("damage_warrior")
-    val damageWarrior: Int,
+    val damageWarrior: Int?,
     @SerialName("deaths")
-    val deaths: Int,
+    val deaths: Int?,
     @SerialName("defender_plays")
-    val defenderPlays: Int,
+    val defenderPlays: Int?,
     @SerialName("earthwarden_plays")
-    val earthwardenPlays: Int,
+    val earthwardenPlays: Int?,
     @SerialName("flag_conquer_self")
-    val flagConquerSelf: Int,
+    val flagConquerSelf: Int?,
     @SerialName("flag_conquer_team")
-    val flagConquerTeam: Int,
+    val flagConquerTeam: Int?,
     @SerialName("heal")
-    val heal: Int,
+    val heal: Int?,
     @SerialName("heal_aquamancer")
-    val healAquamancer: Int,
+    val healAquamancer: Int?,
     @SerialName("heal_avenger")
-    val healAvenger: Int,
+    val healAvenger: Int?,
     @SerialName("heal_berserker")
-    val healBerserker: Int,
+    val healBerserker: Int?,
     @SerialName("heal_crusader")
-    val healCrusader: Int,
+    val healCrusader: Int?,
     @SerialName("heal_cryomancer")
-    val healCryomancer: Int,
+    val healCryomancer: Int?,
     @SerialName("heal_defender")
-    val healDefender: Int,
+    val healDefender: Int?,
     @SerialName("heal_earthwarden")
-    val healEarthwarden: Int,
+    val healEarthwarden: Int?,
     @SerialName("heal_mage")
-    val healMage: Int,
+    val healMage: Int?,
     @SerialName("heal_paladin")
-    val healPaladin: Int,
+    val healPaladin: Int?,
     @SerialName("heal_protector")
-    val healProtector: Int,
+    val healProtector: Int?,
     @SerialName("heal_pyromancer")
-    val healPyromancer: Int,
+    val healPyromancer: Int?,
     @SerialName("heal_revenant")
-    val healRevenant: Int,
+    val healRevenant: Int?,
     @SerialName("heal_shaman")
-    val healShaman: Int,
+    val healShaman: Int?,
     @SerialName("heal_spiritguard")
-    val healSpiritguard: Int,
+    val healSpiritguard: Int?,
     @SerialName("heal_thunderlord")
-    val healThunderlord: Int,
+    val healThunderlord: Int?,
     @SerialName("heal_warrior")
-    val healWarrior: Int,
+    val healWarrior: Int?,
     @SerialName("kills")
-    val kills: Int,
+    val kills: Int?,
     @SerialName("life_leeched")
-    val lifeLeeched: Int,
+    val lifeLeeched: Int?,
     @SerialName("life_leeched_berserker")
-    val lifeLeechedBerserker: Int,
+    val lifeLeechedBerserker: Int?,
     @SerialName("losses")
-    val losses: Int,
+    val losses: Int?,
     @SerialName("losses_aquamancer")
-    val lossesAquamancer: Int,
+    val lossesAquamancer: Int?,
     @SerialName("losses_avenger")
-    val lossesAvenger: Int,
+    val lossesAvenger: Int?,
     @SerialName("losses_berserker")
-    val lossesBerserker: Int,
+    val lossesBerserker: Int?,
     @SerialName("losses_crusader")
-    val lossesCrusader: Int,
+    val lossesCrusader: Int?,
     @SerialName("losses_cryomancer")
-    val lossesCryomancer: Int,
+    val lossesCryomancer: Int?,
     @SerialName("losses_defender")
-    val lossesDefender: Int,
+    val lossesDefender: Int?,
     @SerialName("losses_earthwarden")
-    val lossesEarthwarden: Int,
+    val lossesEarthwarden: Int?,
     @SerialName("losses_mage")
-    val lossesMage: Int,
+    val lossesMage: Int?,
     @SerialName("losses_paladin")
-    val lossesPaladin: Int,
+    val lossesPaladin: Int?,
     @SerialName("losses_protector")
-    val lossesProtector: Int,
+    val lossesProtector: Int?,
     @SerialName("losses_pyromancer")
-    val lossesPyromancer: Int,
+    val lossesPyromancer: Int?,
     @SerialName("losses_revenant")
-    val lossesRevenant: Int,
+    val lossesRevenant: Int?,
     @SerialName("losses_shaman")
-    val lossesShaman: Int,
+    val lossesShaman: Int?,
     @SerialName("losses_spiritguard")
-    val lossesSpiritguard: Int,
+    val lossesSpiritguard: Int?,
     @SerialName("losses_thunderlord")
-    val lossesThunderlord: Int,
+    val lossesThunderlord: Int?,
     @SerialName("losses_warrior")
-    val lossesWarrior: Int,
+    val lossesWarrior: Int?,
     @SerialName("mage_cooldown")
-    val mageCooldown: Int,
+    val mageCooldown: Int?,
     @SerialName("mage_critchance")
-    val mageCritchance: Int,
+    val mageCritchance: Int?,
     @SerialName("mage_critmultiplier")
-    val mageCritmultiplier: Int,
+    val mageCritmultiplier: Int?,
     @SerialName("mage_energy")
-    val mageEnergy: Int,
+    val mageEnergy: Int?,
     @SerialName("mage_health")
-    val mageHealth: Int,
+    val mageHealth: Int?,
     @SerialName("mage_plays")
-    val magePlays: Int,
+    val magePlays: Int?,
     @SerialName("mage_skill1")
-    val mageSkill1: Int,
+    val mageSkill1: Int?,
     @SerialName("mage_skill2")
-    val mageSkill2: Int,
+    val mageSkill2: Int?,
     @SerialName("mage_skill3")
-    val mageSkill3: Int,
+    val mageSkill3: Int?,
     @SerialName("mage_skill4")
-    val mageSkill4: Int,
+    val mageSkill4: Int?,
     @SerialName("mage_skill5")
-    val mageSkill5: Int,
+    val mageSkill5: Int?,
     @SerialName("paladin_cooldown")
-    val paladinCooldown: Int,
+    val paladinCooldown: Int?,
     @SerialName("paladin_critchance")
-    val paladinCritchance: Int,
+    val paladinCritchance: Int?,
     @SerialName("paladin_critmultiplier")
-    val paladinCritmultiplier: Int,
+    val paladinCritmultiplier: Int?,
     @SerialName("paladin_energy")
-    val paladinEnergy: Int,
+    val paladinEnergy: Int?,
     @SerialName("paladin_health")
-    val paladinHealth: Int,
+    val paladinHealth: Int?,
     @SerialName("paladin_plays")
-    val paladinPlays: Int,
+    val paladinPlays: Int?,
     @SerialName("paladin_skill1")
-    val paladinSkill1: Int,
+    val paladinSkill1: Int?,
     @SerialName("paladin_skill2")
-    val paladinSkill2: Int,
+    val paladinSkill2: Int?,
     @SerialName("paladin_skill3")
-    val paladinSkill3: Int,
+    val paladinSkill3: Int?,
     @SerialName("paladin_skill4")
-    val paladinSkill4: Int,
+    val paladinSkill4: Int?,
     @SerialName("paladin_skill5")
-    val paladinSkill5: Int,
+    val paladinSkill5: Int?,
     @SerialName("penalty")
-    val penalty: Int,
+    val penalty: Int?,
     @SerialName("protector_plays")
-    val protectorPlays: Int,
+    val protectorPlays: Int?,
     @SerialName("pyromancer_plays")
-    val pyromancerPlays: Int,
+    val pyromancerPlays: Int?,
     @SerialName("revenant_plays")
-    val revenantPlays: Int,
+    val revenantPlays: Int?,
     @SerialName("shaman_cooldown")
-    val shamanCooldown: Int,
+    val shamanCooldown: Int?,
     @SerialName("shaman_critchance")
-    val shamanCritchance: Int,
+    val shamanCritchance: Int?,
     @SerialName("shaman_critmultiplier")
-    val shamanCritmultiplier: Int,
+    val shamanCritmultiplier: Int?,
     @SerialName("shaman_energy")
-    val shamanEnergy: Int,
+    val shamanEnergy: Int?,
     @SerialName("shaman_health")
-    val shamanHealth: Int,
+    val shamanHealth: Int?,
     @SerialName("shaman_plays")
-    val shamanPlays: Int,
+    val shamanPlays: Int?,
     @SerialName("shaman_skill1")
-    val shamanSkill1: Int,
+    val shamanSkill1: Int?,
     @SerialName("shaman_skill2")
-    val shamanSkill2: Int,
+    val shamanSkill2: Int?,
     @SerialName("shaman_skill3")
-    val shamanSkill3: Int,
+    val shamanSkill3: Int?,
     @SerialName("shaman_skill4")
-    val shamanSkill4: Int,
+    val shamanSkill4: Int?,
     @SerialName("shaman_skill5")
-    val shamanSkill5: Int,
+    val shamanSkill5: Int?,
     @SerialName("spiritguard_plays")
-    val spiritguardPlays: Int,
+    val spiritguardPlays: Int?,
     @SerialName("thunderlord_plays")
-    val thunderlordPlays: Int,
+    val thunderlordPlays: Int?,
     @SerialName("warrior_cooldown")
-    val warriorCooldown: Int,
+    val warriorCooldown: Int?,
     @SerialName("warrior_critchance")
-    val warriorCritchance: Int,
+    val warriorCritchance: Int?,
     @SerialName("warrior_critmultiplier")
-    val warriorCritmultiplier: Int,
+    val warriorCritmultiplier: Int?,
     @SerialName("warrior_energy")
-    val warriorEnergy: Int,
+    val warriorEnergy: Int?,
     @SerialName("warrior_health")
-    val warriorHealth: Int,
+    val warriorHealth: Int?,
     @SerialName("warrior_plays")
-    val warriorPlays: Int,
+    val warriorPlays: Int?,
     @SerialName("warrior_skill1")
-    val warriorSkill1: Int,
+    val warriorSkill1: Int?,
     @SerialName("warrior_skill2")
-    val warriorSkill2: Int,
+    val warriorSkill2: Int?,
     @SerialName("warrior_skill3")
-    val warriorSkill3: Int,
+    val warriorSkill3: Int?,
     @SerialName("warrior_skill4")
-    val warriorSkill4: Int,
+    val warriorSkill4: Int?,
     @SerialName("warrior_skill5")
-    val warriorSkill5: Int,
+    val warriorSkill5: Int?,
     @SerialName("wins")
-    val wins: Int,
+    val wins: Int?,
     @SerialName("wins_aquamancer")
-    val winsAquamancer: Int,
+    val winsAquamancer: Int?,
     @SerialName("wins_avenger")
-    val winsAvenger: Int,
+    val winsAvenger: Int?,
     @SerialName("wins_berserker")
-    val winsBerserker: Int,
+    val winsBerserker: Int?,
     @SerialName("wins_blu")
-    val winsBlu: Int,
+    val winsBlu: Int?,
     @SerialName("wins_capturetheflag")
-    val winsCapturetheflag: Int,
+    val winsCapturetheflag: Int?,
     @SerialName("wins_capturetheflag_a")
-    val winsCapturetheflagA: Int,
+    val winsCapturetheflagA: Int?,
     @SerialName("wins_capturetheflag_b")
-    val winsCapturetheflagB: Int,
+    val winsCapturetheflagB: Int?,
     @SerialName("wins_capturetheflag_blu")
-    val winsCapturetheflagBlu: Int,
+    val winsCapturetheflagBlu: Int?,
     @SerialName("wins_capturetheflag_red")
-    val winsCapturetheflagRed: Int,
+    val winsCapturetheflagRed: Int?,
     @SerialName("wins_crusader")
-    val winsCrusader: Int,
+    val winsCrusader: Int?,
     @SerialName("wins_cryomancer")
-    val winsCryomancer: Int,
+    val winsCryomancer: Int?,
     @SerialName("wins_defender")
-    val winsDefender: Int,
+    val winsDefender: Int?,
     @SerialName("wins_domination")
-    val winsDomination: Int,
+    val winsDomination: Int?,
     @SerialName("wins_domination_a")
-    val winsDominationA: Int,
+    val winsDominationA: Int?,
     @SerialName("wins_domination_b")
-    val winsDominationB: Int,
+    val winsDominationB: Int?,
     @SerialName("wins_domination_blu")
-    val winsDominationBlu: Int,
+    val winsDominationBlu: Int?,
     @SerialName("wins_domination_red")
-    val winsDominationRed: Int,
+    val winsDominationRed: Int?,
     @SerialName("wins_earthwarden")
-    val winsEarthwarden: Int,
+    val winsEarthwarden: Int?,
     @SerialName("wins_mage")
-    val winsMage: Int,
+    val winsMage: Int?,
     @SerialName("wins_paladin")
-    val winsPaladin: Int,
+    val winsPaladin: Int?,
     @SerialName("wins_protector")
-    val winsProtector: Int,
+    val winsProtector: Int?,
     @SerialName("wins_pyromancer")
-    val winsPyromancer: Int,
+    val winsPyromancer: Int?,
     @SerialName("wins_red")
-    val winsRed: Int,
+    val winsRed: Int?,
     @SerialName("wins_revenant")
-    val winsRevenant: Int,
+    val winsRevenant: Int?,
     @SerialName("wins_shaman")
-    val winsShaman: Int,
+    val winsShaman: Int?,
     @SerialName("wins_spiritguard")
-    val winsSpiritguard: Int,
+    val winsSpiritguard: Int?,
     @SerialName("wins_teamdeathmatch")
-    val winsTeamdeathmatch: Int,
+    val winsTeamdeathmatch: Int?,
     @SerialName("wins_teamdeathmatch_a")
-    val winsTeamdeathmatchA: Int,
+    val winsTeamdeathmatchA: Int?,
     @SerialName("wins_teamdeathmatch_b")
-    val winsTeamdeathmatchB: Int,
+    val winsTeamdeathmatchB: Int?,
     @SerialName("wins_teamdeathmatch_blu")
-    val winsTeamdeathmatchBlu: Int,
+    val winsTeamdeathmatchBlu: Int?,
     @SerialName("wins_teamdeathmatch_red")
-    val winsTeamdeathmatchRed: Int,
+    val winsTeamdeathmatchRed: Int?,
     @SerialName("wins_thunderlord")
-    val winsThunderlord: Int,
+    val winsThunderlord: Int?,
     @SerialName("wins_warrior")
-    val winsWarrior: Int
+    val winsWarrior: Int?
 )
 
 @Serializable
 data class WarlordsSr(
     @SerialName("DHP")
-    val dHP: Int,
+    val dHP: Int?,
     @SerialName("KD")
-    val kD: Double,
+    val kD: Double?,
     @SerialName("KDA")
-    val kDA: Double,
+    val kDA: Double?,
     @SerialName("mage")
-    val mage: Mage,
+    val mage: Mage?,
     @SerialName("paladin")
-    val paladin: Paladin,
+    val paladin: Paladin?,
     @SerialName("plays")
-    val plays: Int,
+    val plays: Int?,
     @SerialName("SR")
-    val sR: Int,
+    val sR: Int?,
     @SerialName("shaman")
-    val shaman: Shaman,
+    val shaman: Shaman?,
     @SerialName("WL")
-    val wL: Double,
+    val wL: Double?,
     @SerialName("warrior")
-    val warrior: Warrior
+    val warrior: Warrior?
 )
 
 @Serializable
 data class MageRank(
     @SerialName("aquamancer")
-    val aquamancer: Int,
+    val aquamancer: Int?,
     @SerialName("cryomancer")
-    val cryomancer: Int,
+    val cryomancer: Int?,
     @SerialName("overall")
-    val overall: Int,
+    val overall: Int?,
     @SerialName("pyromancer")
-    val pyromancer: Int
+    val pyromancer: Int?
 )
 
 @Serializable
 data class PaladinRank(
     @SerialName("avenger")
-    val avenger: Int,
+    val avenger: Int?,
     @SerialName("crusader")
-    val crusader: Int,
+    val crusader: Int?,
     @SerialName("overall")
-    val overall: Int,
+    val overall: Int?,
     @SerialName("protector")
-    val protector: Int
+    val protector: Int?
 )
 
 @Serializable
 data class ShamanRank(
     @SerialName("earthwarden")
-    val earthwarden: Int,
+    val earthwarden: Int?,
     @SerialName("overall")
-    val overall: Int,
+    val overall: Int?,
     @SerialName("spiritguard")
-    val spiritguard: Int,
+    val spiritguard: Int?,
     @SerialName("thunderlord")
-    val thunderlord: Int
+    val thunderlord: Int?
 )
 
 @Serializable
 data class WarriorRank(
     @SerialName("berserker")
-    val berserker: Int,
+    val berserker: Int?,
     @SerialName("defender")
-    val defender: Int,
+    val defender: Int?,
     @SerialName("overall")
-    val overall: Int,
+    val overall: Int?,
     @SerialName("revenant")
-    val revenant: Int
+    val revenant: Int?
 )
 
 @Serializable
 data class Mage(
     @SerialName("aquamancer")
-    val aquamancer: Spec,
+    val aquamancer: Spec?,
     @SerialName("cryomancer")
-    val cryomancer: Spec,
+    val cryomancer: Spec?,
     @SerialName("pyromancer")
-    val pyromancer: Spec,
+    val pyromancer: Spec?,
     @SerialName("LEVEL")
-    val LEVEL: Int,
+    val LEVEL: Int?,
     @SerialName("DHP")
-    val DHP: Int,
+    val DHP: Int?,
     @SerialName("SR")
-    val SR: Int,
+    val SR: Int?,
     @SerialName("WINS")
-    val WINS: Int,
+    val WINS: Int?,
     @SerialName("WL")
-    val WL: Double
+    val WL: Double?
 )
 
 @Serializable
 data class Paladin(
     @SerialName("avenger")
-    val avenger: Spec,
+    val avenger: Spec?,
     @SerialName("crusader")
-    val crusader: Spec,
+    val crusader: Spec?,
     @SerialName("protector")
-    val protector: Spec,
+    val protector: Spec?,
     @SerialName("LEVEL")
-    val LEVEL: Int,
+    val LEVEL: Int?,
     @SerialName("DHP")
-    val DHP: Int,
+    val DHP: Int?,
     @SerialName("SR")
-    val SR: Int,
+    val SR: Int?,
     @SerialName("WINS")
-    val WINS: Int,
+    val WINS: Int?,
     @SerialName("WL")
-    val WL: Double
+    val WL: Double?
 )
 
 @Serializable
 data class Shaman(
     @SerialName("earthwarden")
-    val earthwarden: Spec,
+    val earthwarden: Spec?,
     @SerialName("spiritguard")
-    val spiritguard: Spec,
+    val spiritguard: Spec?,
     @SerialName("thunderlord")
-    val thunderlord: Spec,
+    val thunderlord: Spec?,
     @SerialName("LEVEL")
-    val LEVEL: Int,
+    val LEVEL: Int?,
     @SerialName("DHP")
-    val DHP: Int,
+    val DHP: Int?,
     @SerialName("SR")
-    val SR: Int,
+    val SR: Int?,
     @SerialName("WINS")
-    val WINS: Int,
+    val WINS: Int?,
     @SerialName("WL")
-    val WL: Double
+    val WL: Double?
 )
 
 @Serializable
 data class Warrior(
     @SerialName("berserker")
-    val berserker: Spec,
+    val berserker: Spec?,
     @SerialName("revenant")
-    val revenant: Spec,
+    val revenant: Spec?,
     @SerialName("defender")
-    val defender: Spec,
+    val defender: Spec?,
     @SerialName("LEVEL")
-    val LEVEL: Int,
+    val LEVEL: Int?,
     @SerialName("DHP")
-    val DHP: Int,
+    val DHP: Int?,
     @SerialName("SR")
-    val SR: Int,
+    val SR: Int?,
     @SerialName("WINS")
-    val WINS: Int,
+    val WINS: Int?,
     @SerialName("WL")
-    val WL: Double
+    val WL: Double?
 )
 
 
 @Serializable
 data class Spec(
     @SerialName("DHP")
-    val DHP: Int,
+    val DHP: Int?,
     @SerialName("SR")
-    val SR: Int,
+    val SR: Int?,
     @SerialName("WINS")
-    val WINS: Int,
+    val WINS: Int?,
     @SerialName("WL")
-    val WL: Double
+    val WL: Double?
 )

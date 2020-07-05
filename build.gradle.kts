@@ -52,7 +52,6 @@ idea {
 version = modVersion
 group = "net.unaussprechlich.warlordsplus"
 
-
 configure<ForgeExtension> {
     version = "1.8.9-11.15.1.2318-1.8.9"
     runDir = "run"
@@ -93,6 +92,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
+
 
 }
 
