@@ -6,7 +6,6 @@ import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.Player
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
-import net.unaussprechlich.warlordsplus.module.ResetEvent
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 
 object ScoreboardComponent : AbstractRenderComponent() {
@@ -126,6 +125,5 @@ object ScoreboardComponent : AbstractRenderComponent() {
         drawBackgroundRect(xStart, yStart + 14 + offset, w, 10 * teamRed.size)
 
         teamRed.forEach(renderLine)
-
     }
 }

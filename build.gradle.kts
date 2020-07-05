@@ -83,9 +83,8 @@ dependencies {
     embed(kotlin("reflect"))
     embed("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 
-    embed(ktor("client-apache")) {
-        exclude(group = "org.jetbrains.kotlin")
-    }
+    embed(ktor("client-cio"))
+
     embed(ktor("client-serialization-jvm")) {
         exclude(group = "org.jetbrains.kotlin")
     }
