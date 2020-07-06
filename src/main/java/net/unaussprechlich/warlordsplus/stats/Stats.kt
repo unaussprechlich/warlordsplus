@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.entity.RendererLivingEntity
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderPlayerEvent
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -32,9 +33,29 @@ object StatsRenderer : IModule {
         if (GameStateManager.isIngame) return
         if (!WarlordsSrApi.playerCache.containsKey(e.entityPlayer.displayNameString)) return
 
+        renderBasicStats(e)
+        renderPaladinStats(e)
+        renderWarriorStats(e)
+        renderMageStats(e)
+        renderShamanStats(e)
+    }
+
+    fun renderBasicStats(e: RenderPlayerEvent.Pre) {
+        val player = WarlordsSrApi.playerCache[e.entityPlayer.displayNameString] ?: return
         renderName(
             e.renderer,
-            getRenderString(WarlordsSrApi.playerCache[e.entityPlayer.displayNameString]!!) ?: return,
+            if (player.data?.warlordsSr == null || player.data.warlordsHypixel == null) return
+            else {
+                val blueWins = player.data.warlordsHypixel.winsBlu
+                var redWins = player.data.warlordsHypixel.winsRed
+                if (redWins == 0)
+                    redWins = 1
+                (if (blueWins!! / redWins!! > 1.5 && player.data.warlordsSr.plays!! > 2000)
+                    "BOOSTED - " else "") +
+                        "SR: " + player.data.warlordsSr.sR + "  " +
+                        "WL: " + player.data.warlordsSr.wL + "  " +
+                        "KD: " + player.data.warlordsSr.kD
+            },
             e.entityPlayer,
             e.x,
             e.y + .25,
@@ -42,11 +63,104 @@ object StatsRenderer : IModule {
         )
     }
 
-    fun getRenderString(player: WarlordsSrApi.PlayerCacheEntry): String? {
-        if (player.data?.warlordsSr == null) return null
-        return "SR: " + player.data.warlordsSr.sR + "  " +
-                "WL: " + player.data.warlordsSr.wL + "  " +
-                "KD: " + player.data.warlordsSr.kD
+    fun renderPaladinStats(e: RenderPlayerEvent.Pre) {
+        val player = WarlordsSrApi.playerCache[e.entityPlayer.displayNameString] ?: return
+        val paladinInfo = ArrayList<String>()
+        if (player.data != null)
+            paladinInfo.add("" + EnumChatFormatting.YELLOW + "Paladin")
+        if (player.data?.warlordsSr?.paladin?.SR != null)
+            paladinInfo.add("SR: " + (player.data.warlordsSr.paladin.SR))
+        if (player.data?.warlordsSr?.paladin?.WL != null)
+            paladinInfo.add("WL: " + player.data.warlordsSr.paladin.WL)
+        if (player.data?.warlordsSr?.paladin?.DHP != null)
+            paladinInfo.add("DHP: " + player.data.warlordsSr.paladin.DHP)
+        var yOffset = .5
+        for (s in paladinInfo) {
+            renderName(
+                e.renderer,
+                s,
+                e.entityPlayer,
+                e.x,
+                e.y + 2 - yOffset,
+                e.z - 2.4
+            )
+            yOffset += .25
+        }
+    }
+
+    fun renderWarriorStats(e: RenderPlayerEvent.Pre) {
+        val player = WarlordsSrApi.playerCache[e.entityPlayer.displayNameString] ?: return
+        val warriorInfo = ArrayList<String>()
+        if (player.data != null)
+            warriorInfo.add("" + EnumChatFormatting.BLACK + "Warrior")
+        if (player.data?.warlordsSr?.warrior?.SR != null)
+            warriorInfo.add("SR: " + (player.data.warlordsSr.warrior.SR))
+        if (player.data?.warlordsSr?.warrior?.WL != null)
+            warriorInfo.add("WL: " + player.data.warlordsSr.warrior.WL)
+        if (player.data?.warlordsSr?.warrior?.DHP != null)
+            warriorInfo.add("DHP: " + player.data.warlordsSr.warrior.DHP)
+        var yOffset = .5
+        for (s in warriorInfo) {
+            renderName(
+                e.renderer,
+                s,
+                e.entityPlayer,
+                e.x,
+                e.y + 2 - yOffset,
+                e.z - .8
+            )
+            yOffset += .25
+        }
+    }
+
+    fun renderMageStats(e: RenderPlayerEvent.Pre) {
+        val player = WarlordsSrApi.playerCache[e.entityPlayer.displayNameString] ?: return
+        val mageInfo = ArrayList<String>()
+        if (player.data != null)
+            mageInfo.add("" + EnumChatFormatting.BLUE + "Mage")
+        if (player.data?.warlordsSr?.mage?.SR != null)
+            mageInfo.add("SR: " + (player.data.warlordsSr.mage.SR))
+        if (player.data?.warlordsSr?.mage?.WL != null)
+            mageInfo.add("WL: " + player.data.warlordsSr.mage.WL)
+        if (player.data?.warlordsSr?.mage?.DHP != null)
+            mageInfo.add("DHP: " + player.data.warlordsSr.mage.DHP)
+        var yOffset = .5
+        for (s in mageInfo) {
+            renderName(
+                e.renderer,
+                s,
+                e.entityPlayer,
+                e.x,
+                e.y + 2 - yOffset,
+                e.z + .8
+            )
+            yOffset += .25
+        }
+    }
+
+    fun renderShamanStats(e: RenderPlayerEvent.Pre) {
+        val player = WarlordsSrApi.playerCache[e.entityPlayer.displayNameString] ?: return
+        val shamanInfo = ArrayList<String>()
+        if (player.data != null)
+            shamanInfo.add("" + EnumChatFormatting.GRAY + "Shaman")
+        if (player.data?.warlordsSr?.shaman?.SR != null)
+            shamanInfo.add("SR: " + (player.data.warlordsSr.shaman.SR))
+        if (player.data?.warlordsSr?.shaman?.WL != null)
+            shamanInfo.add("WL: " + player.data.warlordsSr.shaman.WL)
+        if (player.data?.warlordsSr?.shaman?.DHP != null)
+            shamanInfo.add("DHP: " + player.data.warlordsSr.shaman.DHP)
+        var yOffset = .5
+        for (s in shamanInfo) {
+            renderName(
+                e.renderer,
+                s,
+                e.entityPlayer,
+                e.x,
+                e.y + 2 - yOffset,
+                e.z + 2.4
+            )
+            yOffset += .25
+        }
     }
 
     fun renderName(
@@ -58,7 +172,7 @@ object StatsRenderer : IModule {
         z: Double
     ) {
         val fontrenderer = renderer.fontRendererFromRenderManager
-        val f = 1.6f
+        val f = 1.45f
         val f1 = 0.016666668f * f
         GlStateManager.pushMatrix()
         GlStateManager.translate(x.toFloat() + 0.0f, y.toFloat() + entityIn.height + 0.5f, z.toFloat())

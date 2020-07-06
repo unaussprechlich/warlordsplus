@@ -79,7 +79,8 @@ object ScoreboardComponent : AbstractRenderComponent() {
             )
             drawString(
                 xName, yStart + 15 + offset,
-                "${p.team.color}${p.name}"
+                "" + (if (p.hasFlag) "F-"
+                else "") + "${p.team.color}${p.name}"
             )
             drawString(
                 xKills, yStart + 15 + offset,
