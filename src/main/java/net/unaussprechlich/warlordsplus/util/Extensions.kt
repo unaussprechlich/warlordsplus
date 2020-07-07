@@ -100,6 +100,12 @@ abstract class WarlordsPlusWorldRenderer(
         GlStateManager.disableTexture2D()
     }
 
+    inline fun glMatrix(fn: () -> Unit) {
+        GlStateManager.pushMatrix()
+        fn()
+        GlStateManager.popMatrix()
+    }
+
     inline fun rotate(angle: Float, x: Float, y: Float, z: Float) = GlStateManager.rotate(angle, x, y, z)
     inline fun rotateX(angle: Float) = GlStateManager.rotate(angle, 1.0f, 0.0f, 0.0f)
     inline fun rotateY(angle: Float) = GlStateManager.rotate(angle, 0.0f, 1.0f, 0.0f)

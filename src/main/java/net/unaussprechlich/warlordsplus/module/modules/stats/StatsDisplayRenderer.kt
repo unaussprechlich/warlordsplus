@@ -136,18 +136,6 @@ object StatsDisplayRenderer : IModule {
         fun renderBasicStats(e: RenderPlayerEvent.Post) {
             if (data.warlordsSr == null || data.warlordsHypixel == null) return
 
-            val str: String = {
-                val blueWins = data.warlordsHypixel?.winsBlu
-                var redWins = data.warlordsHypixel?.winsRed
-                if (redWins == 0)
-                    redWins = 1
-                (if (blueWins!! / redWins!! > 1.5 && data.warlordsSr?.plays!! > 2000)
-                    "BOOSTED - " else "") +
-                        "SR: " + data.warlordsSr?.sR + "  " +
-                        "WL: " + data.warlordsSr?.wL + "  " +
-                        "KD: " + data.warlordsSr?.kD
-            }()
-
             val width = 150.0
 
             translateY(-30.0)
