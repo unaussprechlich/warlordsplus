@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.stats
+package net.unaussprechlich.warlordsplus.module.modules.stats
 
 import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialName

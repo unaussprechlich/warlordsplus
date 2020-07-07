@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.hud;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -49,8 +50,12 @@ public class HudManager extends FancyGui implements IModule {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        for(AbstractHudElement element : hudElements){
-            if(element instanceof IUpdateConsumer && element.isVisible())
+        if (event.phase != TickEvent.Phase.END
+                && !Minecraft.getMinecraft().isGamePaused()
+                && Minecraft.getMinecraft().thePlayer != null) return;
+
+        for (AbstractHudElement element : hudElements) {
+            if (element instanceof IUpdateConsumer && element.isVisible())
                 ((IUpdateConsumer) element).update();
         }
     }

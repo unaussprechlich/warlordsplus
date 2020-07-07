@@ -3,7 +3,7 @@ package net.unaussprechlich.warlordsplus.ingamegui.components
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
-import net.unaussprechlich.warlordsplus.module.ResetEvent
+import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import net.unaussprechlich.warlordsplus.util.convertToArgb
 import net.unaussprechlich.warlordsplus.util.fdiv

@@ -6,9 +6,9 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
-import net.unaussprechlich.warlordsplus.module.ResetEvent
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
 import net.unaussprechlich.warlordsplus.module.modules.KillEvent
+import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer

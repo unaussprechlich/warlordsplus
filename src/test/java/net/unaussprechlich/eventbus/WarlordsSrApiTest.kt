@@ -1,10 +1,7 @@
 package net.unaussprechlich.eventbus
 
-import io.ktor.client.request.get
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.UnstableDefault
-import net.unaussprechlich.warlordsplus.stats.WarlordsSrApi
-import net.unaussprechlich.warlordsplus.stats.WarlordsSrApiResponse
 import org.junit.Test
 import kotlin.test.assertEquals
 
