@@ -3,7 +3,6 @@ package net.unaussprechlich.warlordsplus
 import net.minecraft.client.Minecraft
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.module.ResetEvent
 import net.unaussprechlich.warlordsplus.module.modules.*
 import net.unaussprechlich.warlordsplus.util.SpecsEnum
 import net.unaussprechlich.warlordsplus.util.TeamEnum

@@ -2,8 +2,10 @@ package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
+import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
+import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import java.util.*
@@ -11,6 +13,12 @@ import java.util.*
 class HudElementHitCounter : AbstractHudElement(), IChatConsumer {
 
     var totalHits = 0
+
+    init {
+        EventBus.register<ResetEvent> {
+            totalHits = 0
+        }
+    }
 
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
@@ -23,9 +31,6 @@ class HudElementHitCounter : AbstractHudElement(), IChatConsumer {
         if (message.contains("You hit")) {
             totalHits++
         }
-        if (message.contains("The gates will fall")) {
-            totalHits = 0
-        }
 
     }
 
@@ -36,6 +41,5 @@ class HudElementHitCounter : AbstractHudElement(), IChatConsumer {
     override fun isEnabled(): Boolean {
         return true
     }
-
 
 }

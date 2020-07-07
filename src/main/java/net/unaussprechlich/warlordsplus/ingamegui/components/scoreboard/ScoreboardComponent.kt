@@ -71,6 +71,17 @@ object ScoreboardComponent : AbstractRenderComponent() {
         }
 
         val renderLine = fun(p: Player) {
+            var output = ""
+            fun drawFlag(): String {
+                if (p.hasFlag) {
+                    if (p.team == TeamEnum.BLUE)
+                        EnumChatFormatting.RED
+                    else
+                        EnumChatFormatting.BLUE
+                    output += "F-"
+                }
+                return output
+            }
             drawString(
                 xLevel, yStart + 15 + offset,
                 "${EnumChatFormatting.GOLD}" +
@@ -79,7 +90,7 @@ object ScoreboardComponent : AbstractRenderComponent() {
             )
             drawString(
                 xName, yStart + 15 + offset,
-                "${p.team.color}${p.name}"
+                "${drawFlag()}${p.team.color}${p.name}"
             )
             drawString(
                 xKills, yStart + 15 + offset,

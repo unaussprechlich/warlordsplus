@@ -5,7 +5,6 @@ import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.util.EnumChatFormatting
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.module.ResetEvent
 import net.unaussprechlich.warlordsplus.module.modules.*
 import net.unaussprechlich.warlordsplus.util.*
 import java.util.*

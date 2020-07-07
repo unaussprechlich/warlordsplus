@@ -65,7 +65,6 @@ object RenderNumbers : IModule {
 
     class RenderObject(val event: AbstractDamageHealEvent) {
         val time: Long = System.currentTimeMillis() + 1750
-        val randomize = Math.random()
         val zOffset = kotlin.math.sin(Math.random() * 365f) * 1.1
         val xOffset = kotlin.math.cos(Math.random() * 365f) * 1.1
         val yOffset = Math.random() * 0.5f
