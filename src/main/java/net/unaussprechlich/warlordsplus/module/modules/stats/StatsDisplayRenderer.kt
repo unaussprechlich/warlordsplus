@@ -56,7 +56,16 @@ object StatsDisplayRenderer : IModule {
     @SubscribeEvent
     fun onRenderPlayer(e: RenderPlayerEvent.Post) {
         if (!GameStateManager.isWarlords /*|| TODO GameStateManager.isIngame*/) return
-        if (!renderObjects.containsKey(e.entityPlayer.displayNameString)) return
+        if (!renderObjects.containsKey(e.entityPlayer.displayNameString)) {
+            if (autoShowStats && StatsLoader.containsPlayer(e.entityPlayer.displayNameString)) {
+                val data = StatsLoader.getPlayer(e.entityPlayer.displayNameString)?.data
+                if (data != null) {
+                    val renderObject = StatsRenderObject(e.entityPlayer.displayNameString)
+                    renderObject.data = data
+                    renderObject.isLoading = false
+                }
+            }
+        }
         renderObjects[e.entityPlayer.displayNameString]?.render(e)
     }
 
@@ -64,8 +73,9 @@ object StatsDisplayRenderer : IModule {
     fun onClientTick(e: TickEvent.ClientTickEvent) {
         if (e.checkPreConditions() || !showStats) return
 
-        if (!autoShowStats)
-            renderObjects.entries.removeIf { it.value.expires <= System.currentTimeMillis() }
+        if (autoShowStats) return;
+
+        renderObjects.entries.removeIf { it.value.expires <= System.currentTimeMillis() }
 
         /*TODO if(GameStateManager.isIngame) return */
 
@@ -136,31 +146,35 @@ object StatsDisplayRenderer : IModule {
         fun renderBasicStats(e: RenderPlayerEvent.Post) {
             if (data.warlordsSr == null || data.warlordsHypixel == null) return
 
-            val width = 150.0
+            glMatrix {
+                val width = 150.0
 
-            translateY(-30.0)
-            translateX(80.0)
+                translateY(-30.0)
+                translateX(80.0)
 
-            scale(0.5)
+                scale(0.5)
 
-            renderRectXCentered(width, 10.0, -0.5, Colors.DEF, 255)
+                renderRectXCentered(width, 10.0, -0.5, Colors.DEF, 255)
 
-            translateY(-1.0)
-
-            text {
-                "GeneralStats".drawCentered()
-            }
-
-            translateY(-9.0)
-            renderRectXCentered(width, 30.0, -0.5, Colors.DEF, 100)
-
-            text {
-                translateX(-width / 2)
                 translateY(-1.0)
-                "SR: ${data.warlordsSr?.sR}".draw()
-                translateY(-8.0)
-                "WL: ${data.warlordsSr?.wL}".draw()
+
+                text {
+                    "GeneralStats".drawCentered()
+                }
+
+                translateY(-9.0)
+                renderRectXCentered(width, 30.0, -0.5, Colors.DEF, 100)
+
+                text {
+                    translateX(-width / 2)
+                    translateY(-1.0)
+                    "SR: ${data.warlordsSr?.sR}".draw()
+                    translateY(-8.0)
+                    "WL: ${data.warlordsSr?.wL}".draw()
+                }
             }
+
+
         }
 
         fun renderPaladinStats(e: RenderPlayerEvent.Pre) {
