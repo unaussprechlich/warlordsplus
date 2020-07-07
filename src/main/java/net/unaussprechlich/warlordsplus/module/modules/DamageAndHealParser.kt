@@ -135,7 +135,12 @@ object DamageAndHealParser : IModule {
 
     private fun getDamageOrHealthValue(inputMessage: String): Int {
         try {
-            val message = inputMessage.substring(inputMessage.indexOf("for"))
+            var message: String = ""
+            if (inputMessage.contain("for"))
+                message = inputMessage.substring(inputMessage.indexOf("for"))
+            //giving energy
+            else if (inputMessage.contain("Crusader"))
+                message = inputMessage.substring(inputMessage.indexOf("energy") - 4)
             val m = numberPattern.matcher(message.replace("!", ""))
             if (!m.find()) return 0
             return m.group().trim().toInt()
