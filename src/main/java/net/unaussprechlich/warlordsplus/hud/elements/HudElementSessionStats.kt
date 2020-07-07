@@ -24,6 +24,8 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
             renderStrings.add(EnumChatFormatting.DARK_GREEN.toString() + "Win Streak: " + winStreak)
         else if (lossStreak > 0)
             renderStrings.add(EnumChatFormatting.DARK_RED.toString() + "Loss Streak: " + lossStreak)
+        else
+            renderStrings.add(EnumChatFormatting.WHITE.toString() + "Streak: 0")
         return renderStrings.toTypedArray()
     }
 
@@ -34,7 +36,7 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
         else if (message.contains("You killed"))
             totalPlayerKills++
         else if (message.contains("Winner")) {
-            if (message.contains("BLU") && ThePlayer.team == TeamEnum.BLUE) {
+            if (message.contains("BLU") && ThePlayer.team == TeamEnum.BLUE || message.contains("RED") && ThePlayer.team == TeamEnum.RED) {
                 winStreak++
                 lossStreak = 0
             } else {
