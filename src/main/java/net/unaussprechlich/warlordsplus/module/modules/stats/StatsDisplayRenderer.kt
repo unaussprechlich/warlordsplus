@@ -204,10 +204,10 @@ object StatsDisplayRenderer : IModule {
             if (data.warlordsSr == null || data.warlordsHypixel == null) return
 
             glMatrix {
-                val width = 75.0
+                val width = 80.0
                 translateZ(-10.0)
                 translateY(-12.0)
-                translateX(-125.0)
+                translateX(-110.0)
                 renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
                 translateY(-2.0)
                 glMatrix {
@@ -236,12 +236,12 @@ object StatsDisplayRenderer : IModule {
             if (data.warlordsSr == null || data.warlordsHypixel == null) return
 
             glMatrix {
-                val width = 75.0
+                val width = 80.0
                 translateZ(-10.0)
                 translateY(-12.0)
-                translateX(-62.5)
+                translateX(-60.0)
                 renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
-                translateY(-2.0)
+                translateY(-3.0)
                 glMatrix {
                     scale(.6)
                     text {
@@ -253,7 +253,7 @@ object StatsDisplayRenderer : IModule {
                 text {
                     scale(.7)
                     translateX(-width * .36)
-                    translateY(-2.0)
+                    translateY(-1.0)
                     "SR: ${data.warlordsSr?.warrior?.SR}".draw()
                     translateY(-8.0)
                     "WL: ${data.warlordsSr?.warrior?.WL}".draw()
@@ -267,10 +267,10 @@ object StatsDisplayRenderer : IModule {
             if (data.warlordsSr == null || data.warlordsHypixel == null) return
 
             glMatrix {
-                val width = 75.0
+                val width = 80.0
                 translateZ(-10.0)
                 translateY(-12.0)
-                translateX(62.5)
+                translateX(60.0)
                 renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
                 translateY(-2.0)
                 glMatrix {
@@ -298,10 +298,10 @@ object StatsDisplayRenderer : IModule {
             if (data.warlordsSr == null || data.warlordsHypixel == null) return
 
             glMatrix {
-                val width = 75.0
+                val width = 80.0
                 translateZ(-10.0)
                 translateY(-12.0)
-                translateX(125.0)
+                translateX(110.0)
                 renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
                 translateY(-2.0)
                 glMatrix {

@@ -10,7 +10,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import org.lwjgl.opengl.GL11
 
-val REGEX_FILTER = Regex("[^A-Za-z0-9/.,&_!:>+)(y<\\-\\]\\[\\u00AB\\u00BB\\s]")
+val REGEX_FILTER = Regex("[^A-Za-z0-9/.,&_!:>+')(y<\\-\\]\\[\\u00AB\\u00BB\\s]")
 
 infix fun Int.fdiv(i: Int): Float = this / i.toFloat();
 infix fun Int.ddiv(i: Int): Double = this / i.toDouble();

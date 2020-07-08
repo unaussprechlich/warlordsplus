@@ -41,7 +41,7 @@ private val numberPattern = Pattern.compile("[0-9]{2}")
 
 object OtherPlayers : IModule {
 
-    private val playersMap: MutableMap<String, Player> = mutableMapOf()
+    val playersMap: MutableMap<String, Player> = mutableMapOf()
 
     init {
         EventBus.register<ResetEvent> {
@@ -60,22 +60,22 @@ object OtherPlayers : IModule {
 
         EventBus.register<HealingReceivedEvent> {
             if (it.player in playersMap)
-                playersMap[it.player]!!.healingDone += it.amount
+                playersMap[it.player]!!.healingReceived += it.amount
         }
 
         EventBus.register<HealingGivenEvent> {
             if (it.player in playersMap)
-                playersMap[it.player]!!.healingReceived += it.amount
+                playersMap[it.player]!!.healingDone += it.amount
         }
 
         EventBus.register<DamageTakenEvent> {
             if (it.player in playersMap)
-                playersMap[it.player]!!.damageDone += it.amount
+                playersMap[it.player]!!.damageReceived += it.amount
         }
 
         EventBus.register<DamageDoneEvent> {
             if (it.player in playersMap)
-                playersMap[it.player]!!.damageReceived += it.amount
+                playersMap[it.player]!!.damageDone += it.amount
         }
 
         EventBus.register<FlagTakenEvent> {

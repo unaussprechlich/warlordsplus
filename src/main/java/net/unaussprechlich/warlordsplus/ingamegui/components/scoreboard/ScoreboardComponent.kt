@@ -56,21 +56,22 @@ object ScoreboardComponent : AbstractRenderComponent() {
 
         drawBackgroundRect(xStart, yStart + 14, w, 10 * teamBlue.size)
 
-        fun hasMostKills(p: Player): Boolean {
-            return if (p.team == TeamEnum.BLUE)
-                p.kills == mostKillsBlue
-            else
-                p.kills == mostKillsRed
-        }
-
-        fun hasMostDeaths(p: Player): Boolean {
-            return if (p.team == TeamEnum.BLUE)
-                p.kills == mostDeathsBlue
-            else
-                p.kills == mostDeathsRed
-        }
-
         val renderLine = fun(p: Player) {
+
+            fun hasMostKills(): Boolean {
+                return if (p.team == TeamEnum.BLUE)
+                    p.kills == mostKillsBlue
+                else
+                    p.kills == mostKillsRed
+            }
+
+            fun hasMostDeaths(): Boolean {
+                return if (p.team == TeamEnum.BLUE)
+                    p.kills == mostDeathsBlue
+                else
+                    p.kills == mostDeathsRed
+            }
+
             var output = ""
             fun drawFlag(): String {
                 if (p.hasFlag) {
@@ -94,32 +95,32 @@ object ScoreboardComponent : AbstractRenderComponent() {
             )
             drawString(
                 xKills, yStart + 15 + offset,
-                "${if (hasMostKills(p)) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}"
+                "${if (hasMostKills()) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}"
             )
 
             drawString(
                 xDeaths, yStart + 15 + offset,
-                "${if (hasMostDeaths(p)) EnumChatFormatting.DARK_RED else EnumChatFormatting.RESET}${p.deaths}"
+                "${if (hasMostDeaths()) EnumChatFormatting.DARK_RED else EnumChatFormatting.RESET}${p.deaths}"
             )
 
             if (ThePlayer.team == p.team) {
                 drawString(
                     xDone, yStart + 15 + offset,
-                    "${EnumChatFormatting.GREEN}${p.healingDone}"
+                    "${EnumChatFormatting.GREEN}${p.healingReceived}"
                 )
 
                 drawString(
                     xReceived, yStart + 15 + offset,
-                    "${EnumChatFormatting.DARK_GREEN}${p.healingReceived}"
+                    "${EnumChatFormatting.DARK_GREEN}${p.healingDone}"
                 )
             } else {
                 drawString(
                     xDone, yStart + 15 + offset,
-                    "${EnumChatFormatting.RED}${p.damageDone}"
+                    "${EnumChatFormatting.RED}${p.damageReceived}"
                 )
                 drawString(
                     xReceived, yStart + 15 + offset,
-                    "${EnumChatFormatting.DARK_RED}${p.damageReceived}"
+                    "${EnumChatFormatting.DARK_RED}${p.damageDone}"
                 )
             }
 
