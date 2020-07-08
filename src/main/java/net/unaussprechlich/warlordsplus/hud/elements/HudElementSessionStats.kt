@@ -15,6 +15,7 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
     var totalPlayerKills = 0
     var winStreak = 0
     var lossStreak = 0
+    var totalCoinsGained = 0
 
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
@@ -26,11 +27,13 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
             renderStrings.add(EnumChatFormatting.DARK_RED.toString() + "Loss Streak: " + lossStreak)
         else
             renderStrings.add(EnumChatFormatting.WHITE.toString() + "Streak: 0")
+        renderStrings.add(EnumChatFormatting.GOLD.toString() + "Coins Earned: " + totalCoinsGained)
         return renderStrings.toTypedArray()
     }
 
     override fun onChat(e: ClientChatReceivedEvent) {
-        val message = e.message.formattedText
+        val message = e.message.unformattedText
+
         if (message.contains("You were killed"))
             totalPlayerDeaths++
         else if (message.contains("You killed"))
@@ -43,11 +46,12 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
                 winStreak = 0
                 lossStreak++
             }
-        }
+        } else if (message.contains("+") && message.contains("coins"))
+            totalCoinsGained += Integer.parseInt(message.substring(1, message.indexOf("coins") - 1))
     }
 
     override fun isVisible(): Boolean {
-        return true
+        return GameStateManager.isWarlords
     }
 
     override fun isEnabled(): Boolean {

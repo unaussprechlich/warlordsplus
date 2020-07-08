@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.ingamegui.components.scoreboard
 
+import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.unaussprechlich.warlordsplus.OtherPlayers
@@ -33,9 +34,9 @@ object ScoreboardComponent : AbstractRenderComponent() {
         val mostKillsBlue = teamBlue.map { it.kills }.sorted().reversed()[0]
 
         var offset = 0
-        val w = 420
+        val w = 443
 
-        val yStart = 20
+        val yStart = 25
         val xStart = xCenter - (w / 2)
 
         val xLevel = xStart + 2
@@ -46,31 +47,33 @@ object ScoreboardComponent : AbstractRenderComponent() {
         val xReceived = xDone + 60
         val xKilled = xReceived + 60
 
+        GlStateManager.scale(.9, .9, 1.0)
         drawHeaderRect(xStart, yStart, w, 13)
         drawString(xName, yStart + 3, "Name", false)
         drawString(xKills, yStart + 3, "Kills", false)
         drawString(xDeaths, yStart + 3, "Deaths", false)
         drawString(xDone, yStart + 3, "Given", false)
         drawString(xReceived, yStart + 3, "Received", false)
-        drawString(xKilled, yStart + 3, "Died To You", false)
+        drawString(xKilled, yStart + 3, "DiedToYou/StoleKill", false)
 
         drawBackgroundRect(xStart, yStart + 14, w, 10 * teamBlue.size)
 
-        fun hasMostKills(p: Player): Boolean {
-            return if (p.team == TeamEnum.BLUE)
-                p.kills == mostKillsBlue
-            else
-                p.kills == mostKillsRed
-        }
-
-        fun hasMostDeaths(p: Player): Boolean {
-            return if (p.team == TeamEnum.BLUE)
-                p.kills == mostDeathsBlue
-            else
-                p.kills == mostDeathsRed
-        }
-
         val renderLine = fun(p: Player) {
+
+            fun hasMostKills(): Boolean {
+                return if (p.team == TeamEnum.BLUE)
+                    p.kills == mostKillsBlue
+                else
+                    p.kills == mostKillsRed
+            }
+
+            fun hasMostDeaths(): Boolean {
+                return if (p.team == TeamEnum.BLUE)
+                    p.deaths == mostDeathsBlue
+                else
+                    p.deaths == mostDeathsRed
+            }
+
             var output = ""
             fun drawFlag(): String {
                 if (p.hasFlag) {
@@ -94,39 +97,42 @@ object ScoreboardComponent : AbstractRenderComponent() {
             )
             drawString(
                 xKills, yStart + 15 + offset,
-                "${if (hasMostKills(p)) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}"
+                "${if (hasMostKills()) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}"
             )
 
             drawString(
                 xDeaths, yStart + 15 + offset,
-                "${if (hasMostDeaths(p)) EnumChatFormatting.DARK_RED else EnumChatFormatting.RESET}${p.deaths}"
+                "${if (hasMostDeaths()) EnumChatFormatting.DARK_RED else EnumChatFormatting.RESET}${p.deaths}"
             )
 
             if (ThePlayer.team == p.team) {
                 drawString(
                     xDone, yStart + 15 + offset,
-                    "${EnumChatFormatting.GREEN}${p.healingDone}"
+                    "${EnumChatFormatting.GREEN}${p.healingReceived}"
                 )
 
                 drawString(
                     xReceived, yStart + 15 + offset,
-                    "${EnumChatFormatting.DARK_GREEN}${p.healingReceived}"
+                    "${EnumChatFormatting.DARK_GREEN}${p.healingDone}"
+                )
+                drawString(
+                    xKilled, yStart + 15 + offset,
+                    "${EnumChatFormatting.RESET}${p.stoleKill}"
                 )
             } else {
                 drawString(
                     xDone, yStart + 15 + offset,
-                    "${EnumChatFormatting.RED}${p.damageDone}"
+                    "${EnumChatFormatting.RED}${p.damageReceived}"
                 )
                 drawString(
                     xReceived, yStart + 15 + offset,
-                    "${EnumChatFormatting.DARK_RED}${p.damageReceived}"
+                    "${EnumChatFormatting.DARK_RED}${p.damageDone}"
+                )
+                drawString(
+                    xKilled, yStart + 15 + offset,
+                    "${EnumChatFormatting.RESET}${p.died}"
                 )
             }
-
-            drawString(
-                xKilled, yStart + 15 + offset,
-                "${EnumChatFormatting.RESET}${p.died}"
-            )
 
             offset += 10
         }

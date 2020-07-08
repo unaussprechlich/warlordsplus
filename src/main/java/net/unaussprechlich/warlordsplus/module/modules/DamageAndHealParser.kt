@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
+import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
@@ -31,20 +32,28 @@ object DamageAndHealParser : IModule {
 
             if (e.message.unformattedText contain SOMEBODY_DID) {
 
-                when {
-                    //PLAYER's ability hit you
-                    msg contain "'s" -> {
-                        otherPlayer = msg.substring(2, msg.indexOf("'s"))
+                otherPlayer = fun(): String {
+                    when {
+                        //PLAYER's ability hit you
+                        msg.contains("Your") && msg.contains("you") -> {
+                            return Minecraft.getMinecraft().thePlayer.displayNameString
+                        }
+                        msg contain "'s" -> {
+                            return msg.substring(2, msg.indexOf("'s"))
+                        }
+                        //You took 500 dmg (revenant)
+                        msg.contains("You took") -> {
+                            return "EXTERNAL"
+                        }
+                        //PLAYER hit you for
+                        msg.contains("hit") -> {
+                            return msg.substring(2, msg.indexOf(" hit"))
+                        }
+                        else -> {
+                            return "UNDEFINED"
+                        }
                     }
-                    //You took 500 dmg (revenant)
-                    msg.contains("You took") -> {
-                        otherPlayer = "EXTERNAL"
-                    }
-                    //PLAYER hit you for
-                    msg.contains("hit") -> {
-                        otherPlayer = msg.substring(2, msg.indexOf(" hit"))
-                    }
-                }
+                }()
 
                 when {
                     msg.contains("health") -> {
@@ -67,8 +76,12 @@ object DamageAndHealParser : IModule {
 
                 when {
 
-                    msg.contains("health") -> {
+                    msg.contains("health") && !msg.contain("you") -> {
                         otherPlayer = msg.substring(msg.indexOf("healed ") + 7, msg.indexOf("for") - 1)
+                        EventBus.post(HealingGivenEvent(amount, otherPlayer, crit))
+                    }
+                    msg.contains("health") -> {
+                        otherPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
                         EventBus.post(HealingGivenEvent(amount, otherPlayer, crit))
                     }
                     msg.contains("damage") -> {

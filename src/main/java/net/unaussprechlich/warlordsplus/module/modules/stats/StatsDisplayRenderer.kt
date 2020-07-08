@@ -77,7 +77,7 @@ object StatsDisplayRenderer : IModule {
 
         renderObjects.entries.removeIf { it.value.expires <= System.currentTimeMillis() }
 
-        if (GameStateManager.isIngame && GameStateManager.isWarlords) return
+        if (GameStateManager.isIngame || !GameStateManager.isWarlords) return
 
         val mc = Minecraft.getMinecraft()
 
@@ -131,16 +131,12 @@ object StatsDisplayRenderer : IModule {
 
         private fun renderLoading(e: RenderPlayerEvent.Post) {
             translateY(0.5)
-            text {
-                "Loading ...".drawCentered()
-            }
+            "Loading ...".drawCentered()
         }
 
         private fun renderError(e: RenderPlayerEvent.Post) {
             translateY(0.5)
-            text {
-                "${EnumChatFormatting.RED}ERROR | maybe nicked?".drawCentered()
-            }
+            "${EnumChatFormatting.RED}ERROR | maybe nicked?".drawCentered()
         }
 
         fun renderBasicStats() {
@@ -155,48 +151,45 @@ object StatsDisplayRenderer : IModule {
                 glMatrix {
                     scale(.8)
                     translateY(-1.0)
-                    text {
-                        "GeneralStats".drawCentered()
-                    }
+                    "GeneralStats".drawCentered()
                 }
                 translateY(-9.0)
                 renderRectXCentered(width, 20.0, -0.5, Colors.DEF, 100)
                 scale(.6)
-                text {
-                    translateX(-width * .825)
-                    translateY(-1.0)
-                    "SR: ${data.warlordsSr?.sR}".draw()
-                    translateY(-8.0)
-                    "Plays: ${data.warlordsSr?.plays}".draw()
-                    translateY(-8.0)
-                    "Blue Wins: ${data.warlordsHypixel?.winsBlu}".draw()
-                    translateY(-8.0)
-                    "Red Wins: ${data.warlordsHypixel?.winsRed}".draw()
-                }
+                translateX(-width * .825)
+                translateY(-1.0)
+                "SR: ${data.warlordsSr?.sR}".draw()
+                translateY(-8.0)
+                "Plays: ${data.warlordsSr?.plays}".draw()
+                translateY(-8.0)
+                "Blue Wins: ${data.warlordsHypixel?.winsBlu}".draw()
+                translateY(-8.0)
+                "Red Wins: ${data.warlordsHypixel?.winsRed}".draw()
+
                 translateX(92.5)
                 translateY(25.0)
-                text {
-                    translateY(-1.0)
-                    "W/L: ${data.warlordsSr?.wL}".draw()
-                    translateY(-8.0)
-                    "Wins: ${data.warlordsHypixel?.wins}".draw()
-                    translateY(-8.0)
-                    "Losses: ${data.warlordsHypixel?.losses}".draw()
-                    translateY(-8.0)
-                    "AFKs: ${data.warlordsHypixel?.penalty}".draw()
-                }
+
+                translateY(-1.0)
+                "W/L: ${data.warlordsSr?.wL}".draw()
+                translateY(-8.0)
+                "Wins: ${data.warlordsHypixel?.wins}".draw()
+                translateY(-8.0)
+                "Losses: ${data.warlordsHypixel?.losses}".draw()
+                translateY(-8.0)
+                "AFKs: ${data.warlordsHypixel?.penalty}".draw()
+
                 translateX(85.0)
                 translateY(25.0)
-                text {
-                    translateY(-1.0)
-                    "K/D: ${data.warlordsSr?.kD}".draw()
-                    translateY(-8.0)
-                    "KA/D: ${data.warlordsSr?.kDA}".draw()
-                    translateY(-8.0)
-                    "Kills: ${data.warlordsHypixel?.kills}".draw()
-                    translateY(-8.0)
-                    "Deaths: ${data.warlordsHypixel?.deaths}".draw()
-                }
+
+                translateY(-1.0)
+                "K/D: ${data.warlordsSr?.kD}".draw()
+                translateY(-8.0)
+                "KA/D: ${data.warlordsSr?.kDA}".draw()
+                translateY(-8.0)
+                "Kills: ${data.warlordsHypixel?.kills}".draw()
+                translateY(-8.0)
+                "Deaths: ${data.warlordsHypixel?.deaths}".draw()
+
             }
         }
 
@@ -204,31 +197,31 @@ object StatsDisplayRenderer : IModule {
             if (data.warlordsSr == null || data.warlordsHypixel == null) return
 
             glMatrix {
-                val width = 75.0
+                val width = 80.0
                 translateZ(-10.0)
                 translateY(-12.0)
-                translateX(-125.0)
+                translateX(-110.0)
                 renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
                 translateY(-2.0)
                 glMatrix {
                     scale(.6)
                     translateY(-1.0)
-                    text {
-                        "Paladin${if (data.ranking?.paladin?.overall != null) " #${data.ranking?.paladin?.overall}" else ""}".drawCentered()
-                    }
+
+                    "Paladin${if (data.ranking?.paladin?.overall != null) " #${data.ranking?.paladin?.overall}" else ""}".drawCentered()
+
                 }
                 translateY(-8.0)
                 renderRectXCentered(width / 1.8, 20.0, -0.5, Colors.DEF, 100)
-                text {
-                    scale(.7)
-                    translateX(-width * .37)
-                    translateY(-2.0)
-                    "SR: ${data.warlordsSr?.paladin?.SR}".draw()
-                    translateY(-8.0)
-                    "WL: ${data.warlordsSr?.paladin?.WL}".draw()
-                    translateY(-8.0)
-                    "DHP: ${data.warlordsSr?.paladin?.DHP}".draw()
-                }
+
+                scale(.7)
+                translateX(-width * .37)
+                translateY(-2.0)
+                "SR: ${data.warlordsSr?.paladin?.SR}".draw()
+                translateY(-8.0)
+                "WL: ${data.warlordsSr?.paladin?.WL}".draw()
+                translateY(-8.0)
+                "DHP: ${data.warlordsSr?.paladin?.DHP}".draw()
+
             }
         }
 
@@ -236,30 +229,30 @@ object StatsDisplayRenderer : IModule {
             if (data.warlordsSr == null || data.warlordsHypixel == null) return
 
             glMatrix {
-                val width = 75.0
+                val width = 80.0
                 translateZ(-10.0)
                 translateY(-12.0)
-                translateX(-62.5)
+                translateX(-60.0)
                 renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
-                translateY(-2.0)
+                translateY(-3.0)
                 glMatrix {
                     scale(.6)
-                    text {
-                        "Warrior${if (data.ranking?.warrior?.overall != null) " #${data.ranking?.warrior?.overall}" else ""}".drawCentered()
-                    }
+
+                    "Warrior${if (data.ranking?.warrior?.overall != null) " #${data.ranking?.warrior?.overall}" else ""}".drawCentered()
+
                 }
                 translateY(-8.0)
                 renderRectXCentered(width / 1.8, 20.0, -0.5, Colors.DEF, 100)
-                text {
-                    scale(.7)
-                    translateX(-width * .36)
-                    translateY(-2.0)
-                    "SR: ${data.warlordsSr?.warrior?.SR}".draw()
-                    translateY(-8.0)
-                    "WL: ${data.warlordsSr?.warrior?.WL}".draw()
-                    translateY(-8.0)
-                    "DHP: ${data.warlordsSr?.warrior?.DHP}".draw()
-                }
+
+                scale(.7)
+                translateX(-width * .36)
+                translateY(-1.0)
+                "SR: ${data.warlordsSr?.warrior?.SR}".draw()
+                translateY(-8.0)
+                "WL: ${data.warlordsSr?.warrior?.WL}".draw()
+                translateY(-8.0)
+                "DHP: ${data.warlordsSr?.warrior?.DHP}".draw()
+
             }
         }
 
@@ -267,30 +260,30 @@ object StatsDisplayRenderer : IModule {
             if (data.warlordsSr == null || data.warlordsHypixel == null) return
 
             glMatrix {
-                val width = 75.0
+                val width = 80.0
                 translateZ(-10.0)
                 translateY(-12.0)
-                translateX(62.5)
+                translateX(60.0)
                 renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
                 translateY(-2.0)
                 glMatrix {
                     scale(.6)
-                    text {
-                        "Mage${if (data.ranking?.mage?.overall != null) " #${data.ranking?.mage?.overall}" else ""}".drawCentered()
-                    }
+
+                    "Mage${if (data.ranking?.mage?.overall != null) " #${data.ranking?.mage?.overall}" else ""}".drawCentered()
+
                 }
                 translateY(-8.0)
                 renderRectXCentered(width / 1.8, 20.0, -0.5, Colors.DEF, 100)
-                text {
-                    scale(.7)
-                    translateX(-width * .36)
-                    translateY(-2.0)
-                    "SR: ${data.warlordsSr?.mage?.SR}".draw()
-                    translateY(-8.0)
-                    "WL: ${data.warlordsSr?.mage?.WL}".draw()
-                    translateY(-8.0)
-                    "DHP: ${data.warlordsSr?.mage?.DHP}".draw()
-                }
+
+                scale(.7)
+                translateX(-width * .36)
+                translateY(-2.0)
+                "SR: ${data.warlordsSr?.mage?.SR}".draw()
+                translateY(-8.0)
+                "WL: ${data.warlordsSr?.mage?.WL}".draw()
+                translateY(-8.0)
+                "DHP: ${data.warlordsSr?.mage?.DHP}".draw()
+
             }
         }
 
@@ -298,30 +291,30 @@ object StatsDisplayRenderer : IModule {
             if (data.warlordsSr == null || data.warlordsHypixel == null) return
 
             glMatrix {
-                val width = 75.0
+                val width = 80.0
                 translateZ(-10.0)
                 translateY(-12.0)
-                translateX(125.0)
+                translateX(110.0)
                 renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
                 translateY(-2.0)
                 glMatrix {
                     scale(.6)
-                    text {
-                        "Shaman${if (data.ranking?.shaman?.overall != null) " #${data.ranking?.shaman?.overall}" else ""}".drawCentered()
-                    }
+
+                    "Shaman${if (data.ranking?.shaman?.overall != null) " #${data.ranking?.shaman?.overall}" else ""}".drawCentered()
+
                 }
                 translateY(-8.0)
                 renderRectXCentered(width / 1.8, 20.0, -0.5, Colors.DEF, 100)
-                text {
-                    scale(.7)
-                    translateX(-width * .36)
-                    translateY(-2.0)
-                    "SR: ${data.warlordsSr?.shaman?.SR}".draw()
-                    translateY(-8.0)
-                    "WL: ${data.warlordsSr?.shaman?.WL}".draw()
-                    translateY(-8.0)
-                    "DHP: ${data.warlordsSr?.shaman?.DHP}".draw()
-                }
+
+                scale(.7)
+                translateX(-width * .36)
+                translateY(-2.0)
+                "SR: ${data.warlordsSr?.shaman?.SR}".draw()
+                translateY(-8.0)
+                "WL: ${data.warlordsSr?.shaman?.WL}".draw()
+                translateY(-8.0)
+                "DHP: ${data.warlordsSr?.shaman?.DHP}".draw()
+
             }
         }
     }
