@@ -31,6 +31,7 @@ object ModuleManager {
             add(RenderNumbers)
             add(StatsLoader)
             add(StatsDisplayRenderer)
+            add(RenderStatsInGame)
         }
     }
 

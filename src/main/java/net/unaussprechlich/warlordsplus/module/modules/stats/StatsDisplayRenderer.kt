@@ -77,7 +77,7 @@ object StatsDisplayRenderer : IModule {
 
         renderObjects.entries.removeIf { it.value.expires <= System.currentTimeMillis() }
 
-        if (GameStateManager.isIngame && GameStateManager.isWarlords) return
+        if (GameStateManager.isIngame || !GameStateManager.isWarlords) return
 
         val mc = Minecraft.getMinecraft()
 
