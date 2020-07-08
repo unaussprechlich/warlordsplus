@@ -62,37 +62,39 @@ object IngameGuiManager : IModule{
                 e.isCanceled = true
             }
             BOSSHEALTH -> {
-                //e.isCanceled = true
+                e.isCanceled = true
             }
             ARMOR -> {
-                //e.isCanceled = true
+                e.isCanceled = true
             }
             HEALTH -> {
-                //e.isCanceled = true
+                e.isCanceled = true
             }
             FOOD -> {
-                //e.isCanceled = true
+                e.isCanceled = true
             }
             HOTBAR -> {
-                //RedThingyComponent.render(e)
-                //PurpleThingyComponent.render(e)
-                //BlueThingyComponent.render(e)
-                //YellowThingyComponent.render(e)
-                //e.isCanceled = true
+                RedThingyComponent.render(e)
+                PurpleThingyComponent.render(e)
+                BlueThingyComponent.render(e)
+                YellowThingyComponent.render(e)
+                HorseComponent.render(e)
+                HealthComponent.render(e)
+                e.isCanceled = true
             }
             EXPERIENCE -> {
-                //EnergyComponent.render(e)
-                //e.isCanceled = true
+                EnergyComponent.render(e)
+                e.isCanceled = true
             }
             TEXT -> {
-
-                //e.isCanceled = true
+                WhoIsWinningComponent.render(e)
+                e.isCanceled = true
             }
             HEALTHMOUNT -> {
-                //e.isCanceled = true
+                e.isCanceled = true
             }
             JUMPBAR -> {
-                //e.isCanceled = true
+                e.isCanceled = true
             }
             CHAT -> {
                 ChatComponent.render(e)

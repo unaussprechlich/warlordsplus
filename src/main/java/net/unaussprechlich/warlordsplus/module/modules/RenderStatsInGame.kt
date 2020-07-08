@@ -23,10 +23,10 @@ object RenderStatsInGame : IModule, WarlordsPlusWorldRenderer() {
         glMatrix {
             translateY(25.0)
             scale(1.25)
-            text {
-                val player = OtherPlayers.playersMap[event.entityPlayer.name]
-                "${EnumChatFormatting.GREEN}${player?.kills}${EnumChatFormatting.RESET}:${EnumChatFormatting.RED}${player?.deaths}".drawCentered()
-            }
+
+            val player = OtherPlayers.playersMap[event.entityPlayer.name]
+            "${EnumChatFormatting.GREEN}${player?.kills}${EnumChatFormatting.RESET}:${EnumChatFormatting.RED}${player?.deaths}".drawCentered()
+
         }
     }
 }
