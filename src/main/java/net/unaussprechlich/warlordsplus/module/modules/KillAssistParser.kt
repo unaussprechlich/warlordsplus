@@ -34,6 +34,11 @@ object KillAssistParser : IModule {
                     EventBus.post(KillEvent(player, deathPlayer))
                     EventBus.post(KillRatioEvent(deathPlayer))
                 }
+                textMessage.contains("You assisted") -> {
+                    val playerThatStoleKill =
+                        textMessage.substring(textMessage.indexOf("You assisted ") + 13, textMessage.indexOf("in ") - 1)
+                    EventBus.post(KillStealEvent(playerThatStoleKill))
+                }
             }
 
         } catch (throwable: Throwable) {
@@ -56,3 +61,6 @@ data class KillRatioEvent(
     val otherPlayer: String
 ) : IEvent
 
+data class KillStealEvent(
+    val otherPlayer: String
+) : IEvent

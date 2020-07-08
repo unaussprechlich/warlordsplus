@@ -34,6 +34,7 @@ open class Player(val name: String, val uuid : UUID) {
     var hasFlag: Boolean = false
 
     var died: Int = 0
+    var stoleKill: Int = 0
 
 }
 
@@ -84,6 +85,10 @@ object OtherPlayers : IModule {
 
         EventBus.register<KillRatioEvent> {
             playersMap[it.otherPlayer]!!.died += 1
+        }
+
+        EventBus.register<KillStealEvent> {
+            playersMap[it.otherPlayer]!!.stoleKill += 1
         }
     }
 
