@@ -6,6 +6,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.WarlordsPlusWorldRenderer
 
 object RenderStatsInGame : IModule, WarlordsPlusWorldRenderer() {
@@ -25,8 +26,13 @@ object RenderStatsInGame : IModule, WarlordsPlusWorldRenderer() {
             scale(1.25)
 
             val player = OtherPlayers.playersMap[event.entityPlayer.name]
-            "${EnumChatFormatting.GREEN}${player?.kills}${EnumChatFormatting.RESET}:${EnumChatFormatting.RED}${player?.deaths}".drawCentered()
-
+            val stats =
+                "${EnumChatFormatting.GREEN}${player?.kills}${EnumChatFormatting.RESET}:${EnumChatFormatting.RED}${player?.deaths}"
+            translateX(-.5)
+            renderRectXCentered(stats.width().toDouble() + 1, 9.0, -0.5, Colors.DEF, 100)
+            translateY(-1.0)
+            translateX(.5)
+            stats.drawCentered()
         }
     }
 }

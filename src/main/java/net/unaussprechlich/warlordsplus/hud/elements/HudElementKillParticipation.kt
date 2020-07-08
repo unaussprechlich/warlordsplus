@@ -13,6 +13,7 @@ import net.unaussprechlich.warlordsplus.util.TeamEnum
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 class HudElementKillParticipation : AbstractHudElement(), IUpdateConsumer, IChatConsumer {
 
@@ -38,6 +39,13 @@ class HudElementKillParticipation : AbstractHudElement(), IUpdateConsumer, IChat
                 }
             }
         }
+    }
+
+    override fun getRenderString(): Array<String> {
+        if (numberOfTeamKills > 0)
+            return arrayOf(EnumChatFormatting.YELLOW.toString() + "KP: " + (playerKills / numberOfTeamKills.toDouble() * 100).roundToInt() + "%")
+        else
+            return arrayOf(EnumChatFormatting.YELLOW.toString() + "KP: NaN")
     }
 
     override fun update() {
@@ -70,10 +78,6 @@ class HudElementKillParticipation : AbstractHudElement(), IUpdateConsumer, IChat
             else if (team == TeamEnum.RED)
                 numberOfTeamKills = red.substring(red.indexOf(":") + 1, red.indexOf("/")).toInt() / 15
         }
-    }
-
-    override fun getRenderString(): Array<String> {
-        return arrayOf(EnumChatFormatting.YELLOW.toString() + "KP: " + (playerKills / numberOfTeamKills.toDouble() * 100) + "%")
     }
 
     override fun onChat(e: ClientChatReceivedEvent) {
