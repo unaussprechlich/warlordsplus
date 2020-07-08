@@ -9,6 +9,8 @@ import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardNames
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardTitle
 import net.unaussprechlich.warlordsplus.util.checkPreConditions
+import net.unaussprechlich.warlordsplus.util.contain
+import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object GameStateManager : IModule {
 
@@ -22,11 +24,21 @@ object GameStateManager : IModule {
     var isWarlords: Boolean = false
         private set
 
+    var isCTF: Boolean = false
+        private set
+
+    var isTDM: Boolean = false
+        private set
+
+    var isDOM: Boolean = false
+        private set
+
     @SubscribeEvent
     fun onClientTick(@Suppress("UNUSED_PARAMETER") e: ClientTickEvent) {
         if (e.checkPreConditions()) return
 
         isWarlords = scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))
+
         val ingame = (isWarlords
                 && (scoreboardNames.size == 15 || scoreboardNames.size == 12)
                 && (scoreboardNames[9].contains("Wins in:")
@@ -37,6 +49,12 @@ object GameStateManager : IModule {
         if (ingame != isIngame) {
             isIngame = ingame
             EventBus.post(IngameChangedEvent(isIngame))
+        }
+
+        if (isIngame) {
+            isCTF = scoreboardNames[7].removeFormatting().contains("RED Flag")
+            isTDM = scoreboardNames[9].removeFormatting().contains("BLU:")
+            isDOM = scoreboardNames[11].removeFormatting().contain("/2000")
         }
     }
 
