@@ -65,7 +65,6 @@ object EasyConfigHandler : IModule{
     val fieldMapStr: MutableMap<Field, AnnotationHelper.AnnotationInfo> = mutableMapOf()
     val fieldMapInt: MutableMap<Field, AnnotationHelper.AnnotationInfo> = mutableMapOf()
     val fieldMapBoolean: MutableMap<Field, AnnotationHelper.AnnotationInfo> = mutableMapOf()
-//    val fieldMapDouble: MutableMap<Field, AnnotationHelper.AnnotationInfo> = mutableMapOf()
 
     fun init(asm: ASMDataTable?) {
         if (asm == null) return
@@ -142,18 +141,6 @@ object EasyConfigHandler : IModule{
                 )
             }
         }
-//        fieldMapDouble.forEach {
-//            it.key.isAccessible = true
-//            if (!it.value.getBoolean("devOnly", false) || WarlordsPlus.IS_DEBUGGING) {
-//                it.key.set(null, WarlordsPlus.CONFIG.get(it.value.getString("category", CCategory.UNKNOWN), it.value.getString("id", ""), it.value.getDouble("def", 0.0), it.value.getString("comment", "")).double)
-//                ModConfigGui.addElement(
-//                    CCategory.getCategoryByName(it.value.getString("category", CCategory.UNKNOWN)),
-//                    it.value.getString("id", ""),
-//                    it.value.getDouble("def", 0.0),
-//                    it.value.getString("comment", "")
-//                )
-//            }
-//        }
 
         if (WarlordsPlus.IS_DEBUGGING) {
             fieldMapStr.forEach {
@@ -211,9 +198,6 @@ object EasyConfigHandler : IModule{
         ) { field: Field, info: AnnotationHelper.AnnotationInfo ->
             fieldMapBoolean[field] = info
         }
-//        AnnotationHelper.findAnnotatedObjects(asm, clazz, ConfigPropertyDouble::class.java) { field: Field, info: AnnotationHelper.AnnotationInfo ->
-//            fieldMapDouble[field] = info
-//        }
     }
 
     private fun fancy(text: String, length: Int): String {
@@ -254,14 +238,5 @@ annotation class ConfigPropertyBoolean(
     val def: Boolean,
     val devOnly: Boolean = false
 )
-
-/**
- * This annotation should be applied to non-final, static (if in Kotlin, [JvmStatic]) fields of type [Boolean] (or in Kotlin Boolean?]
- * that you wish to use as a config property. Use [category] to indicate the config category in the config file,
- * [id] will indicate the nm of the property, [comment] will be the comment above the entry in the config file,
- * [def] is the default value, and if [devOnly] (optional) is set to true, this config property will only be set in a
- * development environment.
- */
-//@Target(AnnotationTarget.FIELD) annotation class ConfigPropertyDouble(val category: String, val id: String, val comment: String, val def: Boolean, val devOnly: Boolean = false)
 
 
