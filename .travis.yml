@@ -4,7 +4,7 @@ sudo: required
 jdk: openjdk8
 
 env:
-  - RELEASE_VERSION="V1.0.0"
+  - RELEASE_VERSION="V1.1.0"
 
 git:
   quiet: true
