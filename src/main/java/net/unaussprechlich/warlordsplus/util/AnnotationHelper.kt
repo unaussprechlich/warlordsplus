@@ -78,11 +78,6 @@ object AnnotationHelper {
             return if (`val` == null) def else `val` as Boolean
         }
 
-//        fun getDouble(id: String, def: Double): Double {
-//            val `val` = map[id]
-//            return `val`?. ?: def
-//        }
-
     }
 
 
