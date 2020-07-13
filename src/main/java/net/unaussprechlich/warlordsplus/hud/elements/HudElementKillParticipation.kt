@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
@@ -42,10 +44,16 @@ class HudElementKillParticipation : AbstractHudElement(), IUpdateConsumer, IChat
     }
 
     override fun getRenderString(): Array<String> {
-        if (numberOfTeamKills > 0)
-            return arrayOf(EnumChatFormatting.YELLOW.toString() + "KP: " + (playerKills / numberOfTeamKills.toDouble() * 100).roundToInt() + "%")
-        else
-            return arrayOf(EnumChatFormatting.YELLOW.toString() + "KP: NaN")
+        val renderStrings = ArrayList<String>()
+
+        if (showKillParticipation) {
+            if (numberOfTeamKills > 0)
+                renderStrings.add(EnumChatFormatting.YELLOW.toString() + "KP: " + (playerKills / numberOfTeamKills.toDouble() * 100).roundToInt() + "%")
+            else
+                renderStrings.add(EnumChatFormatting.YELLOW.toString() + "KP: NaN")
+        }
+
+        return renderStrings.toTypedArray()
     }
 
     override fun update() {
@@ -118,5 +126,15 @@ class HudElementKillParticipation : AbstractHudElement(), IUpdateConsumer, IChat
 
     override fun isEnabled(): Boolean {
         return true
+    }
+
+    companion object {
+        @ConfigPropertyBoolean(
+            category = CCategory.HUD,
+            id = "showKP",
+            comment = "Enable or disable the Kill Participation counter",
+            def = true
+        )
+        var showKillParticipation = false
     }
 }

@@ -6,14 +6,42 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.Player
 import net.unaussprechlich.warlordsplus.ThePlayer
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 
 object ScoreboardComponent : AbstractRenderComponent() {
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "showNewScoreboard",
+        comment = "Enable or disable the new scoreboard",
+        def = true
+    )
+    var showNewScoreboard = false
+
+    @ConfigPropertyInt(
+        category = CCategory.SCOREBOARD,
+        id = "setScaleDOM",
+        comment = "Change the scale of the scoreboard in DOM, so all players will fit on your screen ( 90 = 90% )",
+        def = 100
+    )
+    var setScaleDOM = 100
+
+    @ConfigPropertyInt(
+        category = CCategory.SCOREBOARD,
+        id = "setScaleCTF/TDM",
+        comment = "Change the scale of the scoreboard in CTF/TDM, so all players will fit on your screen ( 90 = 90% )",
+        def = 100
+    )
+    var setScaleCTFTDM = 100
 
     override fun render(e: RenderGameOverlayEvent.Pre) {
         try {
-            renderPlayerlist()
+            if (showNewScoreboard)
+                renderPlayerlist()
         } catch (e: Throwable) {
             e.printStackTrace()
         }
@@ -37,7 +65,15 @@ object ScoreboardComponent : AbstractRenderComponent() {
         val w = 443
 
         val yStart = 25
-        val xStart = xCenter - (w / 2)
+        var xStart = xCenter - (w / 2)
+
+        if (GameStateManager.isCTF || GameStateManager.isTDM) {
+            GlStateManager.scale(setScaleCTFTDM.toDouble() / 100, setScaleCTFTDM.toDouble() / 100, 1.0)
+            xStart = (xCenter + 50 - setScaleCTFTDM / 2 - ((w * setScaleCTFTDM.toDouble() / 100 / 2)).toInt())
+        } else if (GameStateManager.isDOM) {
+            GlStateManager.scale(setScaleDOM.toDouble() / 100, setScaleDOM.toDouble() / 100, 1.0)
+            xStart = (xCenter + 50 - setScaleDOM / 2 - ((w * setScaleDOM.toDouble() / 100 / 2)).toInt())
+        }
 
         val xLevel = xStart + 2
         val xName = xLevel + 53
@@ -47,7 +83,8 @@ object ScoreboardComponent : AbstractRenderComponent() {
         val xReceived = xDone + 60
         val xKilled = xReceived + 60
 
-        GlStateManager.scale(.9, .9, 1.0)
+
+
         drawHeaderRect(xStart, yStart, w, 13)
         drawString(xName, yStart + 3, "Name", false)
         drawString(xKills, yStart + 3, "Kills", false)

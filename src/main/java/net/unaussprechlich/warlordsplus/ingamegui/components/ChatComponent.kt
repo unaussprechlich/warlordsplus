@@ -39,8 +39,8 @@ object ChatComponent : AbstractRenderComponent(), IUpdateConsumer {
             offset += 11
 
             val renderStrings = fontRenderer.listFormattedStringToWidth(
-                    "${it.type.color.enumColor}${it.type.chatName} > ${EnumChatFormatting.RESET}${it.message}",
-                    width - 6
+                "${it.type.color.enumColor}${it.type.chatName} > ${EnumChatFormatting.RESET}${it.message}",
+                width - 6
             )
 
             drawBackgroundRect(xStart, yStart + offset, width, renderStrings.size * 9 + 1)
@@ -64,26 +64,26 @@ object ChatComponent : AbstractRenderComponent(), IUpdateConsumer {
     //Config ###########################################################################################################
 
     @ConfigPropertyBoolean(
-            category = CCategory.CHAT,
-            id = "enabled",
-            comment = "Enable the chat notification component",
-            def = true
+        category = CCategory.CHAT,
+        id = "enabled",
+        comment = "Enable the chat notification component",
+        def = true
     )
     var isEnabled = true
 
     @ConfigPropertyInt(
-            category = CCategory.CHAT,
-            id = "duration",
-            comment = "The duartion in ms for showing the chat notification",
-            def = 2000
+        category = CCategory.CHAT,
+        id = "duration",
+        comment = "The duartion in ms for showing the chat notification",
+        def = 2000
     )
     var duration = 2000
 
     @ConfigPropertyInt(
-            category = CCategory.CHAT,
-            id = "width",
-            comment = "The width of the chat notification",
-            def = 250
+        category = CCategory.CHAT,
+        id = "width",
+        comment = "The width of the chat notification",
+        def = 250
     )
     var width = 250
 
