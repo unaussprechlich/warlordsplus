@@ -4,6 +4,8 @@ import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.OtherPlayers
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
@@ -18,10 +20,10 @@ import kotlin.math.abs
 
 class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsumer {
 
-    private var redKills: Int = 0
     private var blueKills: Int = 0
-    private var numberOfCapsRed: Int = 0
+    private var redKills: Int = 0
     private var numberOfCapsBlue: Int = 0
+    private var numberOfCapsRed: Int = 0
 
     init {
         EventBus.register<ResetEvent> {
@@ -42,8 +44,12 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
 
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
-        renderStrings.add(EnumChatFormatting.BLUE.toString() + "Blue Kills: " + blueKills)
-        renderStrings.add(EnumChatFormatting.RED.toString() + "Red Kills: " + redKills)
+
+        if (showBlueKills)
+            renderStrings.add(EnumChatFormatting.BLUE.toString() + "Blue Kills: " + blueKills)
+        if (showRedKills)
+            renderStrings.add(EnumChatFormatting.RED.toString() + "Red Kills: " + redKills)
+
         return renderStrings.toTypedArray()
     }
 
@@ -96,5 +102,22 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
         return true
     }
 
+    companion object {
+        @ConfigPropertyBoolean(
+            category = CCategory.HUD,
+            id = "showBlueKills",
+            comment = "Enable or disable the Blue Kill counter",
+            def = true
+        )
+        var showBlueKills = false
+
+        @ConfigPropertyBoolean(
+            category = CCategory.HUD,
+            id = "showRedKills",
+            comment = "Enable or disable the Red Kill counter",
+            def = true
+        )
+        var showRedKills = false
+    }
 
 }

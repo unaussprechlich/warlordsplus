@@ -20,7 +20,7 @@ object ModuleManager {
             add(EasyConfigHandler)
             add(ScoreboardManager)
             add(GameStateManager)
-            add(Meme)
+            //add(Meme)
             add(DamageAndHealParser)
             add(KillAssistParser)
             add(FlagTakenDetector)

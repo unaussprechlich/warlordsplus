@@ -17,9 +17,9 @@ import kotlin.math.exp
 
 object RenderNumbers : IModule {
     @ConfigPropertyBoolean(
-        category = CCategory.HUD,
-        id = "enableRenderer",
-        comment = "Enable or disable the renderer",
+        category = CCategory.RENDERER,
+        id = "showDamageHealingNumbersAroundPlayers",
+        comment = "Enable or disable the Damage/Healing numbers when hitting/healing player",
         def = true
     )
     var showRender: Boolean = true
@@ -47,7 +47,7 @@ object RenderNumbers : IModule {
      */
     @SubscribeEvent
     fun onRenderPlayer(e: RenderPlayerEvent.Pre) {
-        if (GameStateManager.notIngame && !showRender) return
+        if (GameStateManager.notIngame || !showRender) return
         if (!players.containsKey(e.entityPlayer.displayNameString)) return
 
         players[e.entityPlayer.displayNameString]?.forEach { it.render(e) }

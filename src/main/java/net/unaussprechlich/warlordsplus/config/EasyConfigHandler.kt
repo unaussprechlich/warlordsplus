@@ -124,23 +124,32 @@ object EasyConfigHandler : IModule{
         fieldMapBoolean.forEach {
             it.key.isAccessible = true
             if (!it.value.getBoolean("devOnly", false) || WarlordsPlus.IS_DEBUGGING) {
-                it.key.set(null, WarlordsPlus.CONFIG.get(it.value.getString("category", CCategory.UNKNOWN), it.value.getString("id", ""), it.value.getBoolean("def", false), it.value.getString("comment", "")).boolean)
-                ModConfigGui.addElement(
-                        CCategory.getCategoryByName(it.value.getString("category", CCategory.UNKNOWN)),
+                it.key.set(
+                    null,
+                    WarlordsPlus.CONFIG.get(
+                        it.value.getString("category", CCategory.UNKNOWN),
                         it.value.getString("id", ""),
                         it.value.getBoolean("def", false),
                         it.value.getString("comment", "")
+                    ).boolean
+                )
+                ModConfigGui.addElement(
+                    CCategory.getCategoryByName(it.value.getString("category", CCategory.UNKNOWN)),
+                    it.value.getString("id", ""),
+                    it.value.getBoolean("def", false),
+                    it.value.getString("comment", "")
                 )
             }
         }
 
         if (WarlordsPlus.IS_DEBUGGING) {
             fieldMapStr.forEach {
-                println("[CONFIGURATION][STRING]" +
-                        " [CAT]:${fancy(it.value.getString("category", CCategory.UNKNOWN).toString(), 15)}" +
-                        " [ID]: ${fancy(it.value.getString("id", "").toString(), 25)}" +
-                        " [VALUE]:${fancy(it.key.get(String).toString(), 15)}" +
-                        " [DEF]:${fancy(it.value.getString("def", "").toString(), 15)}"
+                println(
+                    "[CONFIGURATION][STRING]" +
+                            " [CAT]:${fancy(it.value.getString("category", CCategory.UNKNOWN).toString(), 15)}" +
+                            " [ID]: ${fancy(it.value.getString("id", "").toString(), 25)}" +
+                            " [VALUE]:${fancy(it.key.get(String).toString(), 15)}" +
+                            " [DEF]:${fancy(it.value.getString("def", "").toString(), 15)}"
                 )
             }
             if (fieldMapStr.keys.size == 0) println("No string configuration property fields found!")
@@ -168,13 +177,25 @@ object EasyConfigHandler : IModule{
     }
 
     private fun findByClass(clazz: Class<*>, asm: ASMDataTable) {
-        AnnotationHelper.findAnnotatedObjects(asm, clazz, ConfigPropertyString::class.java) { field: Field, info: AnnotationHelper.AnnotationInfo ->
+        AnnotationHelper.findAnnotatedObjects(
+            asm,
+            clazz,
+            ConfigPropertyString::class.java
+        ) { field: Field, info: AnnotationHelper.AnnotationInfo ->
             fieldMapStr[field] = info
         }
-        AnnotationHelper.findAnnotatedObjects(asm, clazz, ConfigPropertyInt::class.java) { field: Field, info: AnnotationHelper.AnnotationInfo ->
+        AnnotationHelper.findAnnotatedObjects(
+            asm,
+            clazz,
+            ConfigPropertyInt::class.java
+        ) { field: Field, info: AnnotationHelper.AnnotationInfo ->
             fieldMapInt[field] = info
         }
-        AnnotationHelper.findAnnotatedObjects(asm, clazz, ConfigPropertyBoolean::class.java) { field: Field, info: AnnotationHelper.AnnotationInfo ->
+        AnnotationHelper.findAnnotatedObjects(
+            asm,
+            clazz,
+            ConfigPropertyBoolean::class.java
+        ) { field: Field, info: AnnotationHelper.AnnotationInfo ->
             fieldMapBoolean[field] = info
         }
     }
@@ -209,6 +230,13 @@ object EasyConfigHandler : IModule{
  * [def] is the default value, and if [devOnly] (optional) is set to true, this config property will only be set in a
  * development environment.
  */
-@Target(AnnotationTarget.FIELD) annotation class ConfigPropertyBoolean(val category: String, val id: String, val comment: String, val def: Boolean, val devOnly: Boolean = false)
+@Target(AnnotationTarget.FIELD)
+annotation class ConfigPropertyBoolean(
+    val category: String,
+    val id: String,
+    val comment: String,
+    val def: Boolean,
+    val devOnly: Boolean = false
+)
 
 

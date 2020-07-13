@@ -31,6 +31,22 @@ object StatsDisplayRenderer : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.STATS,
+        id = "showBasicStats",
+        comment = "Enable or disable the Basic Stats Above Heads",
+        def = true
+    )
+    var showBasicStats = false
+
+    @ConfigPropertyBoolean(
+        category = CCategory.STATS,
+        id = "showClassStats",
+        comment = "Enable or disable Showing Stats of Each Class",
+        def = true
+    )
+    var showClassStats = false
+
+    @ConfigPropertyBoolean(
+        category = CCategory.STATS,
         id = "autoShowStats",
         comment = "Switch between automatically showing the stats and sneaking to show.",
         def = false
@@ -122,11 +138,17 @@ object StatsDisplayRenderer : IModule {
                 renderError(event)
                 return
             }
-            renderBasicStats()
-            renderPaladinStats()
-            renderWarriorStats()
-            renderMageStats()
-            renderShamanStats()
+
+            if (showStats) {
+                if (showBasicStats)
+                    renderBasicStats()
+                if (showClassStats) {
+                    renderPaladinStats()
+                    renderWarriorStats()
+                    renderMageStats()
+                    renderShamanStats()
+                }
+            }
         }
 
         private fun renderLoading(e: RenderPlayerEvent.Post) {
