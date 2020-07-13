@@ -8,15 +8,16 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.*
 import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
+import net.unaussprechlich.warlordsplus.ingamegui.components.ChatComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.EnergyComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.HealthComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.WhoIsWinningComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.scoreboard.ScoreboardComponent
 import net.unaussprechlich.warlordsplus.ingamegui.components.skills.*
-import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
-import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
+import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
+import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 
 
 object IngameGuiManager : IModule{
@@ -35,6 +36,7 @@ object IngameGuiManager : IModule{
             add(HorseComponent)
             add(WhoIsWinningComponent)
             add(ScoreboardComponent)
+            add(ChatComponent)
         }
 
     }
@@ -60,38 +62,42 @@ object IngameGuiManager : IModule{
                 e.isCanceled = true
             }
             BOSSHEALTH -> {
-                //e.isCanceled = true
+//                e.isCanceled = true
             }
             ARMOR -> {
-                //e.isCanceled = true
+//                e.isCanceled = true
             }
             HEALTH -> {
-                //e.isCanceled = true
+//                e.isCanceled = true
             }
             FOOD -> {
-                //e.isCanceled = true
+//                e.isCanceled = true
             }
             HOTBAR -> {
-                //RedThingyComponent.render(e)
-                //PurpleThingyComponent.render(e)
-                //BlueThingyComponent.render(e)
-                //YellowThingyComponent.render(e)
-                //e.isCanceled = true
+//                RedThingyComponent.render(e)
+//                PurpleThingyComponent.render(e)
+//                BlueThingyComponent.render(e)
+//                YellowThingyComponent.render(e)
+//                HorseComponent.render(e)
+//                HealthComponent.render(e)
+//                e.isCanceled = true
             }
             EXPERIENCE -> {
-                //EnergyComponent.render(e)
-                //e.isCanceled = true
+//                EnergyComponent.render(e)
+//                e.isCanceled = true
             }
             TEXT -> {
-                //e.isCanceled = true
+//                WhoIsWinningComponent.render(e)
+//                e.isCanceled = true
             }
             HEALTHMOUNT -> {
-                //e.isCanceled = true
+//                e.isCanceled = true
             }
             JUMPBAR -> {
-                //e.isCanceled = true
+//                e.isCanceled = true
             }
             CHAT -> {
+//                ChatComponent.render(e)
                 //e.isCanceled = true
             }
 

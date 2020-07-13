@@ -2,9 +2,10 @@ package net.unaussprechlich.warlordsplus.ingamegui.components
 
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderGameOverlayEvent
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
+import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
+import net.unaussprechlich.warlordsplus.util.convertToArgb
 import net.unaussprechlich.warlordsplus.util.fdiv
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import net.unaussprechlich.warlordsplus.util.removeSpaces
@@ -21,28 +22,28 @@ object WhoIsWinningComponent : AbstractRenderComponent(), IUpdateConsumer {
     var redFlag = ""
     var blueFlag = ""
 
-    override fun render(e: RenderGameOverlayEvent.Pre){
+    override fun render(e: RenderGameOverlayEvent.Pre) {
 
         val vsWidth = getTextWidth(timeToWin) + 12
-        val pWidth  = getTextWidth(pointsToWin.toString()) + 20
+        val pWidth = getTextWidth(pointsToWin.toString()) + 20
         val y = yTop + 10
-        val bpWith  = (pWidth * (bluePoints fdiv pointsToWin)).toInt()
+        val bpWith = (pWidth * (bluePoints fdiv pointsToWin)).toInt()
         val rpWidth = (pWidth * (redPoints fdiv pointsToWin)).toInt()
 
-        drawCenteredStringWithBox(xCenter - (vsWidth / 2),y , vsWidth, timeToWin, Color(34,34,39, 200))
+        drawCenteredStringWithHeaderBox(xCenter - (vsWidth / 2), y, vsWidth, timeToWin)
 
-        drawRect(xCenter - (vsWidth / 2) - bpWith, y, bpWith, 13, Color(0, 0, 255, 150))
-        drawCenteredStringWithBox(xCenter - (vsWidth / 2) - pWidth, y, pWidth, bluePoints.toString(), Color(0, 0, 255, 50))
+        drawRect(xCenter - (vsWidth / 2) - bpWith, y, bpWith, 13, Color(0, 0, 255, 150).convertToArgb())
+        drawCenteredStringWithBox(xCenter - (vsWidth / 2) - pWidth, y, pWidth, bluePoints.toString(), Color(0, 0, 255, 50).convertToArgb())
 
-        if(blueFlag != "Safe")
-            drawStringWithBox(xCenter - (vsWidth / 2) - getTextWidth(blueFlag), y + 13, blueFlag, Color(34,34,39, 200))
+        if (blueFlag != "Safe")
+            drawStringWithBox(xCenter - (vsWidth / 2) - getTextWidth(blueFlag), y + 13, blueFlag, Color(34, 34, 39, 200).convertToArgb())
 
 
-        drawRect(xCenter + (vsWidth / 2), y, rpWidth, 13, Color(255, 0, 0, 150))
-        drawCenteredStringWithBox(xCenter + (vsWidth / 2), y, pWidth, redPoints.toString(), Color(255, 0, 0, 50))
+        drawRect(xCenter + (vsWidth / 2), y, rpWidth, 13, Color(255, 0, 0, 150).convertToArgb())
+        drawCenteredStringWithBox(xCenter + (vsWidth / 2), y, pWidth, redPoints.toString(), Color(255, 0, 0, 50).convertToArgb())
 
-        if(redFlag != "Safe")
-            drawStringWithBox(xCenter + (vsWidth / 2), y + 13, redFlag, Color(34,34,39, 200))
+        if (redFlag != "Safe")
+            drawStringWithBox(xCenter + (vsWidth / 2), y + 13, redFlag, Color(34, 34, 39, 200).convertToArgb())
     }
 
     override fun update() {

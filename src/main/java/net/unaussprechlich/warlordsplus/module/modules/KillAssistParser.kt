@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
+import akka.actor.Kill
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -7,14 +8,12 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.removeFormatting
-import scala.collection.parallel.ParIterableLike
-import java.util.regex.Pattern
 
 object KillAssistParser : IModule {
 
     @SubscribeEvent
     fun onChatMessage(e: ClientChatReceivedEvent) {
-        if(GameStateManager.notIngame) return
+        if (GameStateManager.notIngame || e.type == 2.toByte()) return
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
 
@@ -27,19 +26,20 @@ object KillAssistParser : IModule {
                 textMessage.contains("You were killed") -> {
                     val player = textMessage.substring(textMessage.indexOf("by ") + 3)
                     val deathPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
-                    EventBus.post(KillEvent(player, deathPlayer));
+                    EventBus.post(KillEvent(player, deathPlayer))
                 }
                 textMessage.contains("You killed") -> {
                     val deathPlayer = textMessage.substring(textMessage.indexOf("killed ") + 7)
                     val player = Minecraft.getMinecraft().thePlayer.displayNameString
                     EventBus.post(KillEvent(player, deathPlayer))
+                    EventBus.post(KillRatioEvent(deathPlayer))
+                }
+                textMessage.contains("You assisted") -> {
+                    val playerThatStoleKill =
+                        textMessage.substring(textMessage.indexOf("You assisted ") + 13, textMessage.indexOf("in ") - 1)
+                    EventBus.post(KillStealEvent(playerThatStoleKill))
                 }
             }
-
-            /* TODO @ebic
-                    [ ] Add a Hud
-                    [ ] Add options for Hud
-                 */
 
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
@@ -53,6 +53,14 @@ object KillAssistParser : IModule {
  * Must extend IEvent
  */
 data class KillEvent(
-    val player : String,
-    val deathPlayer : String
+    val player: String,
+    val deathPlayer: String
+) : IEvent
+
+data class KillRatioEvent(
+    val otherPlayer: String
+) : IEvent
+
+data class KillStealEvent(
+    val otherPlayer: String
 ) : IEvent

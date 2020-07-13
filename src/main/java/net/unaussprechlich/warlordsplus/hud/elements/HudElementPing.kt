@@ -1,12 +1,12 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
 import net.minecraft.client.network.OldServerPinger
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
-import java.net.UnknownHostException
-
-import kotlinx.coroutines.*
-
 
 
 class HudElementPing : AbstractHudElement() {
@@ -16,7 +16,11 @@ class HudElementPing : AbstractHudElement() {
         if (System.currentTimeMillis() >= nextTimeStamp) updatePing()
         if (Minecraft.getMinecraft().currentServerData.pingToServer > 0) lastValidPing =
             Minecraft.getMinecraft().currentServerData.pingToServer.toInt()
-        return arrayOf("Ping: $lastValidPing")
+
+        val renderStrings = ArrayList<String>()
+        if (showPing)
+            renderStrings.add("Ping: $lastValidPing")
+        return renderStrings.toTypedArray()
     }
 
     override fun isVisible(): Boolean {
@@ -29,7 +33,7 @@ class HudElementPing : AbstractHudElement() {
 
     companion object {
         private val serverPinger = OldServerPinger()
-        private const val pingCooldwonMs = 1000
+        private const val pingCooldwonMs = 2000
         private var nextTimeStamp: Long = 0
 
         private fun updatePing() {
@@ -44,10 +48,18 @@ class HudElementPing : AbstractHudElement() {
                         //ignore
                     }
                 }
-            } catch (e : Exception){
+            } catch (e: Exception) {
                 //Ignore
             }
 
         }
+
+        @ConfigPropertyBoolean(
+            category = CCategory.HUD,
+            id = "showPing",
+            comment = "Enable or disable the Ping counter",
+            def = true
+        )
+        var showPing = false
     }
 }

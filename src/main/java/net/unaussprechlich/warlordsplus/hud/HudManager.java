@@ -1,21 +1,19 @@
 package net.unaussprechlich.warlordsplus.hud;
 
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.unaussprechlich.eventbus.EventBus;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 import net.unaussprechlich.warlordsplus.hud.elements.*;
-import net.unaussprechlich.warlordsplus.module.ResetEvent;
-import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
-import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer;
 import net.unaussprechlich.warlordsplus.module.IModule;
 import net.unaussprechlich.warlordsplus.util.FancyGui;
-import org.lwjgl.util.Color;
+import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer;
+import net.unaussprechlich.warlordsplus.util.consumers.IKeyEventConsumer;
+import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer;
 
 import java.util.ArrayList;
 
@@ -37,7 +35,9 @@ public class HudManager extends FancyGui implements IModule {
         hudElements.add(new HudElementDamageAndHealingCounter());
         hudElements.add(new HudElementKillParticipation());
         hudElements.add(new HudElementTotalKills());
-        //hudElements.add(new HudElementSpiked());
+        hudElements.add(new HudElementSessionStats());
+        hudElements.add(new HudElementHitCounter());
+        //hudElements.add(HudElementSpec.INSTANCE);
 
     }
 
@@ -50,32 +50,42 @@ public class HudManager extends FancyGui implements IModule {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        for(AbstractHudElement element : hudElements){
-            if(element instanceof IUpdateConsumer && element.isVisible())
+        if (event.phase != TickEvent.Phase.END
+                && !Minecraft.getMinecraft().isGamePaused()
+                && Minecraft.getMinecraft().thePlayer != null) return;
+
+        for (AbstractHudElement element : hudElements) {
+            if (element instanceof IUpdateConsumer && element.isVisible())
                 ((IUpdateConsumer) element).update();
         }
     }
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
-        for(AbstractHudElement element : hudElements){
-            if(element instanceof IChatConsumer && element.isEnabled())
+        for (AbstractHudElement element : hudElements) {
+            if (element instanceof IChatConsumer && element.isEnabled())
                 ((IChatConsumer) element).onChat(event);
         }
     }
 
     @SubscribeEvent
-    public void onRender(RenderGameOverlayEvent.Text event){
-        FontRenderer fontRenderer = FMLClientHandler.instance().getClient().fontRendererObj;
+    public void onKeyInput(InputEvent.KeyInputEvent event) {
+        for (AbstractHudElement element : hudElements) {
+            if (element instanceof IKeyEventConsumer && element.isEnabled())
+                ((IKeyEventConsumer) element).onKeyInput(event);
+        }
+    }
+
+    @SubscribeEvent
+    public void onRender(RenderGameOverlayEvent.Text event) {
 
         final int height = 12;
         int yStart = 4;
 
         try {
 
-            FancyGui.Companion.drawStringWithBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD
-                    + "Warlords" + EnumChatFormatting.RED + "Plus " + EnumChatFormatting.WHITE + WarlordsPlus.VERSION,
-                    new Color(34, 34, 39, 200),
+            FancyGui.Companion.drawStringWithHeaderBox(this, 4, yStart, "" + EnumChatFormatting.BOLD + EnumChatFormatting.GOLD
+                            + "Warlords" + EnumChatFormatting.RED + "Plus " + EnumChatFormatting.WHITE + WarlordsPlus.VERSION,
                     false
             );
             yStart += height;
@@ -83,7 +93,7 @@ public class HudManager extends FancyGui implements IModule {
             for(AbstractHudElement element : hudElements){
                 if (element.isVisible() && element.isEnabled() && element.getRenderString().length > 0) {
                     for (String s : element.getRenderString()) {
-                        FancyGui.Companion.drawStringWithBox(this, 4, yStart, s, new Color(34, 34, 39, 100), false);
+                        FancyGui.Companion.drawStringWithBackgroundBox(this, 4, yStart, s, false);
                         yStart += height;
                     }
                 }

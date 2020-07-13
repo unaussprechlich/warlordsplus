@@ -5,8 +5,9 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
-import net.unaussprechlich.warlordsplus.module.ResetEvent
+import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
+import net.unaussprechlich.warlordsplus.util.convertToArgb
 import net.unaussprechlich.warlordsplus.util.fdiv
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import net.unaussprechlich.warlordsplus.util.removeSpaces
@@ -25,7 +26,7 @@ object HealthComponent : AbstractRenderComponent(), IChatConsumer {
         }
     }
 
-    override fun render(e: RenderGameOverlayEvent.Pre){
+    override fun render(e: RenderGameOverlayEvent.Pre) {
         val mc = Minecraft.getMinecraft()
         mc.mcProfiler.startSection("health")
 
@@ -34,8 +35,8 @@ object HealthComponent : AbstractRenderComponent(), IChatConsumer {
 
         val ew = (w * (currentHp fdiv maxHp)).toInt()
 
-        drawRect(xRight - w - 5, yBottom - 25 - h, w, h, Color(0, 0, 0, 50))
-        drawRect(xRight - w - 5, yBottom - 25 - h, ew, h, Color(255, 0, 20, 200))
+        drawBackgroundRect(xRight - w - 5, yBottom - 25 - h, w, h)
+        drawRect(xRight - w - 5, yBottom - 25 - h, ew, h, Color(255, 0, 20, 200).convertToArgb())
 
         drawString(xRight - w + 10, yBottom - 25 - h + 7, "$currentHp/$maxHp")
 

@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
+import net.unaussprechlich.warlordsplus.util.convertToArgb
 import org.lwjgl.util.Color
 
 
@@ -33,19 +34,19 @@ abstract class AbstractSkillComponent(
         val y = yBottom + yStart
 
         if (coolDown != "") {
-            drawRectangle(x - 2, y - 2, size, Color(255, 0, 0, 100))
+            drawRectangle(x - 2, y - 2, size, Color(255, 0, 0, 100).convertToArgb())
         } else {
-            drawRectangle(x - 2, y - 2, size, Color(0, 255, 0, 100))
+            drawRectangle(x - 2, y - 2, size, Color(0, 255, 0, 100).convertToArgb())
         }
-        drawRectangle(x - 1, y - 1, size -2, Color(0, 0, 0, 150))
+        drawRectangle(x - 1, y - 1, size - 2, Color(0, 0, 0, 150).convertToArgb())
         drawItemStackWithText(id, meta, x, y, coolDown);
 
         if (thePlayer!!.heldItem != null
                 && thePlayer!!.heldItem == thePlayer!!.inventory.getStackInSlot(slot)) {
-            drawRect(x - 2, y - 2, size, 1, Color(255, 255, 255))
-            drawRect(x - 2, y - 3 + size, size, 1, Color(255, 255, 255))
-            drawRect(x - 3 + size, y - 2, 1, size, Color(255, 255, 255))
-            drawRect(x - 2, y - 2, 1, size, Color(255, 255, 255))
+            drawRect(x - 2, y - 2, size, 1, Color(255, 255, 255).convertToArgb())
+            drawRect(x - 2, y - 3 + size, size, 1, Color(255, 255, 255).convertToArgb())
+            drawRect(x - 3 + size, y - 2, 1, size, Color(255, 255, 255).convertToArgb())
+            drawRect(x - 2, y - 2, 1, size, Color(255, 255, 255).convertToArgb())
         }
     }
 
