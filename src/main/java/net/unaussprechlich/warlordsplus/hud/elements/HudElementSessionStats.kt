@@ -51,7 +51,7 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
     override fun onChat(e: ClientChatReceivedEvent) {
         val message = e.message.unformattedText
 
-        if (message.contains("You were killed") || message.contains("You many not escape"))
+        if (message.contains("You were killed") || message.contains("Your health will decay"))
             totalPlayerDeaths++
         else if (message.contains("You killed"))
             totalPlayerKills++
