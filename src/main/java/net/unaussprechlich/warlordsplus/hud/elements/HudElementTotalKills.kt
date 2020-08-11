@@ -18,10 +18,10 @@ import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import java.util.*
 import kotlin.math.abs
 
-class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsumer {
+object HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsumer {
 
-    private var blueKills: Int = 0
-    private var redKills: Int = 0
+    var blueKills: Int = 0
+    var redKills: Int = 0
     private var numberOfCapsBlue: Int = 0
     private var numberOfCapsRed: Int = 0
 
@@ -102,22 +102,21 @@ class HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsume
         return true
     }
 
-    companion object {
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showBlueKills",
-            comment = "Enable or disable the Blue Kill counter",
-            def = true
-        )
-        var showBlueKills = false
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showBlueKills",
+        comment = "Enable or disable the Blue Kill counter",
+        def = true
+    )
+    var showBlueKills = false
 
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showRedKills",
-            comment = "Enable or disable the Red Kill counter",
-            def = true
-        )
-        var showRedKills = false
-    }
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showRedKills",
+        comment = "Enable or disable the Red Kill counter",
+        def = true
+    )
+    var showRedKills = false
+
 
 }

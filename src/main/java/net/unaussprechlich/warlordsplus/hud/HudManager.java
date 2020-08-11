@@ -33,11 +33,12 @@ public class HudManager extends FancyGui implements IModule {
         hudElements.add(new HudElementRespawnTimer());
         hudElements.add(new HudElementRegenTimer());
         hudElements.add(new HudElementDamageAndHealingCounter());
-        hudElements.add(new HudElementKillParticipation());
-        hudElements.add(new HudElementTotalKills());
+        hudElements.add(HudElementKillParticipation.INSTANCE);
+        hudElements.add(HudElementTotalKills.INSTANCE);
         hudElements.add(new HudElementSessionStats());
-        hudElements.add(new HudElementHitCounter());
-        hudElements.add(HudElementRandomTarget.INSTANCE);
+        hudElements.add(HudElementHitCounter.INSTANCE);
+        hudElements.add(StatsDisplayAfterGame.INSTANCE);
+        //hudElements.add(HudElementRandomTarget.INSTANCE);
         //hudElements.add(HudElementSpec.INSTANCE);
 
     }

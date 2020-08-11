@@ -62,7 +62,8 @@ object GameStateManager : IModule {
     fun onChatMessage(event: ClientChatReceivedEvent) {
         if (!isWarlords || event.type != 0.toByte()) return
         try {
-            if (event.message.formattedText == "§r§eThe gates will fall in §r§c5 §r§eseconds!§r") {
+            val message = event.message.formattedText
+            if (message == "§r§eThe gates will fall in §r§c5 §r§eseconds!§r" || message == "§r§eThe gates will fall in §r§c1 §r§eseconds!§r") {
                 EventBus.post(ResetEvent())
             }
 

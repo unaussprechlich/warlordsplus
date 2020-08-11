@@ -12,7 +12,7 @@ import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import java.util.*
 
-class HudElementHitCounter : AbstractHudElement(), IChatConsumer {
+object HudElementHitCounter : AbstractHudElement(), IChatConsumer {
 
     var totalHits = 0
 
@@ -47,14 +47,13 @@ class HudElementHitCounter : AbstractHudElement(), IChatConsumer {
         return true
     }
 
-    companion object {
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showHitCounter",
-            comment = "Enable or disable the Hit Counter",
-            def = true
-        )
-        var showHitCounter = false
-    }
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showHitCounter",
+        comment = "Enable or disable the Hit Counter",
+        def = true
+    )
+    var showHitCounter = false
+
 
 }
