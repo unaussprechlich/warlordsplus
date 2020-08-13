@@ -1,9 +1,12 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraft.client.Minecraft
+import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
+import net.minecraft.util.IChatComponent
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
@@ -17,11 +20,11 @@ import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class HudElementKillParticipation : AbstractHudElement(), IUpdateConsumer, IChatConsumer {
+object HudElementKillParticipation : AbstractHudElement(), IUpdateConsumer, IChatConsumer {
 
     private var team = TeamEnum.NONE
-    private var numberOfTeamKills: Int = 0
-    private var playerKills: Int = 0
+    var numberOfTeamKills: Int = 0
+    var playerKills: Int = 0
     private var numberOfCapsRed: Int = 0
     private var numberOfCapsBlue: Int = 0
 
@@ -118,6 +121,14 @@ class HudElementKillParticipation : AbstractHudElement(), IUpdateConsumer, IChat
                 playerKills++
             }
         }
+        if (message.contains("Winner")) {
+            EventBus.post(
+                KPEvent(
+                    Minecraft.getMinecraft().thePlayer.displayNameString,
+                    (playerKills / numberOfTeamKills.toDouble() * 100).roundToInt()
+                )
+            )
+        }
     }
 
     override fun isVisible(): Boolean {
@@ -128,13 +139,17 @@ class HudElementKillParticipation : AbstractHudElement(), IUpdateConsumer, IChat
         return true
     }
 
-    companion object {
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showKP",
-            comment = "Enable or disable the Kill Participation counter",
-            def = true
-        )
-        var showKillParticipation = false
-    }
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showKP",
+        comment = "Enable or disable the Kill Participation counter",
+        def = true
+    )
+    var showKillParticipation = false
+
 }
+
+data class KPEvent(
+    val player: String,
+    val amount: Int
+) : IEvent

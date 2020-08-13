@@ -1,15 +1,18 @@
 package net.unaussprechlich.warlordsplus;
 
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler;
 import net.unaussprechlich.warlordsplus.module.ModuleManager;
-
+import net.unaussprechlich.warlordsplus.util.commands.ChangeTargetCommand;
 
 
 @SideOnly(Side.CLIENT)
@@ -40,6 +43,7 @@ public class WarlordsPlus {
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         ModuleManager.INSTANCE.register();
+        ClientCommandHandler.instance.registerCommand(new ChangeTargetCommand());
 
     }
 

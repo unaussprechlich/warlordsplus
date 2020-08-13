@@ -256,10 +256,10 @@ object StatsDisplayRenderer : IModule {
                 translateY(-12.0)
                 translateX(-60.0)
                 renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
-                translateY(-3.0)
+                translateY(-2.0)
                 glMatrix {
                     scale(.6)
-
+                    translateY(-1.0)
                     "Warrior${if (data.ranking?.warrior?.overall != null) " #${data.ranking?.warrior?.overall}" else ""}".drawCentered()
 
                 }
@@ -290,7 +290,7 @@ object StatsDisplayRenderer : IModule {
                 translateY(-2.0)
                 glMatrix {
                     scale(.6)
-
+                    translateY(-1.0)
                     "Mage${if (data.ranking?.mage?.overall != null) " #${data.ranking?.mage?.overall}" else ""}".drawCentered()
 
                 }
@@ -321,7 +321,7 @@ object StatsDisplayRenderer : IModule {
                 translateY(-2.0)
                 glMatrix {
                     scale(.6)
-
+                    translateY(-1.0)
                     "Shaman${if (data.ranking?.shaman?.overall != null) " #${data.ranking?.shaman?.overall}" else ""}".drawCentered()
 
                 }

@@ -25,14 +25,10 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
 
-        if (showTotalKills)
-            renderStrings.add(EnumChatFormatting.GREEN.toString() + "Total Kills: " + totalPlayerKills)
-        if (showTotalDeaths)
-            renderStrings.add(EnumChatFormatting.RED.toString() + "Total Deaths: " + totalPlayerDeaths)
-        if (showTotalWins)
-            renderStrings.add(EnumChatFormatting.GREEN.toString() + "Total Wins: " + totalWins)
-        if (showTotalLosses)
-            renderStrings.add(EnumChatFormatting.RED.toString() + "Total Losses: " + totalLosses)
+        if (showTotalKillsDeaths)
+            renderStrings.add("${EnumChatFormatting.RESET}Total Kills/Deaths ${EnumChatFormatting.GREEN}${totalPlayerKills}:${EnumChatFormatting.RED}${totalPlayerDeaths}")
+        if (showTotalWinLoss)
+            renderStrings.add("${EnumChatFormatting.RESET}Total Win/Loss ${EnumChatFormatting.GREEN}${totalWins}:${EnumChatFormatting.RED}${totalLosses}")
         if (showStreak) {
             when {
                 (streak > 0) ->
@@ -51,7 +47,7 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
     override fun onChat(e: ClientChatReceivedEvent) {
         val message = e.message.unformattedText
 
-        if (message.contains("You were killed"))
+        if (message.contains("You were killed") || message.contains("Your health will decay"))
             totalPlayerDeaths++
         else if (message.contains("You killed"))
             totalPlayerKills++
@@ -87,35 +83,19 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
     companion object {
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showTotalKills",
-            comment = "Enable or disable the Total Kills counter",
+            id = "showTotalKills/Death",
+            comment = "Enable or disable the Total Kills/Death counter",
             def = true
         )
-        var showTotalKills = false
+        var showTotalKillsDeaths = false
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showTotalDeaths",
-            comment = "Enable or disable the Total Deaths counter",
+            id = "showTotalWin/Loss",
+            comment = "Enable or disable the Total Wins/Loss counter",
             def = true
         )
-        var showTotalDeaths = false
-
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showTotalWins",
-            comment = "Enable or disable the Total Wins counter",
-            def = true
-        )
-        var showTotalWins = false
-
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showTotalLosses",
-            comment = "Enable or disable the Total Losses counter",
-            def = true
-        )
-        var showTotalLosses = false
+        var showTotalWinLoss = false
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,

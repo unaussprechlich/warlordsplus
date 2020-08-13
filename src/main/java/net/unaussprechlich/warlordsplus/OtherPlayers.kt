@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.util.EnumChatFormatting
 import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.warlordsplus.hud.elements.KPEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.*
 import net.unaussprechlich.warlordsplus.util.*
@@ -14,7 +15,8 @@ import java.util.regex.Pattern
 open class Player(val name: String, val uuid : UUID) {
 
     var kills: Int = 0
-    var deaths : Int = 0
+    var deaths: Int = 0
+    var killParticipation: Int = 0
 
     var damageDone : Int = 0
     var damageReceived : Int = 0
@@ -57,6 +59,11 @@ object OtherPlayers : IModule {
                 playersMap[it.deathPlayer]!!.deaths++
             if (it.player in playersMap)
                 playersMap[it.player]!!.kills++
+        }
+
+        EventBus.register<KPEvent> {
+            if (it.player in playersMap)
+                playersMap[it.player]!!.killParticipation = it.amount
         }
 
         EventBus.register<HealingReceivedEvent> {

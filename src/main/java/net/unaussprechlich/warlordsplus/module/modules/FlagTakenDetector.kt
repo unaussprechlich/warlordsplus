@@ -13,7 +13,7 @@ object FlagTakenDetector : IModule {
 
     @SubscribeEvent
     fun onChatMessage(e: ClientChatReceivedEvent) {
-        if (GameStateManager.notIngame || e.type == 2.toByte()) return
+        if (!GameStateManager.isWarlords || e.type == 2.toByte()) return
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
             if (textMessage.contains("picked up the")) {
