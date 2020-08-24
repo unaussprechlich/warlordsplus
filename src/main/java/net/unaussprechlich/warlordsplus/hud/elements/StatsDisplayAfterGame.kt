@@ -1,7 +1,5 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
-import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
 import net.minecraft.client.Minecraft
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
@@ -10,8 +8,9 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
-import net.unaussprechlich.warlordsplus.util.FancyGui.Companion.thePlayer
+import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import net.unaussprechlich.warlordsplus.util.removeFormatting
@@ -33,8 +32,6 @@ object StatsDisplayAfterGame : AbstractHudElement(), IUpdateConsumer {
     }
 
     override fun update() {
-        //val chatComponent: IChatComponent = ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------${"\n"}${EnumChatFormatting.GOLD}Kills: ${EnumChatFormatting.WHITE}${OtherPlayers.getPlayerForName(player)!!.kills} ${EnumChatFormatting.GOLD}Deaths: ${EnumChatFormatting.WHITE}${OtherPlayers.getPlayerForName(player)!!.deaths}${"\n"}${EnumChatFormatting.GOLD}------------------------------------------------------")
-        //Minecraft.getMinecraft().thePlayer.addChatMessage(chatComponent)
         if (GameStateManager.isCTF) {
             val blue = EnumChatFormatting.getTextWithoutFormattingCodes(
                 ScoreboardManager.scoreboardNames[12]
@@ -70,7 +67,7 @@ object StatsDisplayAfterGame : AbstractHudElement(), IUpdateConsumer {
             val bluePoints = blue.substring(blue.indexOf(":") + 1, blue.indexOf("/")).toInt()
             val redPoints = red.substring(red.indexOf(":") + 1, red.indexOf("/")).toInt()
             if (ScoreboardManager.scoreboardNames[6].removeFormatting()
-                    .substring(13) == "00:00" || bluePoints == 1000 || redPoints == 1000
+                    .substring(13) == "00:00" || bluePoints == 1000 || redPoints == 1000 || bluePoints - redPoints > 500
             ) {
                 if (showStats) {
                     Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
@@ -92,18 +89,18 @@ object StatsDisplayAfterGame : AbstractHudElement(), IUpdateConsumer {
         return GameStateManager.isIngame
     }
 
+    //TODO fix bug received displaying 0
     fun displayStats() {
         val player: String = Minecraft.getMinecraft().thePlayer.displayNameString
         val stats: IChatComponent = ChatComponentText(
-            "${EnumChatFormatting.GRAY}Kills: ${EnumChatFormatting.WHITE}${OtherPlayers.getPlayerForName(player)!!.kills} ${EnumChatFormatting.GRAY}Deaths: ${EnumChatFormatting.WHITE}${OtherPlayers.getPlayerForName(
-                player
-            )!!.deaths} ${EnumChatFormatting.GRAY}Hits: ${EnumChatFormatting.WHITE}${HudElementHitCounter.totalHits}${"\n"}" +
+            "${EnumChatFormatting.GRAY}Kills: ${EnumChatFormatting.WHITE}${OtherPlayers.getPlayerForName(player)!!.kills} ${EnumChatFormatting.GRAY}Deaths: ${EnumChatFormatting.WHITE}${
+                OtherPlayers.getPlayerForName(
+                    player
+                )!!.deaths
+            } ${EnumChatFormatting.GRAY}Hits: ${EnumChatFormatting.WHITE}${HudElementHitCounter.totalHits}${"\n"}" +
                     "${EnumChatFormatting.GOLD}KP: ${EnumChatFormatting.WHITE}${(HudElementKillParticipation.playerKills / HudElementKillParticipation.numberOfTeamKills.toDouble() * 100).roundToInt()}% ${EnumChatFormatting.BLUE}Blue Kills: ${EnumChatFormatting.WHITE}${HudElementTotalKills.blueKills} ${EnumChatFormatting.RED}Red Kills: ${EnumChatFormatting.WHITE}${HudElementTotalKills.redKills}${"\n"}" +
-                    "${EnumChatFormatting.DARK_GREEN}Healing Received: ${EnumChatFormatting.WHITE}${OtherPlayers.getPlayerForName(
-                        player
-                    )!!.healingReceived} ${EnumChatFormatting.DARK_RED}Damage Received: ${EnumChatFormatting.WHITE}${OtherPlayers.getPlayerForName(
-                        player
-                    )!!.damageReceived}${"\n"}"
+                    "${EnumChatFormatting.DARK_GREEN}Healing Received: ${EnumChatFormatting.WHITE}${OtherPlayers.playersMap[player]?.healingReceived} " +
+                    "${EnumChatFormatting.DARK_RED}Damage Received: ${EnumChatFormatting.WHITE}${OtherPlayers.playersMap[player]?.damageReceived}${"\n"}"
         )
         Minecraft.getMinecraft().thePlayer.addChatMessage(stats)
     }
@@ -119,13 +116,13 @@ object StatsDisplayAfterGame : AbstractHudElement(), IUpdateConsumer {
                 if (ThePlayer.team == TeamEnum.BLUE) {
                     Minecraft.getMinecraft().thePlayer.addChatMessage(
                         ChatComponentText(
-                            "${EnumChatFormatting.RESET}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}[${player.level}]${EnumChatFormatting.BLUE}${player.name}${EnumChatFormatting.RESET} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.RESET}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.RESET} - ${EnumChatFormatting.GREEN}${player.healingReceived}${EnumChatFormatting.RESET}:${EnumChatFormatting.DARK_GREEN}${player.healingDone}${EnumChatFormatting.RESET}"
+                            "${EnumChatFormatting.WHITE}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${EnumChatFormatting.BLUE}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.healingReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_GREEN}${player.healingDone}${EnumChatFormatting.WHITE}"
                         )
                     )
                 } else {
                     Minecraft.getMinecraft().thePlayer.addChatMessage(
                         ChatComponentText(
-                            "${EnumChatFormatting.RESET}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}[${player.level}]${EnumChatFormatting.BLUE}${player.name}${EnumChatFormatting.RESET} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.RESET}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.RESET} - ${EnumChatFormatting.RED}${player.damageReceived}${EnumChatFormatting.RESET}:${EnumChatFormatting.DARK_RED}${player.damageDone}${EnumChatFormatting.RESET}"
+                            "${EnumChatFormatting.WHITE}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${EnumChatFormatting.BLUE}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.RED}${player.damageReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_RED}${player.damageDone}${EnumChatFormatting.WHITE}"
                         )
                     )
                 }
@@ -137,13 +134,13 @@ object StatsDisplayAfterGame : AbstractHudElement(), IUpdateConsumer {
                 if (ThePlayer.team == TeamEnum.RED) {
                     Minecraft.getMinecraft().thePlayer.addChatMessage(
                         ChatComponentText(
-                            "${EnumChatFormatting.RESET}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}[${player.level}]${EnumChatFormatting.RED}${player.name}${EnumChatFormatting.RESET} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.RESET}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.RESET} - ${EnumChatFormatting.GREEN}${player.healingReceived}${EnumChatFormatting.RESET}:${EnumChatFormatting.DARK_GREEN}${player.healingDone}${EnumChatFormatting.RESET}"
+                            "${EnumChatFormatting.WHITE}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${EnumChatFormatting.RED}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.healingReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_GREEN}${player.healingDone}${EnumChatFormatting.WHITE}"
                         )
                     )
                 } else {
                     Minecraft.getMinecraft().thePlayer.addChatMessage(
                         ChatComponentText(
-                            "${EnumChatFormatting.RESET}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}[${player.level}]${EnumChatFormatting.RED}${player.name}${EnumChatFormatting.RESET} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.RESET}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.RESET} - ${EnumChatFormatting.RED}${player.damageReceived}${EnumChatFormatting.RESET}:${EnumChatFormatting.DARK_RED}${player.damageDone}${EnumChatFormatting.RESET}"
+                            "${EnumChatFormatting.WHITE}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${EnumChatFormatting.RED}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.RED}${player.damageReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_RED}${player.damageDone}${EnumChatFormatting.WHITE}"
                         )
                     )
                 }
