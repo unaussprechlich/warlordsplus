@@ -11,6 +11,7 @@ import net.unaussprechlich.warlordsplus.util.*
 import java.util.*
 import java.util.regex.Pattern
 
+
 //TODO [ ] find out/think about what spec they are playing :) Just write a comment with some ideas
 open class Player(val name: String, val uuid : UUID) {
 
@@ -37,6 +38,8 @@ open class Player(val name: String, val uuid : UUID) {
 
     var died: Int = 0
     var stoleKill: Int = 0
+
+    var left: Boolean = false
 
 }
 
@@ -132,6 +135,18 @@ object OtherPlayers : IModule {
 
             //checking if player is prestige
             player.prestiged = it.playerTeam.colorSuffix.contains("${EnumChatFormatting.GOLD}")
+
+            val newMap: MutableMap<String, Player> = mutableMapOf()
+            newMap.putAll(playersMap)
+            for (networkPlayer in networkPlayers) {
+                if (newMap.containsKey(networkPlayer.gameProfile.name)) {
+                    newMap.remove(networkPlayer.gameProfile.name)
+                }
+            }
+            for (mutableEntry in newMap) {
+                if (mutableEntry.value.name == player.name)
+                    player.left = true
+            }
 
             return@map player
 

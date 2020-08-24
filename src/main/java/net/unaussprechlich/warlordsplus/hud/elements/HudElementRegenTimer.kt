@@ -35,7 +35,7 @@ class HudElementRegenTimer : AbstractHudElement(), IUpdateConsumer, IChatConsume
 
     override fun onChat(e: ClientChatReceivedEvent) {
         val message = e.message.formattedText
-        if (message.contains("hit you")) {
+        if (message.contains("hit you") || message.contains("You took")) {
             timer = 10
         }
     }

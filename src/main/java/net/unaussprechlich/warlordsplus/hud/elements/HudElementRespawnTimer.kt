@@ -4,6 +4,7 @@ import net.minecraft.util.EnumChatFormatting
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardNames
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
@@ -17,7 +18,7 @@ class HudElementRespawnTimer : AbstractHudElement(), IUpdateConsumer {
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
 
-        if (showRespawnTimer) {
+        if (showRespawnTimer && GameStateManager.isCTF) {
             when {
                 respawnTimer - 1 < 5 ->
                     renderStrings.add(EnumChatFormatting.RED.toString() + "Respawn: " + (respawnTimer - 1))
