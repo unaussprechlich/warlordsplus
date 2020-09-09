@@ -11,7 +11,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler;
 import net.unaussprechlich.warlordsplus.module.ModuleManager;
 import net.unaussprechlich.warlordsplus.util.commands.ChangeTargetCommand;
-import net.unaussprechlich.warlordsplus.util.commands.GetPlayerStatsCommand;
 
 
 @SideOnly(Side.CLIENT)
@@ -43,7 +42,7 @@ public class WarlordsPlus {
         MinecraftForge.EVENT_BUS.register(this);
         ModuleManager.INSTANCE.register();
         ClientCommandHandler.instance.registerCommand(new ChangeTargetCommand());
-        ClientCommandHandler.instance.registerCommand(new GetPlayerStatsCommand());
+        //ClientCommandHandler.instance.registerCommand(new GetPlayerStatsCommand());
 
     }
 
