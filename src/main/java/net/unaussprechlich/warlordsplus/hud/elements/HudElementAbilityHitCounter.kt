@@ -1,11 +1,9 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import net.unaussprechlich.warlordsplus.config.CCategory
-import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
-import java.util.ArrayList
+import java.util.*
 
 class HudElementAbilityHitCounter : AbstractHudElement(), IChatConsumer {
 

@@ -6,8 +6,6 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler;
@@ -44,6 +42,7 @@ public class WarlordsPlus {
         MinecraftForge.EVENT_BUS.register(this);
         ModuleManager.INSTANCE.register();
         ClientCommandHandler.instance.registerCommand(new ChangeTargetCommand());
+        //ClientCommandHandler.instance.registerCommand(new GetPlayerStatsCommand());
 
     }
 
