@@ -40,7 +40,7 @@ public class HudManager extends FancyGui implements IModule {
         hudElements.add(StatsDisplayAfterGame.INSTANCE);
         //hudElements.add(HudElementRandomTarget.INSTANCE);
         //hudElements.add(HudElementSpec.INSTANCE);
-
+        hudElements.add(DamageHealingAbsorbedEndOfGame.INSTANCE);
     }
 
     public static HudManager INSTANCE(){

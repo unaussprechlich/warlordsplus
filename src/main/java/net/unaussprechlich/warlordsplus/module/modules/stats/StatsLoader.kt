@@ -1,11 +1,10 @@
 package net.unaussprechlich.warlordsplus.module.modules.stats
 
-import io.ktor.client.HttpClient
-import io.ktor.client.features.ClientRequestException
-import io.ktor.client.features.ServerResponseException
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.request.get
+import io.ktor.client.*
+import io.ktor.client.features.*
+import io.ktor.client.features.json.*
+import io.ktor.client.features.json.serializer.*
+import io.ktor.client.request.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.UnstableDefault
@@ -83,9 +82,9 @@ object StatsLoader : IModule {
             println("Loaded results for $name")
             return PlayerCacheEntry(result.data!!)
         } catch (e: ServerResponseException) {
-            println("[WarlordsPlus|PlayerStats] internal server error for player $name!")
+            println("[WarlordsPlus|PlayerStats] internal server error for player $name")
         } catch (e: ClientRequestException) {
-            println("[WarlordsPlus|PlayerStats] no result for player $name!")
+            println("[WarlordsPlus|PlayerStats] no result for player $name")
         } catch (e: Exception) {
             e.printStackTrace()
         }

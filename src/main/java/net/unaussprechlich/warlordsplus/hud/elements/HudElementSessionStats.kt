@@ -26,20 +26,20 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
         val renderStrings = ArrayList<String>()
 
         if (showTotalKillsDeaths)
-            renderStrings.add("${EnumChatFormatting.RESET}Total Kills/Deaths ${EnumChatFormatting.GREEN}${totalPlayerKills}:${EnumChatFormatting.RED}${totalPlayerDeaths}")
+            renderStrings.add("${EnumChatFormatting.WHITE}Total Kills/Deaths ${EnumChatFormatting.GREEN}${totalPlayerKills}:${EnumChatFormatting.RED}${totalPlayerDeaths}")
         if (showTotalWinLoss)
-            renderStrings.add("${EnumChatFormatting.RESET}Total Win/Loss ${EnumChatFormatting.GREEN}${totalWins}:${EnumChatFormatting.RED}${totalLosses}")
+            renderStrings.add("${EnumChatFormatting.WHITE}Total Win/Loss ${EnumChatFormatting.GREEN}${totalWins}:${EnumChatFormatting.RED}${totalLosses}")
         if (showStreak) {
             when {
                 (streak > 0) ->
                     renderStrings.add(EnumChatFormatting.DARK_GREEN.toString() + "Win Streak: " + streak)
                 (streak < 0) ->
                     renderStrings.add(EnumChatFormatting.DARK_RED.toString() + "Loss Streak: " + abs(streak))
-                else -> renderStrings.add(EnumChatFormatting.RESET.toString() + "No Streak")
+                else -> renderStrings.add(EnumChatFormatting.WHITE.toString() + "No Streak")
             }
         }
-        if (showCoinsEarned)
-            renderStrings.add(EnumChatFormatting.GOLD.toString() + "Coins Earned: " + totalCoinsGained)
+//        if (showCoinsEarned)
+//            renderStrings.add(EnumChatFormatting.GOLD.toString() + "Coins Earned: " + totalCoinsGained)
 
         return renderStrings.toTypedArray()
     }
@@ -65,8 +65,8 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
                 else
                     streak = -1
             }
-        } else if (message.contains("+") && message.contains("coins")) {
-            totalCoinsGained += Integer.parseInt(message.substring(1, message.indexOf("coins") - 1))
+//        } else if (message.contains("coins") && message.contains("+")) {
+//            totalCoinsGained += Integer.parseInt(message.substring(1, message.indexOf("coins") - 1))
         } else if (message.contains("Result:")) {
             Minecraft.getMinecraft().thePlayer.sendChatMessage("/weaponscore")
         }
