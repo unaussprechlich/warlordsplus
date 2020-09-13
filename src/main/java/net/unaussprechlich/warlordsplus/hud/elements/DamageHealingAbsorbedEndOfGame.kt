@@ -66,6 +66,9 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
             //{id:"minecraft:stone",Count:1b,tag:{display:{Lore:["§fMinute 1: §64,783","§fMinute 2: §610,206","§fMinute 3: §60","§fMinute 4: §60","§fMinute 5: §62,738","§fMinute 6: §60","§fMinute 7: §60","§fMinute 8: §60","§fMinute 9: §60",],Name:"§bStat Breakdown (Damage):",},},Damage:0s,}
             //"§fMinute 11: §60","§fMinute 12: §60","§fMinute 13: §60","§fMinute 14: §60","§fMinute 15: §60","§fMinute 16: §60",],Name:"§bStat Breakdown (Damage):",},},Damage:0s,}§r
             println(e.message.siblings[1].chatStyle.chatHoverEvent.value.formattedText)
+            println(e.message.siblings[3].chatStyle.chatHoverEvent.value.formattedText)
+            println(e.message.siblings[5].chatStyle.chatHoverEvent.value.formattedText)
+
             val damageUnformatted = e.message.siblings[1].chatStyle.chatHoverEvent.value.formattedText
             val healingUnformatted = e.message.siblings[3].chatStyle.chatHoverEvent.value.formattedText
             val absorbedUnformatted = e.message.siblings[5].chatStyle.chatHoverEvent.value.formattedText
@@ -85,31 +88,31 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                 val damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 12)
                 val damageAmount = damageMinutePosition.substring(
                     0,
-                    damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
+                    damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
                 )
                 damage.add(damageAmount.replace(",", "").toInt())
                 damageString = damageMinutePosition.substring(
-                    damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
+                    damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
                 )
 
-                val healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 12)
+                val healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 13)
                 val healingAmount = healingMinutePosition.substring(
                     0,
-                    healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
+                    healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
                 )
                 healing.add(healingAmount.replace(",", "").toInt())
                 healingString = healingMinutePosition.substring(
-                    healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
+                    healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
                 )
 
-                val absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 12)
+                val absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 13)
                 val absorbedAmount = absorbedMinutePosition.substring(
                     0,
-                    absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
+                    absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
                 )
                 absorbed.add(absorbedAmount.replace(",", "").toInt())
                 absorbedString = absorbedMinutePosition.substring(
-                    absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
+                    absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
                 )
             }
 
@@ -141,6 +144,9 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                 }
             }
 
+            println(highestDamage)
+            println(highestHealing)
+            println(highestAbsorbed)
         }
     }
 
