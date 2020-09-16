@@ -76,17 +76,20 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
             val lastMinutePosition = damageUnformatted.lastIndexOf("Minute")
             val minuteString = damageUnformatted.substring(lastMinutePosition)
             minutes = minuteString.substring(minuteString.indexOf("e") + 2, minuteString.indexOf(":")).toInt()
+            if (minutes == 16) {
+                minutes--
+            }
 
             var damageString = damageUnformatted
             var healingString = healingUnformatted
             var absorbedString = absorbedUnformatted
+            var damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 12)
+            var healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 12)
+            var absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 12)
+            var damageAmount: String
+            var healingAmount: String
+            var absorbedAmount: String
             for (x in 0 until minutes) {
-                val damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 12)
-                val healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 12)
-                val absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 12)
-                var damageAmount: String
-                var healingAmount: String
-                var absorbedAmount: String
                 if (x >= 9) {
                     damageAmount = damageMinutePosition.substring(
                         0,
@@ -95,6 +98,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                     damageString = damageMinutePosition.substring(
                         damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
                     )
+                    damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 13)
 
                     healingAmount = healingMinutePosition.substring(
                         0,
@@ -103,6 +107,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                     healingString = healingMinutePosition.substring(
                         healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
                     )
+                    healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 13)
 
                     absorbedAmount = absorbedMinutePosition.substring(
                         0,
@@ -111,6 +116,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                     absorbedString = absorbedMinutePosition.substring(
                         absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
                     )
+                    absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 13)
                 } else {
                     damageAmount = damageMinutePosition.substring(
                         0,
@@ -119,6 +125,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                     damageString = damageMinutePosition.substring(
                         damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
                     )
+                    damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 12)
 
                     healingAmount = healingMinutePosition.substring(
                         0,
@@ -127,6 +134,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                     healingString = healingMinutePosition.substring(
                         healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
                     )
+                    healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 12)
 
                     absorbedAmount = absorbedMinutePosition.substring(
                         0,
@@ -135,6 +143,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                     absorbedString = absorbedMinutePosition.substring(
                         absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
                     )
+                    absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 12)
                 }
                 damage.add(damageAmount.replace(",", "").toInt())
                 healing.add(healingAmount.replace(",", "").toInt())
