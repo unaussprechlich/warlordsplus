@@ -38,7 +38,7 @@ class HudElementPing : AbstractHudElement() {
 
         private fun updatePing() {
             nextTimeStamp = System.currentTimeMillis() + pingCooldwonMs
-            if (Minecraft.getMinecraft().currentServerData == null)  return
+            if (Minecraft.getMinecraft().currentServerData == null) return
 
             try {
                 GlobalScope.launch {

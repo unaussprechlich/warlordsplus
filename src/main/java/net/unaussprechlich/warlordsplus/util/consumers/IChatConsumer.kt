@@ -5,6 +5,6 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent
 
 interface IChatConsumer {
 
-    fun onChat(e : ClientChatReceivedEvent)
+    fun onChat(e: ClientChatReceivedEvent)
 
 }

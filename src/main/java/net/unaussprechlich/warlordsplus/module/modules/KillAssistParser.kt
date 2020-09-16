@@ -1,6 +1,5 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
-import akka.actor.Kill
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -21,17 +20,17 @@ object KillAssistParser : IModule {
                 textMessage.contains("was killed by") -> {
                     val player = textMessage.substring(textMessage.indexOf("by") + 3)
                     val deathPlayer = textMessage.substring(0, textMessage.indexOf("was") - 1)
-                    EventBus.post(KillEvent(player, deathPlayer));
+                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute()));
                 }
                 textMessage.contains("You were killed") -> {
                     val player = textMessage.substring(textMessage.indexOf("by ") + 3)
                     val deathPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
-                    EventBus.post(KillEvent(player, deathPlayer))
+                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute()))
                 }
                 textMessage.contains("You killed") -> {
                     val deathPlayer = textMessage.substring(textMessage.indexOf("killed ") + 7)
                     val player = Minecraft.getMinecraft().thePlayer.displayNameString
-                    EventBus.post(KillEvent(player, deathPlayer))
+                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute()))
                     EventBus.post(KillRatioEvent(deathPlayer))
                 }
                 textMessage.contains("You assisted") -> {
@@ -54,7 +53,8 @@ object KillAssistParser : IModule {
  */
 data class KillEvent(
     val player: String,
-    val deathPlayer: String
+    val deathPlayer: String,
+    val time: Int
 ) : IEvent
 
 data class KillRatioEvent(

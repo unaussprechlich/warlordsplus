@@ -26,7 +26,7 @@ public class HudManager extends FancyGui implements IModule {
     private ArrayList<AbstractHudElement> hudElements = new ArrayList<>();
     private static HudManager instance;
 
-    private HudManager(){
+    private HudManager() {
         super();
         hudElements.add(new HudElementFps());
         hudElements.add(new HudElementPing());
@@ -43,8 +43,8 @@ public class HudManager extends FancyGui implements IModule {
         hudElements.add(DamageHealingAbsorbedEndOfGame.INSTANCE);
     }
 
-    public static HudManager INSTANCE(){
-        if(instance == null){
+    public static HudManager INSTANCE() {
+        if (instance == null) {
             instance = new HudManager();
         }
         return instance;
@@ -92,7 +92,7 @@ public class HudManager extends FancyGui implements IModule {
             );
             yStart += height;
 
-            for(AbstractHudElement element : hudElements){
+            for (AbstractHudElement element : hudElements) {
                 if (element.isVisible() && element.isEnabled() && element.getRenderString().length > 0) {
                     for (String s : element.getRenderString()) {
                         FancyGui.Companion.drawStringWithBackgroundBox(this, 4, yStart, s, false);

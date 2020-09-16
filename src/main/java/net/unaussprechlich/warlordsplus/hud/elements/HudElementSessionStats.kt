@@ -73,7 +73,7 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
     }
 
     override fun isVisible(): Boolean {
-        return GameStateManager.isWarlords
+        return GameStateManager.notIngame
     }
 
     override fun isEnabled(): Boolean {

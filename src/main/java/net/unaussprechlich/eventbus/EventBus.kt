@@ -30,19 +30,19 @@ object EventBus {
      * Inline function to be able to do EventBus.register<MyBus>({ })
      */
     inline fun <reified T : IEvent> register(noinline callback: (T) -> Unit) =
-            register(T::class.java, callback)
+        register(T::class.java, callback)
 
     /**
      * Inline function to be able to do EventBus.unregister<MyBus>({ })
      */
     inline fun <reified T : IEvent> unregister(noinline callback: (T) -> Unit) =
-            unregister(T::class.java, callback)
+        unregister(T::class.java, callback)
 
     /**
      * Inline function to be able to do EventBus.post<MyBus>({ })
      */
     inline fun <reified T : IEvent> post(data: T) =
-            post(T::class.java, data)
+        post(T::class.java, data)
 
     /**
      * Registers a Callback in a Bus and creates the Bus if it doesn't exist.

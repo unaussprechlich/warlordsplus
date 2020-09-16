@@ -13,10 +13,10 @@ import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 object HudElementSpec : AbstractHudElement() {
 
     @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showSpec",
-            comment = "Display the Spec",
-            def = true
+        category = CCategory.HUD,
+        id = "showSpec",
+        comment = "Display the Spec",
+        def = true
     )
     var showSpec = false
 

@@ -60,7 +60,7 @@ import java.lang.reflect.Field
  * This object contains utilities for the automatic config system. Its [init] method should be invoked at
  * pre-initialization time.
  */
-object EasyConfigHandler : IModule{
+object EasyConfigHandler : IModule {
 
     val fieldMapStr: MutableMap<Field, AnnotationHelper.AnnotationInfo> = mutableMapOf()
     val fieldMapInt: MutableMap<Field, AnnotationHelper.AnnotationInfo> = mutableMapOf()
@@ -99,12 +99,20 @@ object EasyConfigHandler : IModule{
         fieldMapStr.forEach {
             it.key.isAccessible = true
             if (!it.value.getBoolean("devOnly", false) || WarlordsPlus.IS_DEBUGGING) {
-                it.key.set(null, WarlordsPlus.CONFIG.get(it.value.getString("category", CCategory.UNKNOWN), it.value.getString("id", ""), it.value.getString("def", ""), it.value.getString("comment", "")).string)
-                ModConfigGui.addElement(
-                        CCategory.getCategoryByName(it.value.getString("category", CCategory.UNKNOWN)),
+                it.key.set(
+                    null,
+                    WarlordsPlus.CONFIG.get(
+                        it.value.getString("category", CCategory.UNKNOWN),
                         it.value.getString("id", ""),
                         it.value.getString("def", ""),
                         it.value.getString("comment", "")
+                    ).string
+                )
+                ModConfigGui.addElement(
+                    CCategory.getCategoryByName(it.value.getString("category", CCategory.UNKNOWN)),
+                    it.value.getString("id", ""),
+                    it.value.getString("def", ""),
+                    it.value.getString("comment", "")
                 )
             }
         }
@@ -112,12 +120,20 @@ object EasyConfigHandler : IModule{
         fieldMapInt.forEach {
             it.key.isAccessible = true
             if (!it.value.getBoolean("devOnly", false) || WarlordsPlus.IS_DEBUGGING) {
-                it.key.set(null, WarlordsPlus.CONFIG.get(it.value.getString("category", CCategory.UNKNOWN), it.value.getString("id", ""), it.value.getInt("def", 0), it.value.getString("comment", "")).int)
-                ModConfigGui.addElement(
-                        CCategory.getCategoryByName(it.value.getString("category", CCategory.UNKNOWN)),
+                it.key.set(
+                    null,
+                    WarlordsPlus.CONFIG.get(
+                        it.value.getString("category", CCategory.UNKNOWN),
                         it.value.getString("id", ""),
                         it.value.getInt("def", 0),
                         it.value.getString("comment", "")
+                    ).int
+                )
+                ModConfigGui.addElement(
+                    CCategory.getCategoryByName(it.value.getString("category", CCategory.UNKNOWN)),
+                    it.value.getString("id", ""),
+                    it.value.getInt("def", 0),
+                    it.value.getString("comment", "")
                 )
             }
         }
@@ -154,20 +170,22 @@ object EasyConfigHandler : IModule{
             }
             if (fieldMapStr.keys.size == 0) println("No string configuration property fields found!")
             fieldMapInt.forEach {
-                println("[CONFIGURATION][INTEGER]" +
-                        " [CAT]:${fancy(it.value.getString("category", CCategory.UNKNOWN).toString(), 15)}" +
-                        " [ID]: ${fancy(it.value.getString("id", "").toString(), 25)}" +
-                        " [VALUE]:${fancy(it.key.get(String).toString(), 10)}" +
-                        " [DEF]:${fancy(it.value.getInt("def", 0).toString(), 10)}"
+                println(
+                    "[CONFIGURATION][INTEGER]" +
+                            " [CAT]:${fancy(it.value.getString("category", CCategory.UNKNOWN).toString(), 15)}" +
+                            " [ID]: ${fancy(it.value.getString("id", "").toString(), 25)}" +
+                            " [VALUE]:${fancy(it.key.get(String).toString(), 10)}" +
+                            " [DEF]:${fancy(it.value.getInt("def", 0).toString(), 10)}"
                 )
             }
             if (fieldMapInt.keys.size == 0) println("No int configuration property fields found!")
             fieldMapBoolean.forEach {
-                println("[CONFIGURATION][BOOLEAN]" +
-                        " [CAT]:${fancy(it.value.getString("category", CCategory.UNKNOWN).toString(), 15)}" +
-                        " [ID]: ${fancy(it.value.getString("id", "").toString(), 25)}" +
-                        " [VALUE]:${fancy(it.key.get(String).toString(), 5)}" +
-                        " [DEF]:${fancy(it.value.getBoolean("def", false).toString(), 5)}"
+                println(
+                    "[CONFIGURATION][BOOLEAN]" +
+                            " [CAT]:${fancy(it.value.getString("category", CCategory.UNKNOWN).toString(), 15)}" +
+                            " [ID]: ${fancy(it.value.getString("id", "").toString(), 25)}" +
+                            " [VALUE]:${fancy(it.key.get(String).toString(), 5)}" +
+                            " [DEF]:${fancy(it.value.getBoolean("def", false).toString(), 5)}"
                 )
             }
             if (fieldMapBoolean.keys.size == 0) println("No boolean configuration property fields found!")
@@ -212,7 +230,14 @@ object EasyConfigHandler : IModule{
  * [def] is the default value, and if [devOnly] (optional) is set to true, this config property will only be set in a
  * development environment.
  */
-@Target(AnnotationTarget.FIELD) annotation class ConfigPropertyString(val category: String, val id: String, val comment: String, val def: String, val devOnly: Boolean = false)
+@Target(AnnotationTarget.FIELD)
+annotation class ConfigPropertyString(
+    val category: String,
+    val id: String,
+    val comment: String,
+    val def: String,
+    val devOnly: Boolean = false
+)
 
 /**
  * This annotation should be applied to non-final, static (if in Kotlin, [JvmStatic]) fields of type [Int] (or in Kotlin Int?]
@@ -221,7 +246,14 @@ object EasyConfigHandler : IModule{
  * [def] is the default value, and if [devOnly] (optional) is set to true, this config property will only be set in a
  * development environment.
  */
-@Target(AnnotationTarget.FIELD) annotation class ConfigPropertyInt(val category: String, val id: String, val comment: String, val def: Int, val devOnly: Boolean = false)
+@Target(AnnotationTarget.FIELD)
+annotation class ConfigPropertyInt(
+    val category: String,
+    val id: String,
+    val comment: String,
+    val def: Int,
+    val devOnly: Boolean = false
+)
 
 /**
  * This annotation should be applied to non-final, static (if in Kotlin, [JvmStatic]) fields of type [Boolean] (or in Kotlin Boolean?]

@@ -1,8 +1,6 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
-import ibxm.Player
 import net.minecraft.util.EnumChatFormatting
-import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.ThePlayer.damageDoneCounter
 import net.unaussprechlich.warlordsplus.ThePlayer.damageTakenCounter
 import net.unaussprechlich.warlordsplus.ThePlayer.energyGivenCounter

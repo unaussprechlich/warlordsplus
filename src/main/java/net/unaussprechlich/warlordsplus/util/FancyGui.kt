@@ -17,7 +17,7 @@ open class FancyGui : Gui() {
         this.zLevel = -90.0f
     }
 
-    companion object{
+    companion object {
 
         val FONT_HEIGHT = 13
 
@@ -54,22 +54,22 @@ open class FancyGui : Gui() {
         val Gui.scaledMcHeight: Int
             get() = mc.displayHeight / mcScale
 
-        val Gui.xCenter : Int
+        val Gui.xCenter: Int
             get() = mc.displayWidth / 2 / mcScale
 
-        val Gui.yCenter : Int
+        val Gui.yCenter: Int
             get() = mc.displayHeight / 2 / mcScale
 
         val Gui.xLeft: Int
             get() = 0
 
-        val Gui.xRight : Int
+        val Gui.xRight: Int
             get() = mc.displayWidth / mcScale
 
-        val Gui.yBottom : Int
+        val Gui.yBottom: Int
             get() = mc.displayHeight / mcScale
 
-        val Gui.yTop : Int
+        val Gui.yTop: Int
             get() = 0
 
         fun Gui.getTextWidth(text: String) = fontRenderer.getStringWidth(text)
@@ -93,57 +93,97 @@ open class FancyGui : Gui() {
         }
 
         fun Gui.drawRectangle(xStart: Int, yStart: Int, size: Int, color: Int) =
-                drawRect(xStart, yStart, size, size, color)
+            drawRect(xStart, yStart, size, size, color)
 
         fun Gui.drawBackgroundRectangle(xStart: Int, yStart: Int, size: Int) =
-                drawBackgroundRect(xStart, yStart, size, size)
+            drawBackgroundRect(xStart, yStart, size, size)
 
         fun Gui.drawHeaderRectangle(xStart: Int, yStart: Int, size: Int) =
-                drawHeaderRect(xStart, yStart, size, size)
+            drawHeaderRect(xStart, yStart, size, size)
 
         fun Gui.drawRect(xStart: Int, yStart: Int, width: Int, height: Int, color: Int) =
-                Gui.drawRect(xStart, yStart, xStart + width, yStart + height, color)
+            Gui.drawRect(xStart, yStart, xStart + width, yStart + height, color)
 
         fun Gui.drawBackgroundRect(xStart: Int, yStart: Int, width: Int, height: Int) =
-                Gui.drawRect(xStart, yStart, xStart + width, yStart + height, Colors.DEF.BACKGROUND)
+            Gui.drawRect(xStart, yStart, xStart + width, yStart + height, Colors.DEF.BACKGROUND)
 
         fun Gui.drawHeaderRect(xStart: Int, yStart: Int, width: Int, height: Int) =
-                Gui.drawRect(xStart, yStart, xStart + width, yStart + height, Colors.DEF.HEADER)
+            Gui.drawRect(xStart, yStart, xStart + width, yStart + height, Colors.DEF.HEADER)
 
         fun Gui.drawCenteredString(xStart: Int, yStart: Int, width: Int, text: String, shadow: Boolean = false) {
-            if (shadow) fontRenderer.drawStringWithShadow(text, xStart + ((width - getTextWidth(text)) / 2) + 0f, yStart + 3f, 0xffffff)
+            if (shadow) fontRenderer.drawStringWithShadow(
+                text,
+                xStart + ((width - getTextWidth(text)) / 2) + 0f,
+                yStart + 3f,
+                0xffffff
+            )
             fontRenderer.drawString(text, xStart + ((width - getTextWidth(text)) / 2), yStart + 3, 0xffffff)
         }
 
-        fun Gui.drawCenteredStringWithBox(xStart: Int, yStart: Int, width: Int, text: String, color: Int, shadow: Boolean = false) {
+        fun Gui.drawCenteredStringWithBox(
+            xStart: Int,
+            yStart: Int,
+            width: Int,
+            text: String,
+            color: Int,
+            shadow: Boolean = false
+        ) {
             drawRect(xStart, yStart, width, FONT_HEIGHT, color)
             drawCenteredString(xStart, yStart, width, text, shadow)
         }
 
-        fun Gui.drawCenteredStringWithBackgroundBox(xStart: Int, yStart: Int, width: Int, text: String, shadow: Boolean = false) {
+        fun Gui.drawCenteredStringWithBackgroundBox(
+            xStart: Int,
+            yStart: Int,
+            width: Int,
+            text: String,
+            shadow: Boolean = false
+        ) {
             drawBackgroundRect(xStart, yStart, width, FONT_HEIGHT)
             drawCenteredString(xStart, yStart, width, text, shadow)
         }
 
-        fun Gui.drawCenteredStringWithHeaderBox(xStart: Int, yStart: Int, width: Int, text: String, shadow: Boolean = false) {
+        fun Gui.drawCenteredStringWithHeaderBox(
+            xStart: Int,
+            yStart: Int,
+            width: Int,
+            text: String,
+            shadow: Boolean = false
+        ) {
             drawHeaderRect(xStart, yStart, width, FONT_HEIGHT)
             drawCenteredString(xStart, yStart, width, text, shadow)
         }
 
         fun Gui.drawStringWithBox(xStart: Int, yStart: Int, text: String, color: Int, shadow: Boolean = false) {
-            drawRect(xStart, yStart, fontRenderer.getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(text)) + 4, 12, color)
+            drawRect(
+                xStart,
+                yStart,
+                fontRenderer.getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(text)) + 4,
+                12,
+                color
+            )
             if (shadow) fontRenderer.drawStringWithShadow(text, xStart + 2f, yStart + 2f, 0xffffff)
             fontRenderer.drawString(text, xStart + 2, yStart + 2, 0xffffff)
         }
 
         fun Gui.drawStringWithBackgroundBox(xStart: Int, yStart: Int, text: String, shadow: Boolean = false) {
-            drawBackgroundRect(xStart, yStart, fontRenderer.getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(text)) + 4, 12)
+            drawBackgroundRect(
+                xStart,
+                yStart,
+                fontRenderer.getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(text)) + 4,
+                12
+            )
             if (shadow) fontRenderer.drawStringWithShadow(text, xStart + 2f, yStart + 2f, 0xffffff)
             fontRenderer.drawString(text, xStart + 2, yStart + 2, 0xffffff)
         }
 
         fun Gui.drawStringWithHeaderBox(xStart: Int, yStart: Int, text: String, shadow: Boolean = false) {
-            drawHeaderRect(xStart, yStart, fontRenderer.getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(text)) + 4, 12)
+            drawHeaderRect(
+                xStart,
+                yStart,
+                fontRenderer.getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(text)) + 4,
+                12
+            )
             if (shadow) fontRenderer.drawStringWithShadow(text, xStart + 2f, yStart + 2f, 0xffffff)
             fontRenderer.drawString(text, xStart + 2, yStart + 2, 0xffffff)
         }
