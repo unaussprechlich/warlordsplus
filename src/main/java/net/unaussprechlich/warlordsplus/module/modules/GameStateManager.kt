@@ -71,6 +71,19 @@ object GameStateManager : IModule {
             throwable.printStackTrace()
         }
     }
+
+    fun getMinute(): Int {
+        try {
+            //00:00 - 13:23
+            if (isIngame) {
+                val time = scoreboardNames[9].removeFormatting().substring(13)
+                return time.substring(0, 2).toInt()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return -1
+    }
 }
 
 data class ResetEvent(val time: Long = System.currentTimeMillis()) : IEvent

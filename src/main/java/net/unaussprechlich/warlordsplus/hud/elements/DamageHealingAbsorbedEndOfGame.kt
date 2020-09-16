@@ -86,35 +86,65 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
             var absorbedString = absorbedUnformatted
             for (x in 0 until minutes) {
                 val damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 12)
-                println(damageMinutePosition)
-                val damageAmount = damageMinutePosition.substring(
-                    0,
-                    damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
-                )
-                damage.add(damageAmount.replace(",", "").toInt())
-                damageString = damageMinutePosition.substring(
-                    damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
-                )
-
                 val healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 12)
-                val healingAmount = healingMinutePosition.substring(
-                    0,
-                    healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
-                )
-                healing.add(healingAmount.replace(",", "").toInt())
-                healingString = healingMinutePosition.substring(
-                    healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
-                )
-
                 val absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 12)
-                val absorbedAmount = absorbedMinutePosition.substring(
-                    0,
-                    absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
-                )
+                var damageAmount = ""
+                var healingAmount = ""
+                var absorbedAmount = ""
+
+                if (x >= 10) {
+                    damageAmount = damageMinutePosition.substring(
+                        0,
+                        damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
+                    )
+                    damageString = damageMinutePosition.substring(
+                        damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
+                    )
+
+                    healingAmount = healingMinutePosition.substring(
+                        0,
+                        healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
+                    )
+                    healingString = healingMinutePosition.substring(
+                        healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
+                    )
+
+                    absorbedAmount = absorbedMinutePosition.substring(
+                        0,
+                        absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
+                    )
+                    absorbedString = absorbedMinutePosition.substring(
+                        absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
+                    )
+                } else {
+                    damageAmount = damageMinutePosition.substring(
+                        0,
+                        damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
+                    )
+                    damageString = damageMinutePosition.substring(
+                        damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
+                    )
+
+                    healingAmount = healingMinutePosition.substring(
+                        0,
+                        healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
+                    )
+                    healingString = healingMinutePosition.substring(
+                        healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
+                    )
+
+                    absorbedAmount = absorbedMinutePosition.substring(
+                        0,
+                        absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
+                    )
+                    absorbedString = absorbedMinutePosition.substring(
+                        absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
+                    )
+                }
+                damage.add(damageAmount.replace(",", "").toInt())
+                healing.add(healingAmount.replace(",", "").toInt())
                 absorbed.add(absorbedAmount.replace(",", "").toInt())
-                absorbedString = absorbedMinutePosition.substring(
-                    absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
-                )
+
             }
 
             damage.forEachIndexed { index, element ->
@@ -143,16 +173,6 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                     lowestAbsorbed = element
                     lowestAbsorbedMin = index + 1
                 }
-            }
-
-            if (highestDamageMin >= 10) {
-                highestDamage = highestDamage.toString().substring(1).toInt()
-            }
-            if (highestHealingMin >= 10) {
-                highestHealing = highestHealing.toString().substring(1).toInt()
-            }
-            if (highestAbsorbedMin >= 10) {
-                highestAbsorbed = highestAbsorbed.toString().substring(1).toInt()
             }
             println(highestDamage)
             println(highestHealing)

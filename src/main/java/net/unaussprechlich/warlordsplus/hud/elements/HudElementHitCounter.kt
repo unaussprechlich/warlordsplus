@@ -3,6 +3,7 @@ package net.unaussprechlich.warlordsplus.hud.elements
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
@@ -34,6 +35,7 @@ object HudElementHitCounter : AbstractHudElement(), IChatConsumer {
     override fun onChat(e: ClientChatReceivedEvent) {
         val message: String = e.message.unformattedText.removeFormatting()
         if (message.contains("You hit")) {
+            EventBus.post(HitEvent(GameStateManager.getMinute()))
             totalHits++
         }
 
@@ -57,3 +59,7 @@ object HudElementHitCounter : AbstractHudElement(), IChatConsumer {
 
 
 }
+
+data class HitEvent(
+    val time: Int
+) : IEvent

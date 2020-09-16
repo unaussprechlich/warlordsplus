@@ -2,6 +2,7 @@ package net.unaussprechlich.warlordsplus
 
 import net.minecraft.client.Minecraft
 import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.warlordsplus.hud.elements.HitEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.*
 import net.unaussprechlich.warlordsplus.util.SpecsEnum
@@ -27,6 +28,11 @@ object ThePlayer : IModule {
     var energyStolenCounter = 0
         private set
     var energyLostCounter = 0
+        private set
+
+    //minute
+    //kill,death,hit,dmg,heal
+    var minuteStats = Array(15) { IntArray(5) }
         private set
 
     //All classes
@@ -106,6 +112,9 @@ object ThePlayer : IModule {
             energyStolenCounter = 0
             energyLostCounter = 0
 
+
+            minuteStats = Array(15) { IntArray(5) }
+
             try {
 
                 spec = SpecsEnum.values().firstOrNull { spec ->
@@ -125,12 +134,27 @@ object ThePlayer : IModule {
                 e.printStackTrace()
             }
         }
+        EventBus.register<KillEvent> {
+            if (it.deathPlayer == Minecraft.getMinecraft().thePlayer.displayNameString && it.time > 0) {
+                minuteStats[it.time][1]++
+            } else if (it.player == Minecraft.getMinecraft().thePlayer.displayNameString && it.time > 0) {
+                minuteStats[it.time][0]++
+            }
+        }
+        EventBus.register<HitEvent> {
+            if (it.time > 0)
+                minuteStats[it.time][2]++
+        }
 
         EventBus.register<HealingGivenEvent> {
             healingGivenCounter += it.amount
+            if (it.minute > 0)
+                minuteStats[it.minute][4] += it.amount
         }
         EventBus.register<DamageDoneEvent> {
             damageDoneCounter += it.amount
+            if (it.minute > 0)
+                minuteStats[it.minute][3] += it.amount
         }
         EventBus.register<EnergyReceivedEvent> {
             energyReceivedCounter += it.amount
