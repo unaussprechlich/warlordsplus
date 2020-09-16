@@ -55,8 +55,8 @@ import net.minecraftforge.fml.client.config.GuiConfigEntries.IConfigEntry;
  * Works pretty similarly but extends ConfigElement and doesn't just implement IConfigElement
  *
  * @author palechip
- *         <p>
- *         Will be added back later ... DummyConfigELements are cool and i also miss those sliders
+ * <p>
+ * Will be added back later ... DummyConfigELements are cool and i also miss those sliders
  */
 public class FancyConfigElement extends ConfigElement {
     protected String[] validValues;

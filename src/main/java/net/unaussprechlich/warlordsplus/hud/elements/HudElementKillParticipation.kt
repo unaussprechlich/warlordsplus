@@ -1,9 +1,7 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraft.client.Minecraft
-import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
-import net.minecraft.util.IChatComponent
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent

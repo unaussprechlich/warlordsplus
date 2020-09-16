@@ -77,10 +77,6 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
             val minuteString = damageUnformatted.substring(lastMinutePosition)
             minutes = minuteString.substring(minuteString.indexOf("e") + 2, minuteString.indexOf(":")).toInt()
 
-//            averageDamagePerMin = e.message.siblings[1].formattedText.replace(",", "").toInt() / minutes
-//            averageHealingPerMin = e.message.siblings[3].formattedText.replace(",", "").toInt() / minutes
-//            averageAbsorbedPerMin = e.message.siblings[5].formattedText.replace(",", "").toInt() / minutes
-
             var damageString = damageUnformatted
             var healingString = healingUnformatted
             var absorbedString = absorbedUnformatted
@@ -88,11 +84,10 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                 val damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 12)
                 val healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 12)
                 val absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 12)
-                var damageAmount = ""
-                var healingAmount = ""
-                var absorbedAmount = ""
-
-                if (x >= 10) {
+                var damageAmount: String
+                var healingAmount: String
+                var absorbedAmount: String
+                if (x >= 9) {
                     damageAmount = damageMinutePosition.substring(
                         0,
                         damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
@@ -144,10 +139,14 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                 damage.add(damageAmount.replace(",", "").toInt())
                 healing.add(healingAmount.replace(",", "").toInt())
                 absorbed.add(absorbedAmount.replace(",", "").toInt())
-
             }
 
+            var totalDamage = 0
+            var totalHealing = 0
+            var totalAbsorbed = 0
+
             damage.forEachIndexed { index, element ->
+                totalDamage += element
                 if (element > highestDamage) {
                     highestDamage = element
                     highestDamageMin = index + 1
@@ -157,6 +156,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                 }
             }
             healing.forEachIndexed { index, element ->
+                totalHealing += element
                 if (element > highestHealing) {
                     highestHealing = element
                     highestHealingMin = index + 1
@@ -166,6 +166,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                 }
             }
             absorbed.forEachIndexed { index, element ->
+                totalAbsorbed += element
                 if (element > highestAbsorbed) {
                     highestAbsorbed = element
                     highestAbsorbedMin = index + 1
@@ -174,6 +175,11 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                     lowestAbsorbedMin = index + 1
                 }
             }
+
+            averageDamagePerMin = totalDamage / minutes
+            averageHealingPerMin = totalHealing / minutes
+            averageAbsorbedPerMin = totalAbsorbed / minutes
+
             println(highestDamage)
             println(highestHealing)
             println(highestAbsorbed)
