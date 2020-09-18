@@ -62,9 +62,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
 
     override fun onChat(e: ClientChatReceivedEvent) {
         if (e.message.formattedText.contains("Damage:")) {
-            //siblings 1 - 3 - 5
-            //{id:"minecraft:stone",Count:1b,tag:{display:{Lore:["§fMinute 1: §64,783","§fMinute 2: §610,206","§fMinute 3: §60","§fMinute 4: §60","§fMinute 5: §62,738","§fMinute 6: §60","§fMinute 7: §60","§fMinute 8: §60","§fMinute 9: §60",],Name:"§bStat Breakdown (Damage):",},},Damage:0s,}
-            //"§fMinute 11: §60","§fMinute 12: §60","§fMinute 13: §60","§fMinute 14: §60","§fMinute 15: §60","§fMinute 16: §60",],Name:"§bStat Breakdown (Damage):",},},Damage:0s,}§r
+
             println(e.message.siblings[1].chatStyle.chatHoverEvent.value.formattedText)
             println(e.message.siblings[3].chatStyle.chatHoverEvent.value.formattedText)
             println(e.message.siblings[5].chatStyle.chatHoverEvent.value.formattedText)
@@ -122,29 +120,49 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
                         0,
                         damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
                     )
-                    damageString = damageMinutePosition.substring(
-                        damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
-                    )
-                    damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 12)
+
+                    damageString =
+                        if (x == 8) damageMinutePosition.substring(
+                            damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
+                        ) else damageMinutePosition.substring(
+                            damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
+                        )
+
+                    damageMinutePosition =
+                        if (x == 8) damageString.substring(damageString.indexOf("Minute") + 13)
+                        else damageString.substring(damageString.indexOf("Minute") + 12)
 
                     healingAmount = healingMinutePosition.substring(
                         0,
                         healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
                     )
-                    healingString = healingMinutePosition.substring(
-                        healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
-                    )
-                    healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 12)
+                    healingString =
+                        if (x == 8) healingMinutePosition.substring(
+                            healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
+                        ) else healingMinutePosition.substring(
+                            healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
+                        )
+
+                    healingMinutePosition =
+                        if (x == 8) healingString.substring(healingString.indexOf("Minute") + 13)
+                        else healingString.substring(healingString.indexOf("Minute") + 12)
 
                     absorbedAmount = absorbedMinutePosition.substring(
                         0,
                         absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
                     )
-                    absorbedString = absorbedMinutePosition.substring(
-                        absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
-                    )
-                    absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 12)
+                    absorbedString =
+                        if (x == 8) absorbedMinutePosition.substring(
+                            absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
+                        ) else absorbedMinutePosition.substring(
+                            absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
+                        )
+
+                    absorbedMinutePosition =
+                        if (x == 8) absorbedString.substring(absorbedString.indexOf("Minute") + 13)
+                        else absorbedString.substring(absorbedString.indexOf("Minute") + 12)
                 }
+
                 damage.add(damageAmount.replace(",", "").toInt())
                 healing.add(healingAmount.replace(",", "").toInt())
                 absorbed.add(absorbedAmount.replace(",", "").toInt())
