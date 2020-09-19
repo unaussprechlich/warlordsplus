@@ -38,7 +38,7 @@ class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
             StatsLoader.loadPlayer(player)
             val data = StatsLoader.getPlayer(player)?.data
             if (data == null) {
-                Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}LOADING PLAYER - TRY AGAIN IN A COUPLE SECONDS"))
+                Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}LOADING PLAYER - TRY AGAIN IN 3-7 SECONDS"))
             } else {
                 val names = StringBuilder()
                 data.nameHistory?.forEach { names.append(it.name + ", ") }
