@@ -161,7 +161,7 @@ class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
                     "OVERALL SHITNESS: " +
                             "${
                                 when {
-                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 100 -> EnumChatFormatting.DARK_RED
+                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 100 -> EnumChatFormatting.BLACK
                                     (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 80 -> EnumChatFormatting.DARK_RED
                                     (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 60 -> EnumChatFormatting.RED
                                     (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 40 -> EnumChatFormatting.YELLOW
