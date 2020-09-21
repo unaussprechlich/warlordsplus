@@ -12,6 +12,7 @@ import net.minecraft.util.IChatComponent
 import net.unaussprechlich.warlordsplus.module.modules.stats.StatsLoader
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import java.util.*
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
@@ -82,10 +83,14 @@ class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
                             "${EnumChatFormatting.GRAY}    DHP: ${EnumChatFormatting.WHITE}${data.warlordsSr?.shaman?.DHP}\n" +
                             "${EnumChatFormatting.GRAY}    Plays: ${EnumChatFormatting.WHITE}${data.warlordsHypixel?.shamanPlays}\n"
                 )
-                val winRatioWeightBasic = .4
-                val winRatioWeightAdvanced = .7
-                val classWinRatioWeightBasic = .6
-                val classWinRatioWeightAdvanced = .3
+
+                //boosted meter
+                var winRatioWeightBasic = .4
+                var classWinRatioWeightBasic = .6
+                if (data.warlordsSr!!.plays!! > 5000) {
+                    winRatioWeightBasic = .7
+                    classWinRatioWeightBasic = .3
+                }
                 //blue vs red wins || >1.6x = party booster
                 val winRatio =
                     if ((data.warlordsHypixel?.winsBlu?.toDouble())?.div((data.warlordsHypixel.winsRed!!))
@@ -96,15 +101,12 @@ class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
                         .div(1.5)).roundToInt()
                 //level to win ration || all 90s = 3000 plays
                 val classWinRatio =
-                    (3000 - (data.warlordsSr?.paladin?.LEVEL!! + data.warlordsSr.warrior?.LEVEL!! +
+                    (3000 - (data.warlordsSr.paladin?.LEVEL!! + data.warlordsSr.warrior?.LEVEL!! +
                             data.warlordsSr.mage?.LEVEL!! + data.warlordsSr.shaman?.LEVEL!!) * 3000 / 360) / 10
 
 
-                val boostedNum = if (data.warlordsSr.plays!! > 3000)
-                    (winRatio * winRatioWeightAdvanced + classWinRatio *
-                            classWinRatioWeightAdvanced
-                            ).roundToInt()
-                else (winRatio * winRatioWeightBasic + classWinRatio * classWinRatioWeightBasic).roundToInt()
+                val boostedNum =
+                    (winRatio * winRatioWeightBasic + classWinRatio * classWinRatioWeightBasic).roundToInt()
                 val boostedMeter: IChatComponent = ChatComponentText(
                     "${EnumChatFormatting.AQUA}SMASH BOOSTED METER/100 V1: " +
                             "${
@@ -117,10 +119,72 @@ class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
                                 }
                             }$boostedNum"
                 )
+
+                //garbage meter
+                //5000/50 = 0 --- 0/0 = 100/
+                val sr = data.warlordsSr.sR
+                // > 70% = capper one trick - punish = *.85
+                val capToWinRatio =
+                    data.warlordsHypixel.flagConquerSelf!!.toDouble() / data.warlordsHypixel.winsCapturetheflag!!
+                // > 50% = cryo one trick - punish = *.70
+                val cryoPlayRatio = data.warlordsHypixel.cryomancerPlays!!.toDouble() / data.warlordsSr.plays!!
+
+                //sr = 5000 = 0 garbage
+                //sr = 0 = 100 garbage
+                var garbageNum = (abs(5000 - sr!!) / 100) * 2.0
+                if (capToWinRatio > .75)
+                    garbageNum += 25
+                if (cryoPlayRatio > .5)
+                    garbageNum += 20
+
+                val garbageMeter: IChatComponent = ChatComponentText(
+                    "${EnumChatFormatting.DARK_AQUA}SMASH GARBAGE METER/100 V1: " +
+                            "${
+                                when {
+                                    garbageNum > 80 -> EnumChatFormatting.DARK_RED
+                                    garbageNum > 60 -> EnumChatFormatting.RED
+                                    garbageNum > 40 -> EnumChatFormatting.YELLOW
+                                    garbageNum > 20 -> EnumChatFormatting.DARK_GREEN
+                                    else -> EnumChatFormatting.GREEN
+                                }
+                            }${garbageNum.toInt()}"
+                )
+
+                var boostedWeight = .5
+                var garbageWeight = 1.5
+                if (data.warlordsSr.plays > 5000) {
+                    boostedWeight = 1.5
+                    garbageWeight = .5
+                }
+
+                val shitMeter: IChatComponent = ChatComponentText(
+                    "OVERALL SHITNESS: " +
+                            "${
+                                when {
+                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 100 -> EnumChatFormatting.DARK_RED
+                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 80 -> EnumChatFormatting.DARK_RED
+                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 60 -> EnumChatFormatting.RED
+                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 40 -> EnumChatFormatting.YELLOW
+                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 20 -> EnumChatFormatting.DARK_GREEN
+                                    else -> EnumChatFormatting.GREEN
+                                }
+                            }${
+                                when {
+                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 100 -> "SUPER SHIT"
+                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 80 -> "PRETTY SHIT"
+                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 60 -> "SHIT"
+                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 40 -> "KINDA SHIT"
+                                    (boostedNum.toDouble() * boostedWeight + garbageNum * garbageWeight) / 2 > 20 -> "BARELY SHIT"
+                                    else -> "NOT REALLY SHIT"
+                                }
+                            }"
+                )
                 Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
                 Minecraft.getMinecraft().thePlayer.addChatMessage(nameHistory)
                 Minecraft.getMinecraft().thePlayer.addChatMessage(stats)
                 Minecraft.getMinecraft().thePlayer.addChatMessage(boostedMeter)
+                Minecraft.getMinecraft().thePlayer.addChatMessage(garbageMeter)
+                Minecraft.getMinecraft().thePlayer.addChatMessage(shitMeter)
                 Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
             }
         }
