@@ -130,7 +130,7 @@ object ScoreboardComponent : AbstractRenderComponent() {
             )
             drawString(
                 xName, yStart + 15 + offset,
-                "${drawFlag()}${if (p.isDead) EnumChatFormatting.GRAY else p.team.color}${p.name}"
+                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn}-" else p.team.color}${p.name}"
             )
             drawString(
                 xKills, yStart + 15 + offset,

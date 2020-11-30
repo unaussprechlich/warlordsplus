@@ -1,6 +1,7 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraft.util.EnumChatFormatting
+import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
@@ -34,7 +35,7 @@ class HudElementRespawnTimer : AbstractHudElement(), IUpdateConsumer {
 
     private var tick = 0
     override fun update() {
-        tick = if (tick >= 40) {
+        tick = if (tick >= 20) {
             0
         } else {
             tick++
@@ -50,6 +51,19 @@ class HudElementRespawnTimer : AbstractHudElement(), IUpdateConsumer {
             }
         } catch (e: Exception) {
             //respawnTimer = -1
+        }
+        OtherPlayers.playersMap.forEach { (_, value) ->
+            if (value.isDead) {
+                println(value.name)
+                println("" + value.respawn)
+                if (value.respawn != -1) {
+                    value.respawn--
+                    if (value.respawn == 0) {
+                        value.isDead = false
+                        value.respawn = -1
+                    }
+                }
+            }
         }
     }
 

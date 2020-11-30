@@ -42,6 +42,7 @@ open class Player(val name: String, val uuid : UUID) {
     var left: Boolean = false
     var isDead: Boolean = false
     var longRespawn: Boolean = false
+    var respawn: Int = -1
 }
 
 private val numberPattern = Pattern.compile("[0-9]{2}")
@@ -62,7 +63,7 @@ object OtherPlayers : IModule {
             if (it.deathPlayer in playersMap) {
                 playersMap[it.deathPlayer]!!.deaths++
                 playersMap[it.deathPlayer]!!.isDead = true
-                playersMap[it.deathPlayer]!!.longRespawn = it.longRespawn
+                playersMap[it.deathPlayer]!!.respawn = it.respawn
             }
             if (it.player in playersMap)
                 playersMap[it.player]!!.kills++
@@ -107,17 +108,6 @@ object OtherPlayers : IModule {
 
         EventBus.register<PlayerLeaveEvent> {
             playersMap[it.player]!!.left = it.left
-        }
-
-        EventBus.register<RespawnEvent> {
-            playersMap.forEach { (_, value) ->
-                if (value.isDead) {
-                    if (!value.longRespawn) {
-                        value.isDead = false
-                    }
-                    value.longRespawn = false
-                }
-            }
         }
 
     }
