@@ -12,6 +12,7 @@ import net.unaussprechlich.warlordsplus.config.EasyConfigHandler;
 import net.unaussprechlich.warlordsplus.module.ModuleManager;
 import net.unaussprechlich.warlordsplus.util.commands.ChangeTargetCommand;
 import net.unaussprechlich.warlordsplus.util.commands.GetPlayerStatsCommand;
+import net.unaussprechlich.warlordsplus.util.commands.SetWinLossCommand;
 
 
 @SideOnly(Side.CLIENT)
@@ -44,6 +45,8 @@ public class WarlordsPlus {
         ModuleManager.INSTANCE.register();
         ClientCommandHandler.instance.registerCommand(new ChangeTargetCommand());
         ClientCommandHandler.instance.registerCommand(new GetPlayerStatsCommand());
+        ClientCommandHandler.instance.registerCommand(new SetWinLossCommand());
+
 
     }
 

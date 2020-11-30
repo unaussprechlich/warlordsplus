@@ -13,7 +13,7 @@ import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import java.util.*
 import kotlin.math.abs
 
-class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
+object HudElementSessionStats : AbstractHudElement(), IChatConsumer {
 
     var totalPlayerDeaths = 0
     var totalPlayerKills = 0
@@ -80,37 +80,36 @@ class HudElementSessionStats : AbstractHudElement(), IChatConsumer {
         return GameStateManager.isWarlords
     }
 
-    companion object {
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showTotalKills/Death",
-            comment = "Enable or disable the Total Kills/Death counter",
-            def = true
-        )
-        var showTotalKillsDeaths = false
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showTotalKills/Death",
+        comment = "Enable or disable the Total Kills/Death counter",
+        def = true
+    )
+    var showTotalKillsDeaths = false
 
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showTotalWin/Loss",
-            comment = "Enable or disable the Total Wins/Loss counter",
-            def = true
-        )
-        var showTotalWinLoss = false
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showTotalWin/Loss",
+        comment = "Enable or disable the Total Wins/Loss counter",
+        def = true
+    )
+    var showTotalWinLoss = false
 
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showStreak",
-            comment = "Enable or disable the Win/Loss streak counter",
-            def = true
-        )
-        var showStreak = false
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showStreak",
+        comment = "Enable or disable the Win/Loss streak counter",
+        def = true
+    )
+    var showStreak = false
 
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showCoinsEarned",
-            comment = "Enable or disable the Total Coins Earned counter",
-            def = true
-        )
-        var showCoinsEarned = false
-    }
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showCoinsEarned",
+        comment = "Enable or disable the Total Coins Earned counter",
+        def = true
+    )
+    var showCoinsEarned = false
+
 }

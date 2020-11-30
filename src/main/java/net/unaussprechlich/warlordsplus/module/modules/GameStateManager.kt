@@ -55,6 +55,16 @@ object GameStateManager : IModule {
             isCTF = scoreboardNames[7].removeFormatting().contains("RED Flag")
             isTDM = scoreboardNames[9].removeFormatting().contains("BLU:")
             isDOM = scoreboardNames[11].removeFormatting().contain("/2000")
+
+            if (isCTF) {
+                val colon = scoreboardNames[9].lastIndexOf(":")
+                val after = scoreboardNames[9].substring(colon + 1, colon + 3)
+                try {
+                    if (after.toInt() % 12 == 0)
+                        EventBus.post(RespawnEvent())
+                } catch (e: Exception) {
+                }
+            }
         }
     }
 
@@ -88,3 +98,4 @@ object GameStateManager : IModule {
 
 data class ResetEvent(val time: Long = System.currentTimeMillis()) : IEvent
 data class IngameChangedEvent(val ingame: Boolean) : IEvent
+data class RespawnEvent(val time: Long = System.currentTimeMillis()) : IEvent

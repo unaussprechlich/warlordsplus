@@ -3,7 +3,6 @@ package net.unaussprechlich.warlordsplus.ingamegui.components.scoreboard
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderGameOverlayEvent
-import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.Player
 import net.unaussprechlich.warlordsplus.ThePlayer
@@ -12,7 +11,6 @@ import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
-import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 
 object ScoreboardComponent : AbstractRenderComponent() {
@@ -132,7 +130,7 @@ object ScoreboardComponent : AbstractRenderComponent() {
             )
             drawString(
                 xName, yStart + 15 + offset,
-                "${drawFlag()}${p.team.color}${p.name}"
+                "${drawFlag()}${if (p.isDead) EnumChatFormatting.GRAY else p.team.color}${p.name}"
             )
             drawString(
                 xKills, yStart + 15 + offset,

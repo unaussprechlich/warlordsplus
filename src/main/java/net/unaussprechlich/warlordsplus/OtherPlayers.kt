@@ -40,7 +40,8 @@ open class Player(val name: String, val uuid : UUID) {
     var stoleKill: Int = 0
 
     var left: Boolean = false
-
+    var isDead: Boolean = false
+    var longRespawn: Boolean = false
 }
 
 private val numberPattern = Pattern.compile("[0-9]{2}")
@@ -58,8 +59,11 @@ object OtherPlayers : IModule {
         }
 
         EventBus.register<KillEvent> {
-            if (it.deathPlayer in playersMap)
+            if (it.deathPlayer in playersMap) {
                 playersMap[it.deathPlayer]!!.deaths++
+                playersMap[it.deathPlayer]!!.isDead = true
+                playersMap[it.deathPlayer]!!.longRespawn = it.longRespawn
+            }
             if (it.player in playersMap)
                 playersMap[it.player]!!.kills++
         }
@@ -100,6 +104,22 @@ object OtherPlayers : IModule {
         EventBus.register<KillStealEvent> {
             playersMap[it.otherPlayer]!!.stoleKill += 1
         }
+
+        EventBus.register<PlayerLeaveEvent> {
+            playersMap[it.player]!!.left = it.left
+        }
+
+        EventBus.register<RespawnEvent> {
+            playersMap.forEach { (_, value) ->
+                if (value.isDead) {
+                    if (!value.longRespawn) {
+                        value.isDead = false
+                    }
+                    value.longRespawn = false
+                }
+            }
+        }
+
     }
 
     fun getPlayersForNetworkPlayers(networkPlayers : Collection<NetworkPlayerInfo>): Collection<Player> {

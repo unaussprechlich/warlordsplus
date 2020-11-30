@@ -15,22 +15,32 @@ object KillAssistParser : IModule {
         if (GameStateManager.notIngame || e.type == 2.toByte()) return
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
-
+            var longRespawn = false
+            if (GameStateManager.isCTF) {
+                val colon = ScoreboardManager.scoreboardNames[9].lastIndexOf(":")
+                val after = ScoreboardManager.scoreboardNames[9].substring(colon + 1, colon + 3)
+                try {
+                    if (after.toInt() % 12 >= 4) {
+                        longRespawn = true
+                    }
+                } catch (e: Exception) {
+                }
+            }
             when {
                 textMessage.contains("was killed by") -> {
                     val player = textMessage.substring(textMessage.indexOf("by") + 3)
                     val deathPlayer = textMessage.substring(0, textMessage.indexOf("was") - 1)
-                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute()));
+                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute(), longRespawn))
                 }
                 textMessage.contains("You were killed") -> {
                     val player = textMessage.substring(textMessage.indexOf("by ") + 3)
                     val deathPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
-                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute()))
+                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute(), longRespawn))
                 }
                 textMessage.contains("You killed") -> {
                     val deathPlayer = textMessage.substring(textMessage.indexOf("killed ") + 7)
                     val player = Minecraft.getMinecraft().thePlayer.displayNameString
-                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute()))
+                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute(), longRespawn))
                     EventBus.post(KillRatioEvent(deathPlayer))
                 }
                 textMessage.contains("You assisted") -> {
@@ -54,7 +64,8 @@ object KillAssistParser : IModule {
 data class KillEvent(
     val player: String,
     val deathPlayer: String,
-    val time: Int
+    val time: Int,
+    val longRespawn: Boolean
 ) : IEvent
 
 data class KillRatioEvent(

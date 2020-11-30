@@ -49,7 +49,7 @@ class HudElementRespawnTimer : AbstractHudElement(), IUpdateConsumer {
                 respawnTimer = 12
             }
         } catch (e: Exception) {
-            respawnTimer = -1
+            //respawnTimer = -1
         }
     }
 
