@@ -27,7 +27,7 @@ object KillAssistParser : IModule {
                 } catch (e: Exception) {
                 }
             } else if (GameStateManager.isTDM) {
-                respawn = 5
+                respawn = 6
             }
             when {
                 textMessage.contains("was killed by") -> {
