@@ -33,6 +33,8 @@ object ModuleManager {
             add(StatsDisplayRenderer)
             add(RenderStatsInGame)
             add(PlayerTab)
+            add(StatsDisplayAfterGame)
+            add(PowerUpTimer)
         }
     }
 

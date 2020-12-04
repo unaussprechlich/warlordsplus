@@ -54,8 +54,6 @@ class HudElementRespawnTimer : AbstractHudElement(), IUpdateConsumer {
         }
         OtherPlayers.playersMap.forEach { (_, value) ->
             if (value.isDead) {
-                println(value.name)
-                println("" + value.respawn)
                 if (value.respawn != -1) {
                     value.respawn--
                     if (value.respawn == 0) {

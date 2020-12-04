@@ -41,7 +41,6 @@ open class Player(val name: String, val uuid : UUID) {
 
     var left: Boolean = false
     var isDead: Boolean = false
-    var longRespawn: Boolean = false
     var respawn: Int = -1
 }
 

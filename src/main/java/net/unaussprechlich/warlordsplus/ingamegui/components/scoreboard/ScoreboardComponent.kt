@@ -111,17 +111,16 @@ object ScoreboardComponent : AbstractRenderComponent() {
                     p.deaths == mostDeathsRed
             }
 
-            var output = ""
             fun drawFlag(): String {
                 if (p.hasFlag) {
-                    if (p.team == TeamEnum.BLUE)
-                        EnumChatFormatting.RED
+                    return if (p.team == TeamEnum.BLUE)
+                        "${EnumChatFormatting.RED}\u2690 "
                     else
-                        EnumChatFormatting.BLUE
-                    output += "F-"
+                        "${EnumChatFormatting.BLUE}\u2690 "
                 }
-                return output
+                return ""
             }
+
             drawString(
                 xLevel, yStart + 15 + offset,
                 "${if (p.left) "LEFT" else ""}${EnumChatFormatting.GOLD}" +
@@ -130,7 +129,7 @@ object ScoreboardComponent : AbstractRenderComponent() {
             )
             drawString(
                 xName, yStart + 15 + offset,
-                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn}-" else p.team.color}${p.name}"
+                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color}${p.name}"
             )
             drawString(
                 xKills, yStart + 15 + offset,

@@ -37,7 +37,6 @@ public class HudManager extends FancyGui implements IModule {
         hudElements.add(HudElementTotalKills.INSTANCE);
         hudElements.add(HudElementSessionStats.INSTANCE);
         hudElements.add(HudElementHitCounter.INSTANCE);
-        hudElements.add(StatsDisplayAfterGame.INSTANCE);
         //hudElements.add(HudElementRandomTarget.INSTANCE);
         //hudElements.add(HudElementSpec.INSTANCE);
         hudElements.add(DamageHealingAbsorbedEndOfGame.INSTANCE);
