@@ -77,4 +77,6 @@ object EventBus {
 
         busMap[clazz.toString()]!!.post(data)
     }
+
+
 }

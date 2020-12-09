@@ -15,7 +15,7 @@ import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.util.Colors
-import net.unaussprechlich.warlordsplus.util.WarlordsPlusWorldRenderer
+import net.unaussprechlich.warlordsplus.util.WarlordsPlusRenderer
 import net.unaussprechlich.warlordsplus.util.checkPreConditions
 
 @UnstableDefault
@@ -109,7 +109,7 @@ object StatsDisplayRenderer : IModule {
         }
     }
 
-    class StatsRenderObject(val name: String) : WarlordsPlusWorldRenderer() {
+    class StatsRenderObject(val name: String) : WarlordsPlusRenderer.Player() {
 
         var expires = System.currentTimeMillis() + displayTime
         lateinit var data: WarlordsSrApiData
@@ -168,7 +168,7 @@ object StatsDisplayRenderer : IModule {
                 val width = 150.0
                 translateZ(-5.0)
                 translateY(40.0)
-                renderRectXCentered(width, 10.0, -0.5, Colors.DEF, 255)
+                renderRectXCentered(width, 10.0, Colors.DEF, 255, -0.5)
                 translateY(-1.0)
                 glMatrix {
                     scale(.8)
@@ -176,7 +176,7 @@ object StatsDisplayRenderer : IModule {
                     "GeneralStats".drawCentered()
                 }
                 translateY(-9.0)
-                renderRectXCentered(width, 20.0, -0.5, Colors.DEF, 100)
+                renderRectXCentered(width, 20.0, Colors.DEF, 100, -0.5)
                 scale(.6)
                 translateX(-width * .825)
                 translateY(-1.0)
@@ -223,7 +223,7 @@ object StatsDisplayRenderer : IModule {
                 translateZ(-10.0)
                 translateY(-12.0)
                 translateX(-110.0)
-                renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
+                renderRectXCentered(width / 1.8, 10.0, Colors.DEF, 255, -0.5)
                 translateY(-2.0)
                 glMatrix {
                     scale(.6)
@@ -233,7 +233,7 @@ object StatsDisplayRenderer : IModule {
 
                 }
                 translateY(-8.0)
-                renderRectXCentered(width / 1.8, 20.0, -0.5, Colors.DEF, 100)
+                renderRectXCentered(width / 1.8, 20.0, Colors.DEF, 100, -0.5)
 
                 scale(.7)
                 translateX(-width * .37)
@@ -255,7 +255,7 @@ object StatsDisplayRenderer : IModule {
                 translateZ(-10.0)
                 translateY(-12.0)
                 translateX(-60.0)
-                renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
+                renderRectXCentered(width / 1.8, 10.0, Colors.DEF, 255, -0.5)
                 translateY(-2.0)
                 glMatrix {
                     scale(.6)
@@ -264,7 +264,7 @@ object StatsDisplayRenderer : IModule {
 
                 }
                 translateY(-8.0)
-                renderRectXCentered(width / 1.8, 20.0, -0.5, Colors.DEF, 100)
+                renderRectXCentered(width / 1.8, 20.0, Colors.DEF, 100, -0.5)
 
                 scale(.7)
                 translateX(-width * .36)
@@ -286,7 +286,7 @@ object StatsDisplayRenderer : IModule {
                 translateZ(-10.0)
                 translateY(-12.0)
                 translateX(60.0)
-                renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
+                renderRectXCentered(width / 1.8, 10.0, Colors.DEF, 255, -0.5)
                 translateY(-2.0)
                 glMatrix {
                     scale(.6)
@@ -295,7 +295,7 @@ object StatsDisplayRenderer : IModule {
 
                 }
                 translateY(-8.0)
-                renderRectXCentered(width / 1.8, 20.0, -0.5, Colors.DEF, 100)
+                renderRectXCentered(width / 1.8, 20.0, Colors.DEF, 100, -0.5)
 
                 scale(.7)
                 translateX(-width * .36)
@@ -317,7 +317,7 @@ object StatsDisplayRenderer : IModule {
                 translateZ(-10.0)
                 translateY(-12.0)
                 translateX(110.0)
-                renderRectXCentered(width / 1.8, 10.0, -0.5, Colors.DEF, 255)
+                renderRectXCentered(width / 1.8, 10.0, Colors.DEF, 255, -0.5)
                 translateY(-2.0)
                 glMatrix {
                     scale(.6)
@@ -326,7 +326,7 @@ object StatsDisplayRenderer : IModule {
 
                 }
                 translateY(-8.0)
-                renderRectXCentered(width / 1.8, 20.0, -0.5, Colors.DEF, 100)
+                renderRectXCentered(width / 1.8, 20.0, Colors.DEF, 100, -0.5)
 
                 scale(.7)
                 translateX(-width * .36)

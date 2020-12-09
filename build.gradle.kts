@@ -1,6 +1,8 @@
 import net.minecraftforge.gradle.user.patcherUser.forge.ForgeExtension
 import org.gradle.jvm.tasks.Jar
+import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.spongepowered.asm.gradle.plugins.MixinExtension
 
 val kotlinVersion = "1.3.50"
 val ktorVersion = "1.2.5"
@@ -22,19 +24,30 @@ if (System.getenv()["RELEASE_VERSION"] != null) {
 buildscript {
 
     repositories {
+        mavenCentral()
         jcenter()
         maven { url = uri("http://files.minecraftforge.net/maven") }
+        maven {
+            setUrl("http://repo.spongepowered.org/maven")
+        }
+        maven {
+            setUrl("https://plugins.gradle.org/m2/")
+        }
     }
+
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50")
+        classpath("org.spongepowered:mixingradle:0.6-SNAPSHOT")
         classpath("net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT") {
             exclude(group = "net.sf.trove4j", module = "trove4j")
+            exclude(group = "trove", module = "trove")
         }
     }
 }
 
 apply(plugin = "net.minecraftforge.gradle.forge")
 apply(plugin = "kotlin")
+apply(plugin = "org.spongepowered.mixin")
 
 plugins {
     kotlin("jvm") version "1.3.50"
@@ -43,10 +56,26 @@ plugins {
     idea
 }
 
-idea {
-    module {
+val sourceSets = the<JavaPluginConvention>().sourceSets
+val mainSourceSet = sourceSets.getByName("main")
+val minecraft = the<ForgeExtension>()
+
+configure<IdeaModel> {
+    module.apply {
         inheritOutputDirs = true
     }
+    module.isDownloadJavadoc = true
+    module.isDownloadSources = true
+}
+
+configure<JavaPluginConvention> {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+configure<MixinExtension> {
+    add(mainSourceSet, "main.refmap.json")
+    defaultObfuscationEnv = "notch"
 }
 
 version = modVersion
@@ -59,11 +88,20 @@ configure<ForgeExtension> {
     makeObfSourceJar = false
 
     replace("@VERSION@", modVersion)
-}
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    coreMod = "net.unaussprechlich.mixin.CoreMod"
+
+    val args = listOf(
+        "-Dfml.coreMods.load=net.unaussprechlich.mixin.CoreMod",
+        "-Dmixin.env.compatLevel=JAVA_8", //needed to use java 8 when using mixins
+        "-Dmixin.debug.verbose=true", //verbose mixin output for easier debugging of mixins
+        "-Dmixin.debug.export=true", //export classes from mixin to runDirectory/.mixin.out
+        "-XX:-OmitStackTraceInFastThrow", //without this sometimes you end up with exception with empty stacktrace
+        "-XX:-DisableExplicitGC"  // fast world loading
+    )
+
+    clientJvmArgs.addAll(args)
+    serverJvmArgs.addAll(args)
 }
 
 val embed by configurations.creating
@@ -75,6 +113,9 @@ repositories {
     "http://dl.bintray.com/kotlin".let {
         maven { setUrl("$it/ktor") }
         maven { setUrl("$it/kotlinx") }
+    }
+    maven {
+        setUrl("http://repo.spongepowered.org/maven")
     }
 }
 
@@ -89,17 +130,22 @@ dependencies {
         exclude(group = "org.jetbrains.kotlin")
     }
 
+    embed("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        exclude(mapOf("module" to "commons-io"))
+        exclude(mapOf("module" to "guava"))
+        exclude(mapOf("module" to "gson"))
+    }
+
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
 
-
 }
-
+/*
 tasks.create<Delete>("kotlinCleanHotfix") {
     delete = setOf(
         "WarlordsPlus.kotlin_module"
     )
-}
+}*/
 
 tasks {
     withType<KotlinCompile> {
@@ -108,19 +154,37 @@ tasks {
     }
 
     withType<ProcessResources> {
-        copy {
-            from("src/main/resources")
-            into("build/classes/java/main")
+        inputs.property("version", project.version)
+        inputs.property("mcversion", minecraft.version)
+
+        // replace stuff in mcmod.info, nothing else
+        from(sourceSets.getByName("main").resources.srcDirs) {
+            include("mcmod.info")
+
+            // replace version and mcversion
+            expand(mapOf("version" to project.version, "mcversion" to minecraft.version))
+        }
+
+        // copy everything else, thats not the mcmod.info
+        from(sourceSets.getByName("main").resources.srcDirs) {
+            exclude("mcmod.info")
         }
     }
 
     withType<Jar> {
 
         manifest {
-            attributes("ModSide" to "CLIENT")
+            attributes["FMLCorePlugin"] = "net.unaussprechlich.mixin.CoreMod"
+            attributes["FMLCorePluginContainsMod"] = "true"
+            attributes["ModSide"] = "CLIENT"
+            attributes["TweakClass"] = "org.spongepowered.asm.launch.MixinTweaker"
+            attributes["MixinConfigs"] = "mixin.config.json"
+            attributes["TweakOrder"] = "0"
+            attributes["ForceLoadAsMod"] = "true"
         }
         from(embed.map { if (it.isDirectory) it else zipTree(it) })
 
         setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     }
 }
+

@@ -11,6 +11,7 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumChatFormatting
 
+@Deprecated("Replaced by WarlordsPlusRenderer.Gui")
 open class FancyGui : Gui() {
 
     init {

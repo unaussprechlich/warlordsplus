@@ -25,7 +25,7 @@ object ModuleManager {
             add(KillAssistParser)
             add(FlagTakenDetector)
             add(ThePlayer)
-            add(HudManager.INSTANCE())
+            add(HudManager)
             add(IngameGuiManager)
             add(ChatDetector)
             add(RenderNumbers)
