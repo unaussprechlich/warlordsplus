@@ -61,6 +61,7 @@ object PowerUpTimer : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
     }
 
     override fun onRender(event: RenderEntitiesEvent) {
+        println("Test")
         powerUps.values.filter { it.respawnTimer != -1 }.forEach {
             glMatrix {
                 //translate(x, y, z)

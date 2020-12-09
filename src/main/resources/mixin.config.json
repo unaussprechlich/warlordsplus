@@ -2,11 +2,13 @@
   "required": true,
   "compatibilityLevel": "JAVA_8",
   "package": "net.unaussprechlich.mixin",
+  "refmap": "unaussprechlich.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.6",
   "mixins": [
     "AccessorRenderManager",
     "MixinMinecraft",
-    "MixinRenderGlobal",
-    "MixinRenderManager"
+    "MixinRenderGlobal"
   ],
   "client": [],
   "server": []
