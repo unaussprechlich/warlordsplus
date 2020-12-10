@@ -1,16 +1,17 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.SoundManager
 import net.unaussprechlich.warlordsplus.util.Sounds
-import java.applet.Applet
-import java.applet.AudioClip
 
 object Meme : IModule {
 
-    @SubscribeEvent
+    init {
+        EventBus.register(this::onChatMessage)
+    }
+
     fun onChatMessage(event: ClientChatReceivedEvent) {
         if (GameStateManager.notIngame) return
         try {

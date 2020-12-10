@@ -2,7 +2,6 @@ package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.module.IModule
@@ -10,8 +9,11 @@ import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object KillAssistParser : IModule {
 
-    @SubscribeEvent
-    fun onChatMessage(e: ClientChatReceivedEvent) {
+    init {
+        EventBus.register(this::onChatMessage)
+    }
+
+    private fun onChatMessage(e: ClientChatReceivedEvent) {
         if (GameStateManager.notIngame || e.type == 2.toByte()) return
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()

@@ -6,6 +6,13 @@ import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.spongepowered.asm.gradle.plugins.MixinExtension
 
+var modVersion = "DEV_${Math.abs(System.currentTimeMillis().hashCode())}"
+
+//Getting the Version if we Build on Travis
+if (System.getenv()["RELEASE_VERSION"] != null) {
+    modVersion = "${System.getenv()["RELEASE_VERSION"]}"
+}
+
 buildscript {
 
     repositories {
@@ -35,15 +42,15 @@ apply(plugin = "net.minecraftforge.gradle.forge")
 apply(plugin = "org.spongepowered.mixin")
 
 plugins {
-    kotlin("jvm") version "1.3.60"
-    kotlin("plugin.serialization") version "1.3.60"
+    kotlin("jvm") version "1.3.50"
+    kotlin("plugin.serialization") version "1.3.50"
     java
     idea
 }
 
 
-val kotlinVersion = "1.3.60"
-val ktorVersion = "1.2.6"
+val kotlinVersion = "1.3.50"
+val ktorVersion = "1.2.5"
 val coroutinesVersion = "1.3.2"
 
 fun ktor(module: String) = "io.ktor:ktor-$module:$ktorVersion"
@@ -52,17 +59,9 @@ fun ktor() = "io.ktor:ktor:$ktorVersion"
 val sourceCompatibility = JavaVersion.VERSION_1_8
 val targetCompatibility = JavaVersion.VERSION_1_8
 
-group = "net.unaussprechlich.warlordsplus"
-version = "DEV_${Math.abs(System.currentTimeMillis().hashCode())}"
-
 val sourceSets = the<JavaPluginConvention>().sourceSets
 val mainSourceSet = sourceSets.getByName("main")
 val minecraft = the<ForgeExtension>()
-
-//Getting the Version if we Build on Travis
-if (System.getenv()["RELEASE_VERSION"] != null) {
-    version = "${System.getenv()["RELEASE_VERSION"]}"
-}
 
 configure<IdeaModel> {
     module.apply {
@@ -81,16 +80,17 @@ configure<MixinExtension> {
     add(mainSourceSet, "net.unaussprechlich.warlordsplus.refmap.json")
 }
 
+version = modVersion
+group = "net.unaussprechlich.warlordsplus"
+
 configure<ForgeExtension> {
     version = "1.8.9-11.15.1.2318-1.8.9"
     runDir = "run"
     mappings = "stable_22"
-
     makeObfSourceJar = true
-
     coreMod = "net.unaussprechlich.mixin.CoreMod"
 
-    replace("@VERSION@", version)
+    replace("@VERSION@", modVersion)
 }
 
 repositories {
@@ -135,12 +135,9 @@ dependencies {
 
 }
 
-val sourceJar: Jar by tasks
 val shadowJar: ShadowJar by tasks
 val build by tasks
 val jar by tasks
-val reobfJar by tasks
-
 
 fun configureManifest(manifest: Manifest) {
     manifest.attributes["FMLCorePlugin"] = "net.unaussprechlich.mixin.CoreMod"
@@ -149,7 +146,6 @@ fun configureManifest(manifest: Manifest) {
     manifest.attributes["TweakOrder"] = "0"
     manifest.attributes["ForceLoadAsMod"] = "true"
 }
-
 
 fun configureShadowJar(task: ShadowJar, classifier: String) {
     task.configurations = listOf(embed)
@@ -173,6 +169,13 @@ tasks.getByName("build").apply {
 
 build.dependsOn(shadowJar)
 
+tasks.create<Delete>("kotlinCleanHotfix") {
+    delete = setOf(
+        "WarlordsPlus.kotlin_module"
+    )
+}
+
+//build.finalizedBy(tasks.getByName("kotlinCleanHotfix"))
 
 tasks {
 
