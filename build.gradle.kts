@@ -35,15 +35,15 @@ apply(plugin = "net.minecraftforge.gradle.forge")
 apply(plugin = "org.spongepowered.mixin")
 
 plugins {
-    kotlin("jvm") version "1.3.50"
-    kotlin("plugin.serialization") version "1.3.50"
+    kotlin("jvm") version "1.3.60"
+    kotlin("plugin.serialization") version "1.3.60"
     java
     idea
 }
 
 
-val kotlinVersion = "1.3.50"
-val ktorVersion = "1.2.5"
+val kotlinVersion = "1.3.60"
+val ktorVersion = "1.2.6"
 val coroutinesVersion = "1.3.2"
 
 fun ktor(module: String) = "io.ktor:ktor-$module:$ktorVersion"
@@ -91,18 +91,6 @@ configure<ForgeExtension> {
     coreMod = "net.unaussprechlich.mixin.CoreMod"
 
     replace("@VERSION@", version)
-    /*
-
-    val args = listOf(
-        "-Dmixin.env.compatLevel=JAVA_8", //needed to use java 8 when using mixins
-        "-Dmixin.debug.verbose=true", //verbose mixin output for easier debugging of mixins
-        "-Dmixin.debug.export=true", //export classes from mixin to runDirectory/.mixin.out
-        "-XX:-OmitStackTraceInFastThrow", //without this sometimes you end up with exception with empty stacktrace
-        "-XX:-DisableExplicitGC"  // fast world loading
-    )
-
-    clientJvmArgs.addAll(args)
-    serverJvmArgs.addAll(args)*/
 }
 
 repositories {
