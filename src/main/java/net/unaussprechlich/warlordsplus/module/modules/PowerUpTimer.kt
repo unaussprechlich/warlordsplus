@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
+import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.RenderEntitiesEvent
 import net.unaussprechlich.warlordsplus.util.WarlordsPlusRenderer
@@ -14,6 +15,13 @@ import java.util.*
 object PowerUpTimer : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = true) {
 
     var powerUps: MutableMap<UUID, PowerUp> = mutableMapOf()
+
+    init {
+        EventBus.register<ResetEvent> {
+            powerUps.clear()
+        }
+
+    }
 
     data class PowerUp(
         val id: UUID,
@@ -55,8 +63,9 @@ object PowerUpTimer : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
             if (it.respawnTimer == -1)
                 it.respawnTimer = 45 * 20
             it.respawnTimer--
-            if (it.respawnTimer == 0)
+            if (it.respawnTimer == 0 || currentPowerUps.map { powerUp -> powerUp.uniqueID }.contains(it.id))
                 powerUps.remove(it.id)
+
         }
     }
 
@@ -67,7 +76,8 @@ object PowerUpTimer : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
                 translateToPos(it.x, it.y + 3, it.z)
                 autoRotate()
                 scaleForText()
-                "Respawning: ${it.respawnTimer / 20}".drawCentered()
+                scale(10.0)
+                "${it.respawnTimer / 20}".drawCentered()
             }
         }
     }

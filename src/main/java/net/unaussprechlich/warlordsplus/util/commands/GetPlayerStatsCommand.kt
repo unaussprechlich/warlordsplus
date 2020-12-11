@@ -2,6 +2,7 @@ package net.unaussprechlich.warlordsplus.util.commands
 
 import kotlinx.serialization.UnstableDefault
 import net.minecraft.client.Minecraft
+import net.minecraft.command.CommandBase
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
@@ -204,7 +205,11 @@ class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
         args: Array<String>,
         pos: BlockPos
     ): List<String>? {
-        return null
+        val players = ArrayList<String>()
+        Minecraft.getMinecraft().netHandler.playerInfoMap.forEach {
+            players.add(it.gameProfile.name)
+        }
+        return CommandBase.getListOfStringsMatchingLastWord(args, players)
     }
 
     override fun isUsernameIndex(args: Array<String>, index: Int): Boolean {

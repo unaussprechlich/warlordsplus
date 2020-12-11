@@ -26,9 +26,9 @@ object HudElementSessionStats : AbstractHudElement(), IChatConsumer {
         val renderStrings = ArrayList<String>()
 
         if (showTotalKillsDeaths)
-            renderStrings.add("${EnumChatFormatting.WHITE}Total Kills/Deaths ${EnumChatFormatting.GREEN}${totalPlayerKills}:${EnumChatFormatting.RED}${totalPlayerDeaths}")
+            renderStrings.add("${EnumChatFormatting.WHITE}Total Kills/Deaths: ${EnumChatFormatting.GREEN}${totalPlayerKills}:${EnumChatFormatting.RED}${totalPlayerDeaths}")
         if (showTotalWinLoss)
-            renderStrings.add("${EnumChatFormatting.WHITE}Total Win/Loss ${EnumChatFormatting.GREEN}${totalWins}:${EnumChatFormatting.RED}${totalLosses}")
+            renderStrings.add("${EnumChatFormatting.WHITE}Total Win/Loss: ${EnumChatFormatting.GREEN}${totalWins}:${EnumChatFormatting.RED}${totalLosses}")
         if (showStreak) {
             when {
                 (streak > 0) ->

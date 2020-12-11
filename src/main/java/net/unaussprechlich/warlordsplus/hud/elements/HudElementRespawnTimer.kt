@@ -61,6 +61,8 @@ class HudElementRespawnTimer : AbstractHudElement(), IUpdateConsumer {
                         value.respawn = -1
                     }
                 }
+                if (GameStateManager.isDOM)
+                    value.isDead = false
             }
         }
     }
