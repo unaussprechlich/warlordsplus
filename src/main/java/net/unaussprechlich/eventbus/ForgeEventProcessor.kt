@@ -5,6 +5,7 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
@@ -57,6 +58,12 @@ object ForgeEventProcessor {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     fun onChatSent(event: ClientChatReceivedEvent) {
+        if (!isDesiredGame) return
+        EventBus.post(event)
+    }
+
+    @SubscribeEvent
+    fun onPlayerEvent(event: EntityJoinWorldEvent) {
         if (!isDesiredGame) return
         EventBus.post(event)
     }

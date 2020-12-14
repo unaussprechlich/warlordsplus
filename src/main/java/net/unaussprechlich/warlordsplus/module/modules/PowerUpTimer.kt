@@ -2,13 +2,11 @@ package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.item.EntityArmorStand
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.RenderEntitiesEvent
 import net.unaussprechlich.warlordsplus.util.WarlordsPlusRenderer
-import net.unaussprechlich.warlordsplus.util.checkPreConditions
 import java.util.*
 
 
@@ -21,6 +19,7 @@ object PowerUpTimer : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
             powerUps.clear()
         }
 
+        EventBus.register(::onClientTick)
     }
 
     data class PowerUp(
@@ -31,14 +30,7 @@ object PowerUpTimer : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
         var respawnTimer: Int = -1
     )
 
-
-    //theworld loadedentitylist
-    //store uniqueid
-    //check if its there
-
-    @SubscribeEvent
-    fun onClientTick(event: TickEvent.ClientTickEvent) {
-        if (event.checkPreConditions()) return
+    private fun onClientTick(event: TickEvent.ClientTickEvent) {
         if (GameStateManager.notIngame) return
 
         val currentPowerUps = Minecraft.getMinecraft().theWorld.getLoadedEntityList().filter {
@@ -52,6 +44,10 @@ object PowerUpTimer : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
         currentPowerUps.filter {
             !powerUps.containsKey(it.uniqueID)
         }.forEach {
+            //Remove old powerups with a different ID at the same position
+            powerUps.values
+                .filter { entry -> (entry.id !== it.uniqueID && entry.x == it.posX && entry.y == it.posY && entry.z == it.posZ) }
+                .forEach { entry -> powerUps.remove(entry.id) }
             powerUps[it.uniqueID] = PowerUp(it.uniqueID, it.posX, it.posY, it.posZ)
         }
 
@@ -62,10 +58,10 @@ object PowerUpTimer : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
         }.forEach {
             if (it.respawnTimer == -1)
                 it.respawnTimer = 45 * 20
-            it.respawnTimer--
-            if (it.respawnTimer == 0 || currentPowerUps.map { powerUp -> powerUp.uniqueID }.contains(it.id))
+            else if (it.respawnTimer == 0)
                 powerUps.remove(it.id)
 
+            it.respawnTimer--
         }
     }
 
@@ -81,5 +77,4 @@ object PowerUpTimer : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
             }
         }
     }
-
 }
