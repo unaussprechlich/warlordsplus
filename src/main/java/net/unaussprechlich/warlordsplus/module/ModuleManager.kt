@@ -34,6 +34,7 @@ object ModuleManager {
             add(RenderStatsInGame)
             add(StatsDisplayAfterGame)
             add(PowerUpTimer)
+            add(StatsInLobby)
         }
     }
 

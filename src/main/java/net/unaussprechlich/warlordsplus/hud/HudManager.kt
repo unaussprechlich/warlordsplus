@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import net.unaussprechlich.warlordsplus.WarlordsPlus
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyString
 import net.unaussprechlich.warlordsplus.hud.elements.*
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.Colors
@@ -41,6 +42,14 @@ object HudManager : WarlordsPlusRenderer.Gui<RenderGameOverlayEvent.Text>(), IMo
         def = 4
     )
     var yOffset = 4
+
+    @ConfigPropertyString(
+        category = CCategory.HUD,
+        id = "hudscale",
+        comment = "Scale the Hud on left side of screen, default 1.0",
+        def = "1"
+    )
+    var scale = "1"
 
     private val hudElements = ArrayList<AbstractHudElement>()
 
@@ -98,11 +107,14 @@ object HudManager : WarlordsPlusRenderer.Gui<RenderGameOverlayEvent.Text>(), IMo
             translateY(-yOffset.toDouble())
             heading.drawWithBackground(Colors.DEF, alpha = 220, padding = 3)
             translateY(-12.0)
+            scale(scale.toDouble())
             for (element in hudElements) {
                 if (element.isVisible && element.isEnabled && element.renderString.size > 0) {
                     for (s in element.renderString) {
+                        scale(scale.toDouble())
                         s.drawWithBackground(Colors.DEF, 100, padding = 2)
                         translateY(-11.0)
+                        scale(1 / scale.toDouble())
                     }
                 }
             }
