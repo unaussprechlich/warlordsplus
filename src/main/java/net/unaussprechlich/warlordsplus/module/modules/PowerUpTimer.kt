@@ -4,13 +4,13 @@ import net.minecraft.client.Minecraft
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.RenderEntitiesEvent
-import net.unaussprechlich.warlordsplus.util.WarlordsPlusRenderer
 import java.util.*
 
 
-object PowerUpTimer : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = true) {
+object PowerUpTimer : IModule, RenderApi.World() {
 
     var powerUps: MutableMap<UUID, PowerUp> = mutableMapOf()
 
@@ -73,7 +73,7 @@ object PowerUpTimer : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
                 autoRotate()
                 scaleForText()
                 scale(10.0)
-                "${it.respawnTimer / 20}".drawCentered()
+                "${it.respawnTimer / 20}".drawCentered(seeThruBlocks = true)
             }
         }
     }

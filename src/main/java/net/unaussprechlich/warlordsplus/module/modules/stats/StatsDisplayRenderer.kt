@@ -5,9 +5,9 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderPlayerEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
@@ -15,11 +15,9 @@ import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.util.Colors
-import net.unaussprechlich.warlordsplus.util.WarlordsPlusRenderer
-import net.unaussprechlich.warlordsplus.util.checkPreConditions
 
 @UnstableDefault
-object StatsDisplayRenderer : IModule {
+object StatsDisplayRenderer : IModule, RenderApi.Player() {
 
     @ConfigPropertyBoolean(
         category = CCategory.STATS,
@@ -67,27 +65,16 @@ object StatsDisplayRenderer : IModule {
         EventBus.register<ResetEvent> {
             if (autoShowStats) renderObjects.clear()
         }
+
+        EventBus.register(::onClientTick)
     }
 
-    @SubscribeEvent
-    fun onRenderPlayer(e: RenderPlayerEvent.Post) {
-        if (!GameStateManager.isWarlords || GameStateManager.isIngame) return
-        if (!renderObjects.containsKey(e.entityPlayer.displayNameString)) {
-            if (autoShowStats && StatsLoader.containsPlayer(e.entityPlayer.displayNameString)) {
-                val data = StatsLoader.getPlayer(e.entityPlayer.displayNameString)?.data
-                if (data != null) {
-                    val renderObject = StatsRenderObject(e.entityPlayer.displayNameString)
-                    renderObject.data = data
-                    renderObject.isLoading = false
-                }
-            }
-        }
-        renderObjects[e.entityPlayer.displayNameString]?.render(e)
+    override fun shouldRender(event: RenderPlayerEvent.Post): Boolean {
+        return GameStateManager.isWarlords && !GameStateManager.isIngame
     }
 
-    @SubscribeEvent
-    fun onClientTick(e: TickEvent.ClientTickEvent) {
-        if (e.checkPreConditions() || !showStats) return
+    private fun onClientTick(e: TickEvent.ClientTickEvent) {
+        if (!showStats) return
 
         if (autoShowStats) return
 
@@ -109,7 +96,22 @@ object StatsDisplayRenderer : IModule {
         }
     }
 
-    class StatsRenderObject(val name: String) : WarlordsPlusRenderer.Player() {
+    override fun onRender(event: RenderPlayerEvent.Post) {
+        if (!renderObjects.containsKey(event.entityPlayer.displayNameString)) {
+            if (autoShowStats && StatsLoader.containsPlayer(event.entityPlayer.displayNameString)) {
+                val data = StatsLoader.getPlayer(event.entityPlayer.displayNameString)?.data
+                if (data != null) {
+                    val renderObject = StatsRenderObject(event.entityPlayer.displayNameString)
+                    renderObject.data = data
+                    renderObject.isLoading = false
+                }
+            }
+        }
+
+        renderObjects[event.entityPlayer.displayNameString]?.onRender(event)
+    }
+
+    class StatsRenderObject(val name: String) {
 
         var expires = System.currentTimeMillis() + displayTime
         lateinit var data: WarlordsSrApiData
@@ -130,7 +132,7 @@ object StatsDisplayRenderer : IModule {
             data = player.data
         }
 
-        override fun onRender(event: RenderPlayerEvent.Post) {
+        fun onRender(event: RenderPlayerEvent.Post) {
             if (isLoading) {
                 renderLoading(event)
                 return
@@ -143,10 +145,38 @@ object StatsDisplayRenderer : IModule {
                 if (showBasicStats)
                     renderBasicStats()
                 if (showClassStats) {
-                    renderPaladinStats()
-                    renderWarriorStats()
-                    renderMageStats()
-                    renderShamanStats()
+                    translateX(-110.0)
+                    renderClassStats(
+                        "Paladin",
+                        data.warlordsSr?.paladin?.SR,
+                        data.warlordsSr?.paladin?.WL,
+                        data.warlordsSr?.paladin?.DHP,
+                        data.ranking?.paladin?.overall
+                    )
+                    translateX(50.0)
+                    renderClassStats(
+                        "Warrior",
+                        data.warlordsSr?.warrior?.SR,
+                        data.warlordsSr?.warrior?.WL,
+                        data.warlordsSr?.warrior?.DHP,
+                        data.ranking?.warrior?.overall
+                    )
+                    translateX(120.0)
+                    renderClassStats(
+                        "Mage",
+                        data.warlordsSr?.mage?.SR,
+                        data.warlordsSr?.mage?.WL,
+                        data.warlordsSr?.mage?.DHP,
+                        data.ranking?.mage?.overall
+                    )
+                    translateX(50.0)
+                    renderClassStats(
+                        "Shaman",
+                        data.warlordsSr?.shaman?.SR,
+                        data.warlordsSr?.shaman?.WL,
+                        data.warlordsSr?.shaman?.DHP,
+                        data.ranking?.shaman?.overall
+                    )
                 }
             }
         }
@@ -215,21 +245,20 @@ object StatsDisplayRenderer : IModule {
             }
         }
 
-        fun renderPaladinStats() {
+        fun renderClassStats(name: String, sr: Int?, wl: Double?, dhp: Int?, rank: Int?) {
             if (data.warlordsSr == null || data.warlordsHypixel == null) return
 
             glMatrix {
                 val width = 80.0
                 translateZ(-10.0)
                 translateY(-12.0)
-                translateX(-110.0)
                 renderRectXCentered(width / 1.8, 10.0, Colors.DEF, 255, -0.5)
                 translateY(-2.0)
                 glMatrix {
                     scale(.6)
                     translateY(-1.0)
 
-                    "Paladin${if (data.ranking?.paladin?.overall != null) " #${data.ranking?.paladin?.overall}" else ""}".drawCentered()
+                    "$name${if (rank != null) " #$rank" else ""}".drawCentered()
 
                 }
                 translateY(-8.0)
@@ -238,104 +267,11 @@ object StatsDisplayRenderer : IModule {
                 scale(.7)
                 translateX(-width * .37)
                 translateY(-2.0)
-                "SR: ${data.warlordsSr?.paladin?.SR}".draw()
+                "SR: $sr".draw()
                 translateY(-8.0)
-                "WL: ${data.warlordsSr?.paladin?.WL}".draw()
+                "WL: $wl".draw()
                 translateY(-8.0)
-                "DHP: ${data.warlordsSr?.paladin?.DHP}".draw()
-
-            }
-        }
-
-        fun renderWarriorStats() {
-            if (data.warlordsSr == null || data.warlordsHypixel == null) return
-
-            glMatrix {
-                val width = 80.0
-                translateZ(-10.0)
-                translateY(-12.0)
-                translateX(-60.0)
-                renderRectXCentered(width / 1.8, 10.0, Colors.DEF, 255, -0.5)
-                translateY(-2.0)
-                glMatrix {
-                    scale(.6)
-                    translateY(-1.0)
-                    "Warrior${if (data.ranking?.warrior?.overall != null) " #${data.ranking?.warrior?.overall}" else ""}".drawCentered()
-
-                }
-                translateY(-8.0)
-                renderRectXCentered(width / 1.8, 20.0, Colors.DEF, 100, -0.5)
-
-                scale(.7)
-                translateX(-width * .36)
-                translateY(-1.0)
-                "SR: ${data.warlordsSr?.warrior?.SR}".draw()
-                translateY(-8.0)
-                "WL: ${data.warlordsSr?.warrior?.WL}".draw()
-                translateY(-8.0)
-                "DHP: ${data.warlordsSr?.warrior?.DHP}".draw()
-
-            }
-        }
-
-        fun renderMageStats() {
-            if (data.warlordsSr == null || data.warlordsHypixel == null) return
-
-            glMatrix {
-                val width = 80.0
-                translateZ(-10.0)
-                translateY(-12.0)
-                translateX(60.0)
-                renderRectXCentered(width / 1.8, 10.0, Colors.DEF, 255, -0.5)
-                translateY(-2.0)
-                glMatrix {
-                    scale(.6)
-                    translateY(-1.0)
-                    "Mage${if (data.ranking?.mage?.overall != null) " #${data.ranking?.mage?.overall}" else ""}".drawCentered()
-
-                }
-                translateY(-8.0)
-                renderRectXCentered(width / 1.8, 20.0, Colors.DEF, 100, -0.5)
-
-                scale(.7)
-                translateX(-width * .36)
-                translateY(-2.0)
-                "SR: ${data.warlordsSr?.mage?.SR}".draw()
-                translateY(-8.0)
-                "WL: ${data.warlordsSr?.mage?.WL}".draw()
-                translateY(-8.0)
-                "DHP: ${data.warlordsSr?.mage?.DHP}".draw()
-
-            }
-        }
-
-        fun renderShamanStats() {
-            if (data.warlordsSr == null || data.warlordsHypixel == null) return
-
-            glMatrix {
-                val width = 80.0
-                translateZ(-10.0)
-                translateY(-12.0)
-                translateX(110.0)
-                renderRectXCentered(width / 1.8, 10.0, Colors.DEF, 255, -0.5)
-                translateY(-2.0)
-                glMatrix {
-                    scale(.6)
-                    translateY(-1.0)
-                    "Shaman${if (data.ranking?.shaman?.overall != null) " #${data.ranking?.shaman?.overall}" else ""}".drawCentered()
-
-                }
-                translateY(-8.0)
-                renderRectXCentered(width / 1.8, 20.0, Colors.DEF, 100, -0.5)
-
-                scale(.7)
-                translateX(-width * .36)
-                translateY(-2.0)
-                "SR: ${data.warlordsSr?.shaman?.SR}".draw()
-                translateY(-8.0)
-                "WL: ${data.warlordsSr?.shaman?.WL}".draw()
-                translateY(-8.0)
-                "DHP: ${data.warlordsSr?.shaman?.DHP}".draw()
+                "DHP: $dhp".draw()
 
             }
         }

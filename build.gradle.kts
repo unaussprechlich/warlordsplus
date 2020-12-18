@@ -1,10 +1,19 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import net.minecraftforge.gradle.user.ReobfMappingType
 import net.minecraftforge.gradle.user.patcherUser.forge.ForgeExtension
+import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.jvm.tasks.Jar
 import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.spongepowered.asm.gradle.plugins.MixinExtension
+
+val MINECRAFT_VERSION = "1.8.9-11.15.1.2318-1.8.9"
+val MOD_NAME = "warlordsplus"
+val MAIN_CLASS = "WarlordsPlus.java"
+
+val kotlinVersion = "1.3.50"
+val ktorVersion = "1.2.5"
+val coroutinesVersion = "1.3.2"
 
 var modVersion = "DEV_${Math.abs(System.currentTimeMillis().hashCode())}"
 
@@ -48,11 +57,6 @@ plugins {
     idea
 }
 
-
-val kotlinVersion = "1.3.50"
-val ktorVersion = "1.2.5"
-val coroutinesVersion = "1.3.2"
-
 fun ktor(module: String) = "io.ktor:ktor-$module:$ktorVersion"
 fun ktor() = "io.ktor:ktor:$ktorVersion"
 
@@ -77,20 +81,19 @@ configure<JavaPluginConvention> {
 }
 
 configure<MixinExtension> {
-    add(mainSourceSet, "net.unaussprechlich.warlordsplus.refmap.json")
+    add(mainSourceSet, "net.unaussprechlich.${MOD_NAME}.refmap.json")
 }
 
 version = modVersion
-group = "net.unaussprechlich.warlordsplus"
+group = "net.unaussprechlich.${MOD_NAME}"
+
 
 configure<ForgeExtension> {
-    version = "1.8.9-11.15.1.2318-1.8.9"
+    version = MINECRAFT_VERSION
     runDir = "run"
     mappings = "stable_22"
-    makeObfSourceJar = true
-    coreMod = "net.unaussprechlich.mixin.CoreMod"
 
-    replace("@VERSION@", modVersion)
+    replace(mapOf("@VERSION@" to modVersion))
 }
 
 repositories {
@@ -140,11 +143,13 @@ val build by tasks
 val jar by tasks
 
 fun configureManifest(manifest: Manifest) {
-    manifest.attributes["FMLCorePlugin"] = "net.unaussprechlich.mixin.CoreMod"
+    manifest.attributes["FMLCorePlugin"] = "net.unaussprechlich.${MOD_NAME}.mixin.CoreMod"
     manifest.attributes["TweakClass"] = "org.spongepowered.asm.launch.MixinTweaker"
-    manifest.attributes["MixinConfigs"] = "mixin.config.json"
+    manifest.attributes["MixinConfigs"] = "mixin.${MOD_NAME}.json"
     manifest.attributes["TweakOrder"] = "0"
-    manifest.attributes["ForceLoadAsMod"] = "true"
+    manifest.attributes["ForceLoadAsMod"] = true
+    manifest.attributes["FMLCorePluginContainsFMLMod"] = true
+    manifest.attributes["ModSide"] = "CLIENT"
 }
 
 fun configureShadowJar(task: ShadowJar, classifier: String) {
@@ -154,6 +159,9 @@ fun configureShadowJar(task: ShadowJar, classifier: String) {
     task.from(sourceSets["api"].output)
     task.from("$buildDir/tmp/compileJava/")
     task.classifier = classifier
+
+    task.setDuplicatesStrategy(EXCLUDE)
+    task.exclude("META-INF/maven/", "META-INF/nar/", "module-info.class", "META-INF/versions/")
 }
 
 shadowJar.apply { configureShadowJar(this, "") }
@@ -163,19 +171,12 @@ configure<NamedDomainObjectContainer<net.minecraftforge.gradle.user.IReobfuscato
         mappingType = ReobfMappingType.SEARGE
     }
 }
-tasks.getByName("build").apply {
-    dependsOn("reobfShadowJar")
+
+tasks.getByName("reobfJar").apply {
+    dependsOn("shadowJar")
 }
 
-build.dependsOn(shadowJar)
-
-tasks.create<Delete>("kotlinCleanHotfix") {
-    delete = setOf(
-        "WarlordsPlus.kotlin_module"
-    )
-}
-
-//build.finalizedBy(tasks.getByName("kotlinCleanHotfix"))
+tasks.getByName("sourceJar").enabled = false
 
 tasks {
 
@@ -185,7 +186,9 @@ tasks {
     }
 
     withType<ProcessResources> {
-        inputs.property("version", project.version)
+        //val tokens = mapOf("@VERSION@" to version)
+
+        inputs.property("version", version)
         inputs.property("mcversion", minecraft.version)
 
         // replace stuff in mcmod.info, nothing else
@@ -193,7 +196,7 @@ tasks {
             include("mcmod.info")
 
             // replace version and mcversion
-            expand(mapOf("version" to project.version, "mcversion" to minecraft.version))
+            expand(mapOf("version" to version, "mcversion" to minecraft.version))
         }
 
         // copy everything else, thats not the mcmod.info
@@ -203,14 +206,8 @@ tasks {
     }
 
     withType<Jar> {
-        //from("$buildDir/tmp/compileJava/")
-        from(sourceSets["main"].output)
-        from(sourceSets["api"].output)
-
         exclude("LICENSE.txt", "log4j2.xml")
-
-        setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-
+        setDuplicatesStrategy(EXCLUDE)
         configureManifest(manifest)
     }
 }

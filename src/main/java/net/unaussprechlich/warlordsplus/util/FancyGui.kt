@@ -106,10 +106,10 @@ open class FancyGui : Gui() {
             Gui.drawRect(xStart, yStart, xStart + width, yStart + height, color)
 
         fun Gui.drawBackgroundRect(xStart: Int, yStart: Int, width: Int, height: Int) =
-            Gui.drawRect(xStart, yStart, xStart + width, yStart + height, Colors.DEF.BACKGROUND)
+            Gui.drawRect(xStart, yStart, xStart + width, yStart + height, Colors.DEF.ALPHA_100)
 
         fun Gui.drawHeaderRect(xStart: Int, yStart: Int, width: Int, height: Int) =
-            Gui.drawRect(xStart, yStart, xStart + width, yStart + height, Colors.DEF.HEADER)
+            Gui.drawRect(xStart, yStart, xStart + width, yStart + height, Colors.DEF.ALPHA_200)
 
         fun Gui.drawCenteredString(xStart: Int, yStart: Int, width: Int, text: String, shadow: Boolean = false) {
             if (shadow) fontRenderer.drawStringWithShadow(

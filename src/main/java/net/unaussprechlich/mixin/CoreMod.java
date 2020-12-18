@@ -1,5 +1,6 @@
 package net.unaussprechlich.mixin;
 
+import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
@@ -12,14 +13,14 @@ import java.util.Map;
  * CoreMod Created by unaussprechlich
  * Description:
  **/
-@IFMLLoadingPlugin.MCVersion("1.8.9")
+@IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
 public class CoreMod implements IFMLLoadingPlugin {
 
     public CoreMod() {
         System.out.println("[WarlordsPlus] Injecting with IFMLLoadingPlugin.");
 
         MixinBootstrap.init();
-        Mixins.addConfiguration("mixin.config.json");
+        Mixins.addConfiguration("mixin.warlordsplus.json");
         MixinEnvironment.getDefaultEnvironment().setSide(MixinEnvironment.Side.CLIENT);
     }
 

@@ -32,8 +32,19 @@ public class WarlordsPlus {
     public static final boolean IS_DEBUGGING = false;
     public static Configuration CONFIG;
 
+    /**
+     * Wrapper to prevent the Kotlin compiler from replacing the the reference to
+     * VERSION with the actual value.
+     *
+     * @return
+     */
+    public static String getModVersion() {
+        return VERSION;
+    }
+
+
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event){
+    public void preInit(FMLPreInitializationEvent event) {
         CONFIG = new Configuration(event.getSuggestedConfigurationFile());
         CONFIG.load();
         EasyConfigHandler.INSTANCE.init(event.getAsmData());

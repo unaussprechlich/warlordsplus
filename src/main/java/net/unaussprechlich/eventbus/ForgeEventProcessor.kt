@@ -3,6 +3,7 @@ package net.unaussprechlich.eventbus
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
+import net.minecraftforge.client.event.RenderPlayerEvent
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
@@ -42,6 +43,12 @@ object ForgeEventProcessor {
         mc.mcProfiler.startSection("WarlordsPlusWorldRenderer")
         EventBus.post(event)
         mc.mcProfiler.endSection()
+    }
+
+    @SubscribeEvent
+    fun onRenderPlayerPost(event: RenderPlayerEvent.Post) {
+        if (!isDesiredGame) return
+        EventBus.post(event)
     }
 
     @SubscribeEvent

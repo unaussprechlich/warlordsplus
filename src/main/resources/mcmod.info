@@ -3,10 +3,13 @@
   "modid": "warlordsplus",
   "name": "warlordsplus",
   "description": "warlords+",
-  "version": "@VERSION@",
+  "version": "${version}",
   "mcversion": "1.8.9",
   "url": "https://github.com/unaussprechlich/warlordsplus",
-  "authorList": ["unaussprechlich", "ebicep"],
+  "authorList": [
+    "unaussprechlich",
+    "ebicep"
+  ],
   "credits": "Created by unaussprechlich"
 }
 ]

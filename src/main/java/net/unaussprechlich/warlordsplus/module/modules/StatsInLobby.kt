@@ -3,13 +3,19 @@ package net.unaussprechlich.warlordsplus.module.modules
 import kotlinx.serialization.UnstableDefault
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.item.EntityArmorStand
+import net.minecraft.util.EnumChatFormatting
+import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.stats.StatsLoader
 import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.RenderEntitiesEvent
-import net.unaussprechlich.warlordsplus.util.WarlordsPlusRenderer
+import net.unaussprechlich.warlordsplus.util.drawSr
+import java.text.NumberFormat
+import java.util.*
 
-object StatsInLobby : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = true) {
+
+object StatsInLobby : IModule, RenderApi.World() {
+
     @UnstableDefault
     override fun onRender(event: RenderEntitiesEvent) {
         if (!GameStateManager.isWarlords) return
@@ -22,15 +28,15 @@ object StatsInLobby : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
 
 
         glMatrix {
-            translateToPos(-2529.0, 55.0, 744.5)
-            autoRotate()
+            translateToPos(-2518.1, 59.0, 744.5)
+            rotateY(90.0f)
             scaleForText()
             scale(.95)
-            renderRectXCentered(320.0, 75.0, Colors.DEF, 100, -0.5)
+            renderRectXCentered(130.0, 300.0, Colors.DEF, 255, -0.5)
+            translateX(-61.0)
             translateY(-4.0)
-            "${data.warlordsSr.sR}".drawCentered()
+            drawSr(data.warlordsSr.sR)
             translateY(-11.5)
-            translateX(-152.0)
             "Plays: ${data.warlordsSr.plays}".draw()
             translateY(-8.0)
             "W/L: ${data.warlordsSr.wL}".draw()
@@ -44,10 +50,7 @@ object StatsInLobby : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
             "Losses: ${data.warlordsHypixel.losses}".draw()
             translateY(-8.0)
             "Left/AFKed: ${data.warlordsHypixel.penalty}".draw()
-
-            translateX(84.0)
-            translateY(48.0)
-
+            translateY(-8.0)
             "DHP: ${data.warlordsSr.dHP}".draw()
             translateY(-8.0)
             "DMG Dealt: ${data.warlordsHypixel.damage}".draw()
@@ -59,11 +62,7 @@ object StatsInLobby : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
             "Healing Leeched: ${data.warlordsHypixel.lifeLeeched}".draw()
             translateY(-8.0)
             "Prevented: ${data.warlordsHypixel.damagePrevented}".draw()
-
-            translateX(140.5)
-            translateY(41.0)
-
-            translateY(-1.0)
+            translateY(-8.0)
             "K/D: ${data.warlordsSr.kD}".draw()
             translateY(-8.0)
             "KA/D: ${data.warlordsSr.kDA}".draw()
@@ -73,6 +72,33 @@ object StatsInLobby : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
             "Deaths: ${data.warlordsHypixel.deaths}".draw()
             translateY(-8.0)
             "Assists: ${data.warlordsHypixel.assists}".draw()
+        }
+
+        fun EntityArmorStand.renderClassStats(sr: Int?, wl: Double?, dhp: Int?, rank: Int?) {
+            glMatrix {
+                translateToPos(this.posX, this.posY + 4, this.posZ)
+                scaleForText()
+                rotateY(-90.0f)
+                scale(1.025)
+                renderRectXCentered(70.0, 56.0, Colors.DEF, 255, -0.5)
+                translateY(-5.0)
+                translateX(-25.0)
+                drawSr(sr)
+                translateX(25.0)
+                translateY(-15.0)
+                "W/L: $wl".drawCentered()
+                translateY(-9.0)
+                if (dhp == null)
+                    "DHP: 0".drawCentered()
+                else
+                    "DHP: ${NumberFormat.getNumberInstance(Locale.US).format(dhp)}".drawCentered()
+                translateY(-15.0)
+                if (rank != null)
+                    "#$rank".drawCentered()
+                else
+                    "unranked".drawCentered()
+            }
+
         }
 
         Minecraft.getMinecraft().theWorld.getLoadedEntityList().filter {
@@ -88,119 +114,53 @@ object StatsInLobby : IModule, WarlordsPlusRenderer.World(seeTextThruBlocks = tr
         }.forEach {
             when {
                 it.customNameTag.contains("Shaman") -> {
-                    glMatrix {
-                        translateToPos(-2520.5, 59.0, 740.5)
-                        autoRotate()
-                        scaleForText()
-                        scale(1.025)
-                        renderRectXCentered(80.0, 75.0, Colors.DEF, 100, -0.5)
-                        translateY(-5.0)
-                        "SR: ${data.warlordsSr.shaman?.SR}".drawCentered()
-                        translateY(-8.0)
-                        "W/L: ${data.warlordsSr.shaman?.WL}".drawCentered()
-                        translateY(-8.0)
-                        "Wins: ${data.warlordsHypixel.winsShaman}".drawCentered()
-                        translateY(-8.0)
-                        "Losses: ${data.warlordsHypixel.lossesShaman}".drawCentered()
-                        translateY(-8.0)
-                        "DHP: ${data.warlordsSr.shaman?.DHP}".drawCentered()
-                        translateY(-8.0)
-                        "D: ${data.warlordsHypixel.damageShaman}".drawCentered()
-                        translateY(-8.0)
-                        "H: ${data.warlordsHypixel.healShaman}".drawCentered()
-                        translateY(-8.0)
-                        "P: ${data.warlordsHypixel.damagePreventedShaman}".drawCentered()
-                    }
+                    it.renderClassStats(
+                        data.warlordsSr.shaman?.SR,
+                        data.warlordsSr.shaman?.WL,
+                        data.warlordsSr.shaman?.DHP,
+                        data.ranking?.shaman?.overall
+                    )
                 }
                 it.customNameTag.contains("Mage") -> {
-                    glMatrix {
-                        translateToPos(-2520.5, 59.0, 742.5)
-                        autoRotate()
-                        scaleForText()
-                        scale(1.025)
-                        renderRectXCentered(80.0, 75.0, Colors.DEF, 100, -0.5)
-                        translateY(-5.0)
-                        "SR: ${data.warlordsSr.mage?.SR}".drawCentered()
-                        translateY(-8.0)
-                        "W/L: ${data.warlordsSr.mage?.WL}".drawCentered()
-                        translateY(-8.0)
-                        "Wins: ${data.warlordsHypixel.winsMage}".drawCentered()
-                        translateY(-8.0)
-                        "Losses: ${data.warlordsHypixel.lossesMage}".drawCentered()
-                        translateY(-8.0)
-                        "DHP: ${data.warlordsSr.mage?.DHP}".drawCentered()
-                        translateY(-8.0)
-                        "D: ${data.warlordsHypixel.damageMage}".drawCentered()
-                        translateY(-8.0)
-                        "H: ${data.warlordsHypixel.healMage}".drawCentered()
-                        translateY(-8.0)
-                        "P: ${data.warlordsHypixel.damagePreventedMage}".drawCentered()
-                    }
+                    it.renderClassStats(
+                        data.warlordsSr.mage?.SR,
+                        data.warlordsSr.mage?.WL,
+                        data.warlordsSr.mage?.DHP,
+                        data.ranking?.mage?.overall
+                    )
                 }
                 it.customNameTag.contains("Warrior") -> {
-                    glMatrix {
-                        translateToPos(-2520.5, 59.0, 746.5)
-                        autoRotate()
-                        scaleForText()
-                        scale(1.025)
-                        renderRectXCentered(80.0, 75.0, Colors.DEF, 100, -0.5)
-                        translateY(-5.0)
-                        "SR: ${data.warlordsSr.warrior?.SR}".drawCentered()
-                        translateY(-8.0)
-                        "W/L: ${data.warlordsSr.warrior?.WL}".drawCentered()
-                        translateY(-8.0)
-                        "Wins: ${data.warlordsHypixel.winsWarrior}".drawCentered()
-                        translateY(-8.0)
-                        "Losses: ${data.warlordsHypixel.lossesWarrior}".drawCentered()
-                        translateY(-8.0)
-                        "DHP: ${data.warlordsSr.warrior?.DHP}".drawCentered()
-                        translateY(-8.0)
-                        "D: ${data.warlordsHypixel.damageWarrior}".drawCentered()
-                        translateY(-8.0)
-                        "H: ${data.warlordsHypixel.healWarrior}".drawCentered()
-                        translateY(-8.0)
-                        "P: ${data.warlordsHypixel.damagePreventedWarrior}".drawCentered()
-                    }
+                    it.renderClassStats(
+                        data.warlordsSr.warrior?.SR,
+                        data.warlordsSr.warrior?.WL,
+                        data.warlordsSr.warrior?.DHP,
+                        data.ranking?.warrior?.overall
+                    )
                 }
                 it.customNameTag.contains("Paladin") -> {
-                    glMatrix {
-                        translateToPos(-2520.5, 59.0, 748.5)
-                        autoRotate()
-                        scaleForText()
-                        scale(1.025)
-                        renderRectXCentered(80.0, 75.0, Colors.DEF, 100, -0.5)
-                        translateY(-5.0)
-                        "SR: ${data.warlordsSr.paladin?.SR}".drawCentered()
-                        translateY(-8.0)
-                        "W/L: ${data.warlordsSr.paladin?.WL}".drawCentered()
-                        translateY(-8.0)
-                        "Wins: ${data.warlordsHypixel.winsPaladin}".drawCentered()
-                        translateY(-8.0)
-                        "Losses: ${data.warlordsHypixel.lossesPaladin}".drawCentered()
-                        translateY(-8.0)
-                        "DHP: ${data.warlordsSr.paladin?.DHP}".drawCentered()
-                        translateY(-8.0)
-                        "D: ${data.warlordsHypixel.damagePaladin}".drawCentered()
-                        translateY(-8.0)
-                        "H: ${data.warlordsHypixel.healPaladin}".drawCentered()
-                        translateY(-8.0)
-                        "P: ${data.warlordsHypixel.damagePreventedPaladin}".drawCentered()
-                    }
+                    it.renderClassStats(
+                        data.warlordsSr.paladin?.SR,
+                        data.warlordsSr.paladin?.WL,
+                        data.warlordsSr.paladin?.DHP,
+                        data.ranking?.paladin?.overall
+                    )
                 }
                 it.customNameTag.contains("Capture the Flag") -> {
                     glMatrix {
-                        translateToPos(it.posX - .25, it.posY + 1.25, it.posZ - 1.75)
-                        autoRotate()
+                        translateToPos(it.posX, it.posY + 1.2, it.posZ)
+                        autoRotateX()
+                        translate(3.0, 0.0, 0.0)
                         scaleForText()
                         scale(.95)
-                        renderRectXCentered(95.0, 47.0, Colors.DEF, 100, -0.5)
-                        translateX(-43.0)
-                        translateY(-4.0)
+                        renderRect(90.0, 55.0, Colors.DEF, 255, -0.5)
+                        translate(4.0, 4.0, 0.0)
                         "Wins: ${data.warlordsHypixel.winsCapturetheflag}".draw()
+                        translate(-4.0, 10.0, 0.0)
+                        renderRect(140.0, 2.0, Colors.WHITE, 255, -0.0)
+                        translate(4.0, 6.0, 0.0)
+                        "Blue Wins: ${EnumChatFormatting.BLUE}${data.warlordsHypixel.winsCapturetheflagBlu}".draw()
                         translateY(-8.0)
-                        "Blue Wins: ${data.warlordsHypixel.winsCapturetheflagBlu}".draw()
-                        translateY(-8.0)
-                        "Red Wins: ${data.warlordsHypixel.winsCapturetheflagBlu}".draw()
+                        "Red Wins: ${EnumChatFormatting.RED}${data.warlordsHypixel.winsCapturetheflagBlu}".draw()
                         translateY(-8.0)
                         "Team Caps: ${data.warlordsHypixel.flagConquerTeam}".draw()
                         translateY(-8.0)

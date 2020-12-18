@@ -26,11 +26,11 @@ object StatsLoader : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.STATS,
-        id = "enableAutoLoadStats",
-        comment = "Enable or disable the stats auto loading.",
+        id = "disableAutoLoadStats",
+        comment = "Disable the stats from loading automatically.",
         def = false
     )
-    var isAutoStats = false
+    var disableAutoStats = false
 
     val client = HttpClient {
         install(JsonFeature) {
@@ -73,7 +73,7 @@ object StatsLoader : IModule {
         if (Minecraft.getMinecraft().thePlayer != null) {
             loadPlayer(Minecraft.getMinecraft().thePlayer.displayNameString)
         }
-        if (!isAutoStats) return
+        if (disableAutoStats) return
         if (event.entity is EntityPlayer) {
             loadPlayer((event.entity as EntityPlayer).displayNameString)
         }
@@ -86,6 +86,8 @@ object StatsLoader : IModule {
         try {
             val result = client.get<WarlordsSrApiResponse>("https://warlordssr.unaussprechlich.net/api/$name")
             println("Loaded results for $name")
+            if (currentlyLoading.contains(name))
+                currentlyLoading.remove(name)
             return PlayerCacheEntry(result.data!!)
         } catch (e: ServerResponseException) {
             println("[WarlordsPlus|PlayerStats] internal server error for player $name")
@@ -94,11 +96,16 @@ object StatsLoader : IModule {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
         return PlayerCacheEntry(null)
     }
 
-    fun loadPlayer(name: String) {
+    private val currentlyLoading: ArrayList<String> = arrayListOf()
+
+    private fun loadPlayer(name: String) {
         if (playerCache.containsKey(name)) return
+        if (currentlyLoading.contains(name)) return
+        currentlyLoading.add(name)
         GlobalScope.launch {
             playerCache[name] = statsRequest(name)
         }
