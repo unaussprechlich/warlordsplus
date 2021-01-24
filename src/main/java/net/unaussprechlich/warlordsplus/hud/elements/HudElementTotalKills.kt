@@ -45,11 +45,12 @@ object HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsum
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
 
-        if (showBlueKills)
-            renderStrings.add(EnumChatFormatting.BLUE.toString() + "Blue Kills: " + blueKills)
-        if (showRedKills)
-            renderStrings.add(EnumChatFormatting.RED.toString() + "Red Kills: " + redKills)
-
+        if (!GameStateManager.isDOM) {
+            if (showBlueKills)
+                renderStrings.add(EnumChatFormatting.BLUE.toString() + "Blue Kills: " + blueKills)
+            if (showRedKills)
+                renderStrings.add(EnumChatFormatting.RED.toString() + "Red Kills: " + redKills)
+        }
         return renderStrings.toTypedArray()
     }
 

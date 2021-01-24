@@ -12,7 +12,6 @@ import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 
-
 object ChatComponent : AbstractRenderComponent(), IUpdateConsumer {
 
     private val messages: ArrayList<ChatDetector.ChatMessageEvent> = arrayListOf()
@@ -33,7 +32,7 @@ object ChatComponent : AbstractRenderComponent(), IUpdateConsumer {
 
         messages.forEach {
 
-            drawRect(xStart, yStart + offset, width, 11, Colors.DEF.HEADER)
+            drawRect(xStart, yStart + offset, width, 11, Colors.DEF.ALPHA_200)
             drawString(xStart + 5, yStart + offset + 2, it.playerNameFormatted, false)
 
             offset += 11
@@ -49,7 +48,7 @@ object ChatComponent : AbstractRenderComponent(), IUpdateConsumer {
                 drawString(xStart + 5, yStart + offset + index * 9 + 1, s, true)
             }
 
-            drawRect(xStart, yStart + offset - 11, 2, 12 + renderStrings.size * 9, it.type.color.HEADER)
+            drawRect(xStart, yStart + offset - 11, 2, 12 + renderStrings.size * 9, it.type.color.ALPHA_200)
 
             offset += renderStrings.size * 9 + 3
         }

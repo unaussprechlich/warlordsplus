@@ -1,14 +1,15 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
+import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardNames
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardTitle
-import net.unaussprechlich.warlordsplus.util.checkPreConditions
 import net.unaussprechlich.warlordsplus.util.contain
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
@@ -33,9 +34,28 @@ object GameStateManager : IModule {
     var isDOM: Boolean = false
         private set
 
+    init {
+        EventBus.register<ClientChatReceivedEvent> {
+            if (isWarlords || it.type == 0.toByte()) {
+                try {
+                    val message = it.message.formattedText
+                    if (message == "§r§eThe gates will fall in §r§c5 §r§eseconds!§r" || message == "§r§eThe gates will fall in §r§c1 §r§eseconds!§r") {
+                        EventBus.post(ResetEvent())
+                    }
+                } catch (throwable: Throwable) {
+                    throwable.printStackTrace()
+                }
+            }
+        }
+    }
+
     @SubscribeEvent
     fun onClientTick(@Suppress("UNUSED_PARAMETER") e: ClientTickEvent) {
-        if (e.checkPreConditions()) return
+        if (e.phase != TickEvent.Phase.END
+            && Minecraft.getMinecraft().theWorld != null
+            && !Minecraft.getMinecraft().isGamePaused
+            && Minecraft.getMinecraft().thePlayer != null
+        ) return
 
         isWarlords = scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))
 
@@ -55,20 +75,16 @@ object GameStateManager : IModule {
             isCTF = scoreboardNames[7].removeFormatting().contains("RED Flag")
             isTDM = scoreboardNames[9].removeFormatting().contains("BLU:")
             isDOM = scoreboardNames[11].removeFormatting().contain("/2000")
-        }
-    }
 
-    @SubscribeEvent
-    fun onChatMessage(event: ClientChatReceivedEvent) {
-        if (!isWarlords || event.type != 0.toByte()) return
-        try {
-            val message = event.message.formattedText
-            if (message == "§r§eThe gates will fall in §r§c5 §r§eseconds!§r" || message == "§r§eThe gates will fall in §r§c1 §r§eseconds!§r") {
-                EventBus.post(ResetEvent())
+            if (isCTF) {
+                val colon = scoreboardNames[9].lastIndexOf(":")
+                val after = scoreboardNames[9].substring(colon + 1, colon + 3)
+                try {
+                    if (after.toInt() % 12 == 0)
+                        EventBus.post(RespawnEvent())
+                } catch (e: Exception) {
+                }
             }
-
-        } catch (throwable: Throwable) {
-            throwable.printStackTrace()
         }
     }
 
@@ -88,3 +104,4 @@ object GameStateManager : IModule {
 
 data class ResetEvent(val time: Long = System.currentTimeMillis()) : IEvent
 data class IngameChangedEvent(val ingame: Boolean) : IEvent
+data class RespawnEvent(val time: Long = System.currentTimeMillis()) : IEvent

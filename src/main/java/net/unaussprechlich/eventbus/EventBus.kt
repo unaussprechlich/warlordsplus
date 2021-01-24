@@ -8,19 +8,19 @@ object EventBus {
     private val busMap = mutableMapOf<String, Bus<*>>()
 
     @Suppress("UNCHECKED_CAST")
-    private class Bus<T : IEvent> {
+    private class Bus<T> {
 
         private val subscribers = ArrayList<(T) -> Unit>()
 
-        fun <E : IEvent> register(callback: (E) -> Unit) {
+        fun <E> register(callback: (E) -> Unit) {
             subscribers.add(callback as (T) -> Unit)
         }
 
-        fun <E : IEvent> unregister(callback: (E) -> Unit) {
+        fun <E> unregister(callback: (E) -> Unit) {
             subscribers.remove(callback as (T) -> Unit)
         }
 
-        fun <E : IEvent> post(data: E) {
+        fun <E> post(data: E) {
             subscribers.forEach { it.invoke(data as T) }
         }
 
@@ -29,25 +29,25 @@ object EventBus {
     /**
      * Inline function to be able to do EventBus.register<MyBus>({ })
      */
-    inline fun <reified T : IEvent> register(noinline callback: (T) -> Unit) =
+    inline fun <reified T> register(noinline callback: (T) -> Unit) =
         register(T::class.java, callback)
 
     /**
      * Inline function to be able to do EventBus.unregister<MyBus>({ })
      */
-    inline fun <reified T : IEvent> unregister(noinline callback: (T) -> Unit) =
+    inline fun <reified T> unregister(noinline callback: (T) -> Unit) =
         unregister(T::class.java, callback)
 
     /**
      * Inline function to be able to do EventBus.post<MyBus>({ })
      */
-    inline fun <reified T : IEvent> post(data: T) =
+    inline fun <reified T> post(data: T) =
         post(T::class.java, data)
 
     /**
      * Registers a Callback in a Bus and creates the Bus if it doesn't exist.
      */
-    fun <T : IEvent> register(clazz: Class<T>, callback: (T) -> Unit) {
+    fun <T> register(clazz: Class<T>, callback: (T) -> Unit) {
         if (!busMap.containsKey(clazz.toString())) {
             busMap[clazz.toString()] = Bus<T>()
         }
@@ -59,7 +59,7 @@ object EventBus {
      * Unregister a Callback in a Bus and throws a NoSuchElementException if the Bus if it doesn't exist.
      */
     @Throws(NoSuchElementException::class)
-    fun <T : IEvent> unregister(clazz: Class<T>, callback: (T) -> Unit) {
+    fun <T> unregister(clazz: Class<T>, callback: (T) -> Unit) {
         if (!busMap.containsKey(clazz.toString())) {
             throw NoSuchElementException("Can't find Bus for event ${clazz}?")
         }
@@ -70,11 +70,13 @@ object EventBus {
     /**
      * Post to a Bus and creates the Bus if it doesn't exist.
      */
-    fun <T : IEvent> post(clazz: Class<T>, data: T) {
+    fun <T> post(clazz: Class<T>, data: T) {
         if (!busMap.containsKey(clazz.toString())) {
             busMap[clazz.toString()] = Bus<T>()
         }
 
         busMap[clazz.toString()]!!.post(data)
     }
+
+
 }

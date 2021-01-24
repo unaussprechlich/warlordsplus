@@ -1,21 +1,23 @@
-package net.unaussprechlich.warlordsplus.hud.elements
+package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.IChatComponent
 import net.minecraftforge.client.event.ClientChatReceivedEvent
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.ThePlayer
-import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
-import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
-import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
+import net.unaussprechlich.warlordsplus.hud.elements.DamageHealingAbsorbedEndOfGame
+import net.unaussprechlich.warlordsplus.hud.elements.HudElementHitCounter
+import net.unaussprechlich.warlordsplus.hud.elements.HudElementKillParticipation
+import net.unaussprechlich.warlordsplus.hud.elements.HudElementTotalKills
+import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.TeamEnum
-import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import kotlin.math.roundToInt
 
-object StatsDisplayAfterGame : AbstractHudElement(), IChatConsumer {
+object StatsDisplayAfterGame : IModule {
 
     var showStats = true
     var redKills = 0
@@ -29,13 +31,9 @@ object StatsDisplayAfterGame : AbstractHudElement(), IChatConsumer {
         }
     }
 
-    override fun getRenderString(): Array<String> {
-        val renderStrings = ArrayList<String>()
-        return renderStrings.toTypedArray()
-    }
-
-
-    override fun onChat(e: ClientChatReceivedEvent) {
+    @SubscribeEvent
+    fun onChatMessage(e: ClientChatReceivedEvent) {
+        if (GameStateManager.notIngame) return
         val message = e.message.formattedText
         if (message.contains("Winner")) {
             redKills = HudElementTotalKills.redKills
@@ -59,19 +57,11 @@ object StatsDisplayAfterGame : AbstractHudElement(), IChatConsumer {
         }
     }
 
-    override fun isEnabled(): Boolean {
-        return true
-    }
-
-    override fun isVisible(): Boolean {
-        return GameStateManager.isIngame
-    }
-
     fun displayStats() {
         val player: String = Minecraft.getMinecraft().thePlayer.displayNameString
         val stats: IChatComponent = ChatComponentText(
             "${EnumChatFormatting.GRAY}Hits: ${EnumChatFormatting.WHITE}${HudElementHitCounter.totalHits}${EnumChatFormatting.GOLD} Energy Given ${EnumChatFormatting.WHITE}${ThePlayer.energyGivenCounter}${EnumChatFormatting.GOLD} Energy Received ${EnumChatFormatting.WHITE}${ThePlayer.energyReceivedCounter}${"\n"}" +
-                    "${EnumChatFormatting.GOLD}KP: ${EnumChatFormatting.WHITE}${(HudElementKillParticipation.playerKills / HudElementKillParticipation.numberOfTeamKills.toDouble() * 100).roundToInt()}%${EnumChatFormatting.BLUE} Blue Kills: ${EnumChatFormatting.WHITE}${blueKills}${EnumChatFormatting.RED} Red Kills: ${EnumChatFormatting.WHITE}${redKills}${"\n"}" +
+                    "${EnumChatFormatting.GOLD}KP: ${EnumChatFormatting.WHITE}${(HudElementKillParticipation.playerKills / HudElementKillParticipation.numberOfTeamKills.toDouble() * 100).roundToInt()}%${EnumChatFormatting.BLUE} Blue Kills: ${EnumChatFormatting.WHITE}$blueKills${EnumChatFormatting.RED} Red Kills: ${EnumChatFormatting.WHITE}$redKills${"\n"}" +
                     "${EnumChatFormatting.DARK_GREEN}Healing Received: ${EnumChatFormatting.WHITE}${ThePlayer.healingReceivedCounter}${EnumChatFormatting.DARK_RED} Damage Received: ${EnumChatFormatting.WHITE}${ThePlayer.damageTakenCounter}${"\n\n"}" +
                     "${EnumChatFormatting.RED}Highest Damage Per Min: ${EnumChatFormatting.WHITE}${DamageHealingAbsorbedEndOfGame.highestDamage}${EnumChatFormatting.RED} At Minute ${EnumChatFormatting.WHITE}${DamageHealingAbsorbedEndOfGame.highestDamageMin}${"\n"}" +
                     "${EnumChatFormatting.GREEN}Highest Healing Per Min: ${EnumChatFormatting.WHITE}${DamageHealingAbsorbedEndOfGame.highestHealing}${EnumChatFormatting.GREEN} At Minute ${EnumChatFormatting.WHITE}${DamageHealingAbsorbedEndOfGame.highestHealingMin}${"\n"}" +

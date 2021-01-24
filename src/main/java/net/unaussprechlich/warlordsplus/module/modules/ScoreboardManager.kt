@@ -2,7 +2,6 @@ package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
 import net.minecraft.scoreboard.ScorePlayerTeam
-import net.minecraftforge.fml.common.FMLCommonHandler
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import net.unaussprechlich.warlordsplus.module.IModule
@@ -19,7 +18,7 @@ object ScoreboardManager : IModule{
     val scoreboardNames = ArrayList<String>()
 
     @SubscribeEvent
-    fun onClientTick(@Suppress("UNUSED_PARAMETER") event: ClientTickEvent?) {
+    fun onClientTick(@Suppress("UNUSED_PARAMETER") event: ClientTickEvent) {
         if (scoreboardNames.isNotEmpty()) scoreboardNames.clear()
         scoreboardTitle = ""
         try {

@@ -3,7 +3,6 @@ package net.unaussprechlich.warlordsplus.ingamegui.components.scoreboard
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderGameOverlayEvent
-import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.Player
 import net.unaussprechlich.warlordsplus.ThePlayer
@@ -12,7 +11,6 @@ import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
-import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 
 object ScoreboardComponent : AbstractRenderComponent() {
@@ -113,17 +111,16 @@ object ScoreboardComponent : AbstractRenderComponent() {
                     p.deaths == mostDeathsRed
             }
 
-            var output = ""
             fun drawFlag(): String {
                 if (p.hasFlag) {
-                    if (p.team == TeamEnum.BLUE)
-                        EnumChatFormatting.RED
+                    return if (p.team == TeamEnum.BLUE)
+                        "${EnumChatFormatting.RED}\u2690 "
                     else
-                        EnumChatFormatting.BLUE
-                    output += "F-"
+                        "${EnumChatFormatting.BLUE}\u2690 "
                 }
-                return output
+                return ""
             }
+
             drawString(
                 xLevel, yStart + 15 + offset,
                 "${if (p.left) "LEFT" else ""}${EnumChatFormatting.GOLD}" +
@@ -132,7 +129,7 @@ object ScoreboardComponent : AbstractRenderComponent() {
             )
             drawString(
                 xName, yStart + 15 + offset,
-                "${drawFlag()}${p.team.color}${p.name}"
+                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color}${p.name}"
             )
             drawString(
                 xKills, yStart + 15 + offset,

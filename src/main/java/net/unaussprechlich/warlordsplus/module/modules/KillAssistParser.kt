@@ -2,7 +2,6 @@ package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.module.IModule
@@ -10,27 +9,43 @@ import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object KillAssistParser : IModule {
 
-    @SubscribeEvent
-    fun onChatMessage(e: ClientChatReceivedEvent) {
+    init {
+        EventBus.register(this::onChatMessage)
+    }
+
+    private fun onChatMessage(e: ClientChatReceivedEvent) {
         if (GameStateManager.notIngame || e.type == 2.toByte()) return
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
-
+            var respawn = -1
+            if (GameStateManager.isCTF) {
+                val colon = ScoreboardManager.scoreboardNames[9].lastIndexOf(":")
+                val after = ScoreboardManager.scoreboardNames[9].substring(colon + 1, colon + 3)
+                try {
+                    respawn = after.toInt() % 12
+                    if (after.toInt() % 12 <= 4) {
+                        respawn = 12 + after.toInt() % 12
+                    }
+                } catch (e: Exception) {
+                }
+            } else if (GameStateManager.isTDM) {
+                respawn = 6
+            }
             when {
                 textMessage.contains("was killed by") -> {
                     val player = textMessage.substring(textMessage.indexOf("by") + 3)
                     val deathPlayer = textMessage.substring(0, textMessage.indexOf("was") - 1)
-                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute()));
+                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute(), respawn))
                 }
                 textMessage.contains("You were killed") -> {
                     val player = textMessage.substring(textMessage.indexOf("by ") + 3)
                     val deathPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
-                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute()))
+                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute(), respawn))
                 }
                 textMessage.contains("You killed") -> {
                     val deathPlayer = textMessage.substring(textMessage.indexOf("killed ") + 7)
                     val player = Minecraft.getMinecraft().thePlayer.displayNameString
-                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute()))
+                    EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute(), respawn))
                     EventBus.post(KillRatioEvent(deathPlayer))
                 }
                 textMessage.contains("You assisted") -> {
@@ -54,7 +69,8 @@ object KillAssistParser : IModule {
 data class KillEvent(
     val player: String,
     val deathPlayer: String,
-    val time: Int
+    val time: Int,
+    val respawn: Int
 ) : IEvent
 
 data class KillRatioEvent(

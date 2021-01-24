@@ -8,10 +8,12 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.unaussprechlich.eventbus.ForgeEventProcessor;
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler;
 import net.unaussprechlich.warlordsplus.module.ModuleManager;
 import net.unaussprechlich.warlordsplus.util.commands.ChangeTargetCommand;
 import net.unaussprechlich.warlordsplus.util.commands.GetPlayerStatsCommand;
+import net.unaussprechlich.warlordsplus.util.commands.SetWinLossCommand;
 
 
 @SideOnly(Side.CLIENT)
@@ -30,21 +32,32 @@ public class WarlordsPlus {
     public static final boolean IS_DEBUGGING = false;
     public static Configuration CONFIG;
 
+    /**
+     * Wrapper to prevent the Kotlin compiler from replacing the the reference to
+     * VERSION with the actual value.
+     *
+     * @return
+     */
+    public static String getModVersion() {
+        return VERSION;
+    }
+
+
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event){
+    public void preInit(FMLPreInitializationEvent event) {
         CONFIG = new Configuration(event.getSuggestedConfigurationFile());
         CONFIG.load();
         EasyConfigHandler.INSTANCE.init(event.getAsmData());
-
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
+        ForgeEventProcessor.INSTANCE.init();
         ModuleManager.INSTANCE.register();
         ClientCommandHandler.instance.registerCommand(new ChangeTargetCommand());
         ClientCommandHandler.instance.registerCommand(new GetPlayerStatsCommand());
-
+        ClientCommandHandler.instance.registerCommand(new SetWinLossCommand());
     }
 
 }

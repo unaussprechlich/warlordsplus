@@ -18,29 +18,21 @@ open class Player(val name: String, val uuid : UUID) {
     var kills: Int = 0
     var deaths: Int = 0
     var killParticipation: Int = 0
-
     var damageDone : Int = 0
     var damageReceived : Int = 0
     var healingDone: Int = 0
     var healingReceived: Int = 0
-
     var warlord = WarlordsEnum.NONE
-
     var spec = SpecsEnum.NONE
-
     var team = TeamEnum.NONE
-
     var level = 0
-
     var prestiged: Boolean = false
-
     var hasFlag: Boolean = false
-
     var died: Int = 0
     var stoleKill: Int = 0
-
     var left: Boolean = false
-
+    var isDead: Boolean = false
+    var respawn: Int = -1
 }
 
 private val numberPattern = Pattern.compile("[0-9]{2}")
@@ -58,8 +50,11 @@ object OtherPlayers : IModule {
         }
 
         EventBus.register<KillEvent> {
-            if (it.deathPlayer in playersMap)
+            if (it.deathPlayer in playersMap) {
                 playersMap[it.deathPlayer]!!.deaths++
+                playersMap[it.deathPlayer]!!.isDead = true
+                playersMap[it.deathPlayer]!!.respawn = it.respawn
+            }
             if (it.player in playersMap)
                 playersMap[it.player]!!.kills++
         }
@@ -100,6 +95,12 @@ object OtherPlayers : IModule {
         EventBus.register<KillStealEvent> {
             playersMap[it.otherPlayer]!!.stoleKill += 1
         }
+
+        /* TODO
+        EventBus.register<PlayerLeaveEvent> {
+            playersMap[it.player]!!.left = it.left
+        }*/
+
     }
 
     fun getPlayersForNetworkPlayers(networkPlayers : Collection<NetworkPlayerInfo>): Collection<Player> {
