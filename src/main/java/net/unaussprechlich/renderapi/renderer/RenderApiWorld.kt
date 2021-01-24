@@ -1,14 +1,14 @@
 package net.unaussprechlich.renderapi.renderer
 
 import net.minecraft.client.renderer.GlStateManager
+import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.mixin.AccessorRenderManager
 import net.unaussprechlich.renderapi.RenderApi
-import net.unaussprechlich.warlordsplus.util.RenderEntitiesEvent
 import org.lwjgl.opengl.GL11
 
 
-abstract class RenderApiWorld : RenderApi<RenderEntitiesEvent>() {
+abstract class RenderApiWorld : RenderApi<RenderWorldLastEvent>() {
 
     companion object {
         val renderPosX: Double
@@ -20,13 +20,7 @@ abstract class RenderApiWorld : RenderApi<RenderEntitiesEvent>() {
     }
 
     init {
-        EventBus.register<RenderEntitiesEvent> {
-            if (shouldRender(it)) render(it)
-        }
-    }
-
-    open fun shouldRender(event: RenderEntitiesEvent): Boolean {
-        return true
+        EventBus.register(::render)
     }
 
     /**
@@ -35,7 +29,7 @@ abstract class RenderApiWorld : RenderApi<RenderEntitiesEvent>() {
      * icamera.setPosition(d0, d1, d2);
      */
     protected fun translateToPos(x: Double, y: Double, z: Double) {
-        val entity = event!!.renderViewEntity
+        val entity = mc.renderViewEntity
         val partialTicks = (event!!.partialTicks).toDouble()
         val d0 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks
         val d1 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks
@@ -71,7 +65,9 @@ abstract class RenderApiWorld : RenderApi<RenderEntitiesEvent>() {
         GlStateManager.rotate(renderManager.playerViewY, 0.0f, 1.0f, 0.0f)
     }
 
-    override fun render(e: RenderEntitiesEvent) {
+    override fun setupRender(e: RenderWorldLastEvent) {
+        if (!shouldRender(e)) return
+
         event = e
 
         GlStateManager.alphaFunc(516, 0.1f)
@@ -79,7 +75,6 @@ abstract class RenderApiWorld : RenderApi<RenderEntitiesEvent>() {
         GlStateManager.pushMatrix()
 
         GL11.glNormal3f(0f, 1f, 0f)
-
 
         GlStateManager.disableLighting()
         GlStateManager.depthMask(true)

@@ -52,6 +52,12 @@ object ForgeEventProcessor {
     }
 
     @SubscribeEvent
+    fun onRender(event: RenderGameOverlayEvent.Text) {
+        if (!isDesiredGame) return
+        EventBus.post(event)
+    }
+
+    @SubscribeEvent
     fun onRender(event: RenderGameOverlayEvent.Post) {
         if (!isDesiredGame) return
         EventBus.post(event)

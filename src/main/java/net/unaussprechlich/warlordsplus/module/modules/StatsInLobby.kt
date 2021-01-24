@@ -4,11 +4,11 @@ import kotlinx.serialization.UnstableDefault
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.util.EnumChatFormatting
+import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.stats.StatsLoader
 import net.unaussprechlich.warlordsplus.util.Colors
-import net.unaussprechlich.warlordsplus.util.RenderEntitiesEvent
 import net.unaussprechlich.warlordsplus.util.drawSr
 import java.text.NumberFormat
 import java.util.*
@@ -17,7 +17,7 @@ import java.util.*
 object StatsInLobby : IModule, RenderApi.World() {
 
     @UnstableDefault
-    override fun onRender(event: RenderEntitiesEvent) {
+    override fun onRender(event: RenderWorldLastEvent) {
         if (!GameStateManager.isWarlords) return
         if (GameStateManager.isIngame) return
 

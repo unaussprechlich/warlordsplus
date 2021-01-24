@@ -63,7 +63,11 @@ object StatsLoader : IModule {
     private fun onClientTick(@Suppress("UNUSED_PARAMETER") event: TickEvent.ClientTickEvent) {
         if (System.currentTimeMillis() - lastTimeChecked > 10000) {
             playerCache.filter { it.value.validUntil < System.currentTimeMillis() }.keys.forEach {
-                playerCache.remove(it)
+                try {
+                    playerCache.remove(it)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }
@@ -86,8 +90,9 @@ object StatsLoader : IModule {
         try {
             val result = client.get<WarlordsSrApiResponse>("https://warlordssr.unaussprechlich.net/api/$name")
             println("Loaded results for $name")
-            if (currentlyLoading.contains(name))
-                currentlyLoading.remove(name)
+
+            currentlyLoading.removeIf { it == name }
+
             return PlayerCacheEntry(result.data!!)
         } catch (e: ServerResponseException) {
             println("[WarlordsPlus|PlayerStats] internal server error for player $name")

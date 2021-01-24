@@ -10,15 +10,48 @@ import org.lwjgl.opengl.GL11
 
 abstract class RenderApi<E : Event> : RenderBasics() {
 
+    //Reference to the World Rendering API
     abstract class World : RenderApiWorld()
+
+    //Reference to the Player Rendering API
     abstract class Player : RenderApiPlayer()
+
+    //Reference to the Gui Rendering API
     abstract class Gui<GuiE : RenderGameOverlayEvent> : RenderApiGui<GuiE>()
 
     protected var event: E? = null
 
+    /**
+     * Abstract function which is actually called once the
+     * rendering has been setup and the render API is ready to
+     * draw.
+     *
+     * Implement this function to add your custom rendering.
+     */
     protected abstract fun onRender(event: E)
 
-    protected open fun render(e: E) {
+    /**
+     * Determine weather or not the render API should actually
+     * draw anything.
+     */
+    protected open fun shouldRender(e: E): Boolean {
+        return true
+    }
+
+    /**
+     * Call this function to initiate the rendering.
+     * Checks if the it should actually render.
+     */
+    protected fun render(e: E) {
+        if (shouldRender(e)) {
+            setupRender(e)
+        }
+    }
+
+    /**
+     * Setup the rendering.
+     */
+    protected open fun setupRender(e: E) {
         event = e
 
         GlStateManager.alphaFunc(516, 0.1f)
@@ -31,11 +64,11 @@ abstract class RenderApi<E : Event> : RenderBasics() {
         GlStateManager.depthMask(true)
         GlStateManager.enableDepth()
         GlStateManager.enableBlend()
+        GlStateManager.disableTexture2D()
 
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0)
 
-        GlStateManager.disableTexture2D()
-
+        //call custom rendering
         onRender(e)
 
         GlStateManager.enableTexture2D()

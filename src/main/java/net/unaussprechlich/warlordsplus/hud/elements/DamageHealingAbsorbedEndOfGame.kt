@@ -4,9 +4,8 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
-import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 
-object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
+object DamageHealingAbsorbedEndOfGame : AbstractHudElement() {
 
     var damage: ArrayList<Int> = arrayListOf()
     var healing: ArrayList<Int> = arrayListOf()
@@ -32,6 +31,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
     var lowestAbsorbedMin: Int = 0
 
     init {
+        EventBus.register(::onChat)
         EventBus.register<ResetEvent> {
             damage = arrayListOf()
             healing = arrayListOf()
@@ -60,7 +60,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement(), IChatConsumer {
         return renderStrings.toTypedArray()
     }
 
-    override fun onChat(e: ClientChatReceivedEvent) {
+    fun onChat(e: ClientChatReceivedEvent) {
         if (e.message.formattedText.contains("Damage:")) {
 
             println(e.message.siblings[1].chatStyle.chatHoverEvent.value.formattedText)

@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
+import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.WarlordsPlus
 import net.unaussprechlich.warlordsplus.config.CCategory
@@ -56,6 +57,8 @@ object HudManager : RenderApi.Gui<RenderGameOverlayEvent.Text>(), IModule {
     private val hudElements = ArrayList<AbstractHudElement>()
 
     init {
+        EventBus.register(::render)
+
         hudElements.add(HudElementFps())
         hudElements.add(HudElementPing())
         hudElements.add(HudElementRespawnTimer())
@@ -92,11 +95,6 @@ object HudManager : RenderApi.Gui<RenderGameOverlayEvent.Text>(), IModule {
         for (element in hudElements) {
             if (element is IKeyEventConsumer && element.isEnabled) (element as IKeyEventConsumer).onKeyInput(event!!)
         }
-    }
-
-    @SubscribeEvent
-    fun RenderGameOverlayEventText(event: RenderGameOverlayEvent.Text) {
-        render(event)
     }
 
     override fun onRender(event: RenderGameOverlayEvent.Text) {

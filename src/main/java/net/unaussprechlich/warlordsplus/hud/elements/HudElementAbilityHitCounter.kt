@@ -1,11 +1,15 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraftforge.client.event.ClientChatReceivedEvent
+import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
-import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import java.util.*
 
-class HudElementAbilityHitCounter : AbstractHudElement(), IChatConsumer {
+class HudElementAbilityHitCounter : AbstractHudElement() {
+
+    init {
+        EventBus.register(::onChat)
+    }
 
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
@@ -22,7 +26,7 @@ class HudElementAbilityHitCounter : AbstractHudElement(), IChatConsumer {
         return false
     }
 
-    override fun onChat(e: ClientChatReceivedEvent) {
+    fun onChat(e: ClientChatReceivedEvent) {
 
     }
 

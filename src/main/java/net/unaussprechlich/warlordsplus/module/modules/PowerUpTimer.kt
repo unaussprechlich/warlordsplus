@@ -2,11 +2,11 @@ package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.item.EntityArmorStand
+import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.util.RenderEntitiesEvent
 import java.util.*
 
 
@@ -65,7 +65,7 @@ object PowerUpTimer : IModule, RenderApi.World() {
         }
     }
 
-    override fun onRender(event: RenderEntitiesEvent) {
+    override fun onRender(event: RenderWorldLastEvent) {
         powerUps.values.filter { it.respawnTimer != -1 }.forEach {
             glMatrix {
                 //translate(x, y, z)

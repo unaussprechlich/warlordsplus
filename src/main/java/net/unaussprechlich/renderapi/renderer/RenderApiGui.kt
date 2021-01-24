@@ -13,13 +13,16 @@ import org.lwjgl.opengl.GL11
 
 abstract class RenderApiGui<GuiE : RenderGameOverlayEvent> : RenderApi<GuiE>() {
 
-    override fun render(e: GuiE) {
-        GlStateManager.pushAttrib()
+    override fun setupRender(e: GuiE) {
+
+
         GlStateManager.pushMatrix()
+        //GlStateManager.pushAttrib()
         GlStateManager.disableLighting()
         GlStateManager.depthMask(true)
         GlStateManager.enableDepth()
         GlStateManager.enableBlend()
+        GlStateManager.enableRescaleNormal()
 
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0)
 
@@ -27,14 +30,17 @@ abstract class RenderApiGui<GuiE : RenderGameOverlayEvent> : RenderApi<GuiE>() {
 
         onRender(e)
 
+        GlStateManager.disableRescaleNormal()
         GlStateManager.enableTexture2D()
-        GlStateManager.disableBlend()
-        GlStateManager.enableDepth()
-        GlStateManager.depthMask(true)
-        GlStateManager.enableLighting()
+        GlStateManager.enableBlend()
+        GlStateManager.enableAlpha()
+        //GlStateManager.disableDepth()
+        //GlStateManager.depthMask(false)
+        //GlStateManager.enableLighting()
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
+        //GlStateManager.popAttrib()
         GlStateManager.popMatrix()
-        GlStateManager.popAttrib()
+
     }
 
     companion object {

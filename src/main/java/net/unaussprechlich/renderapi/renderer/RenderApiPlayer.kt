@@ -11,16 +11,13 @@ abstract class RenderApiPlayer(
 ) : RenderApi<RenderPlayerEvent.Post>() {
 
     init {
-        EventBus.register<RenderPlayerEvent.Post> {
-            if (shouldRender(it)) render(it)
-        }
+        //Autoregister the renderer to the EventBus
+        EventBus.register(::render)
     }
 
-    open fun shouldRender(event: RenderPlayerEvent.Post): Boolean {
-        return true
-    }
+    override fun setupRender(e: RenderPlayerEvent.Post) {
+        if (!shouldRender(e)) return
 
-    override fun render(e: RenderPlayerEvent.Post) {
         event = e
 
         val x = e.x
