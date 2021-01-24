@@ -15,6 +15,9 @@ import net.unaussprechlich.warlordsplus.hud.elements.HudElementKillParticipation
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementTotalKills
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.TeamEnum
+import java.awt.Toolkit
+import java.awt.datatransfer.Clipboard
+import java.awt.datatransfer.StringSelection
 import kotlin.math.roundToInt
 
 object StatsDisplayAfterGame : IModule {
@@ -49,6 +52,7 @@ object StatsDisplayAfterGame : IModule {
                         Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
                         displayScoreboard()
                         Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
+                        addStatsToClipboard(message)
                         showStats = false
                     }
                     counter = 0
@@ -113,5 +117,37 @@ object StatsDisplayAfterGame : IModule {
         //PAL[90]sumSmash - 32:3 - 3798:7893
     }
 
+    fun addStatsToClipboard(winner: String) {
+        val players =
+            OtherPlayers.getPlayersForNetworkPlayers(Minecraft.getMinecraft().thePlayer!!.sendQueue.playerInfoMap)
+        val teamBlue = players.filter { it.team == TeamEnum.BLUE }.sortedByDescending { it.level }
+        val teamRed = players.filter { it.team == TeamEnum.RED }.sortedByDescending { it.level }
+        var endGameStats = "Winners:"
+        if (winner.contains("BLU")) {
+            EnumChatFormatting.BLUE
+            teamBlue.forEach {
+                endGameStats += "${it.name}, "
+            }
+            EnumChatFormatting.RED
+            endGameStats += "\nLosers:"
+            teamRed.forEach {
+                endGameStats += "${it.name}, "
+            }
+        } else {
+            EnumChatFormatting.RED
+            teamRed.forEach {
+                endGameStats += "${it.name}, "
+            }
+            EnumChatFormatting.BLUE
+            endGameStats += "\n\nLosers:"
+            teamBlue.forEach {
+                endGameStats += "${it.name}, "
+            }
+        }
+        val selection = StringSelection(endGameStats)
+        val clipboard: Clipboard = Toolkit.getDefaultToolkit().systemClipboard
+        clipboard.setContents(selection, selection)
+        Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText(endGameStats))
+    }
 
 }

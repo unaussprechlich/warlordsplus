@@ -34,7 +34,8 @@ object PowerUpTimer : IModule, RenderApi.World() {
         if (GameStateManager.notIngame) return
 
         val currentPowerUps = Minecraft.getMinecraft().theWorld.getLoadedEntityList().filter {
-            it is EntityArmorStand && it.customNameTag.contains("§lHEALING") || it.customNameTag.contains("§lDAMAGE") || it.customNameTag.contains(
+            it.customNameTag != null &&
+                    it is EntityArmorStand && it.customNameTag.contains("§lHEALING") || it.customNameTag.contains("§lDAMAGE") || it.customNameTag.contains(
                 "§lSPEED"
             )
         }.map {

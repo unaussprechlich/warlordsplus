@@ -13,7 +13,7 @@ object Meme : IModule {
         if (GameStateManager.notIngame) return
         try {
             val message = event.message.unformattedText
-            /*
+
             if (message.startsWith("You killed ")) {
                 when (((Math.random() * 5) + 1).toInt()) {
                     1 -> SoundManager.playSound(Sounds.MEME_SUCTION)
@@ -28,10 +28,14 @@ object Meme : IModule {
                 SoundManager.playSound(Sounds.MEME_T1BESTRONG)
             }
 
-             */
-            if (message.contains("fall damage")) {
-                SoundManager.playSound(Sounds.MEME_HAPPYLANDING)
-            }
+            /*
+           if (message.contains("fall damage")) {
+               SoundManager.playSound(Sounds.MEME_HAPPYLANDING)
+           } else if(message.contains("picked up")) {
+               if(ThePlayer.team == TeamEnum.BLUE && message.contains("BLU") || ThePlayer.team == TeamEnum.RED && message.contains("RED")) {
+                   SoundManager.playSound(Sounds.MEME_SIREN)
+               }
+           }*/
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
         }

@@ -12,7 +12,6 @@ import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 class HudElementFps : AbstractHudElement() {
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
-
         if (showFPS)
             renderStrings.add("FPS: " + Minecraft.getDebugFPS())
 

@@ -10,8 +10,7 @@ enum class Sounds(val soundName: String) {
     MEME_T1CHRISTMAS("meme.t1Christmas"),
     MEME_T1GTFO("meme.t1GTFO"),
     MEME_T1KS("meme.t1KS"),
-    MEME_T1THANKSFORGOLD("meme.t1ThanksForGold"),
-    MEME_HAPPYLANDING("meme.anotherHappyLanding");
+    MEME_T1THANKSFORGOLD("meme.t1ThanksForGold");
 }
 
 object SoundManager {

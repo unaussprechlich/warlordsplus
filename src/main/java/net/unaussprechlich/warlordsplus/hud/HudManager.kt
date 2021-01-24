@@ -62,6 +62,7 @@ object HudManager : RenderApi.Gui<RenderGameOverlayEvent.Text>(), IModule {
         hudElements.add(HudElementFps())
         hudElements.add(HudElementPing())
         hudElements.add(HudElementRespawnTimer())
+        hudElements.add(HudElementFlagRespawnTimer())
         hudElements.add(HudElementRegenTimer())
         hudElements.add(HudElementDamageAndHealingCounter())
         hudElements.add(HudElementKillParticipation)
@@ -71,6 +72,7 @@ object HudManager : RenderApi.Gui<RenderGameOverlayEvent.Text>(), IModule {
         //hudElements.add(HudElementRandomTarget.INSTANCE);
         //hudElements.add(HudElementSpec.INSTANCE);
         hudElements.add(DamageHealingAbsorbedEndOfGame)
+        hudElements.add(HudElementCustomHud)
     }
 
     @SubscribeEvent

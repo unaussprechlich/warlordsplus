@@ -151,7 +151,7 @@ object StatsDisplayRenderer : IModule, RenderApi.Player() {
                         data.warlordsSr?.paladin?.SR,
                         data.warlordsSr?.paladin?.WL,
                         data.warlordsSr?.paladin?.DHP,
-                        data.ranking?.paladin?.overall
+                        data.warlordsSr?.paladin?.LEVEL
                     )
                     translateX(50.0)
                     renderClassStats(
@@ -159,7 +159,7 @@ object StatsDisplayRenderer : IModule, RenderApi.Player() {
                         data.warlordsSr?.warrior?.SR,
                         data.warlordsSr?.warrior?.WL,
                         data.warlordsSr?.warrior?.DHP,
-                        data.ranking?.warrior?.overall
+                        data.warlordsSr?.warrior?.LEVEL
                     )
                     translateX(120.0)
                     renderClassStats(
@@ -167,7 +167,7 @@ object StatsDisplayRenderer : IModule, RenderApi.Player() {
                         data.warlordsSr?.mage?.SR,
                         data.warlordsSr?.mage?.WL,
                         data.warlordsSr?.mage?.DHP,
-                        data.ranking?.mage?.overall
+                        data.warlordsSr?.mage?.LEVEL
                     )
                     translateX(50.0)
                     renderClassStats(
@@ -175,7 +175,7 @@ object StatsDisplayRenderer : IModule, RenderApi.Player() {
                         data.warlordsSr?.shaman?.SR,
                         data.warlordsSr?.shaman?.WL,
                         data.warlordsSr?.shaman?.DHP,
-                        data.ranking?.shaman?.overall
+                        data.warlordsSr?.shaman?.LEVEL
                     )
                 }
             }

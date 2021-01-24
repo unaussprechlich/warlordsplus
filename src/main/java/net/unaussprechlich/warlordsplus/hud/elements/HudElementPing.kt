@@ -16,7 +16,6 @@ class HudElementPing : AbstractHudElement() {
         if (System.currentTimeMillis() >= nextTimeStamp) updatePing()
         if (Minecraft.getMinecraft().currentServerData.pingToServer > 0) lastValidPing =
             Minecraft.getMinecraft().currentServerData.pingToServer.toInt()
-
         val renderStrings = ArrayList<String>()
         if (showPing)
             renderStrings.add("Ping: $lastValidPing")
