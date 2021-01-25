@@ -69,6 +69,12 @@ object ForgeEventProcessor {
         EventBus.post(event)
     }
 
+    @SubscribeEvent
+    fun onRender(event: RenderGameOverlayEvent.Chat) {
+        if (!isDesiredGame) return
+        EventBus.post(event)
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     fun onChatSent(event: ClientChatReceivedEvent) {
         if (!isDesiredGame) return

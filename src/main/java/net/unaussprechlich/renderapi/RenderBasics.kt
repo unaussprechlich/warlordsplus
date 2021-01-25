@@ -28,6 +28,9 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
             if (alpha < 255) GlStateManager.depthMask(true)
         }
 
+        fun renderRect(width: Int, height: Int, color: Colors, alpha: Int = 255, z: Double = 0.0) =
+            renderRect(width.toDouble(), height.toDouble(), color, alpha, z)
+
         fun renderRectXCentered(width: Double, height: Double, color: Colors, alpha: Int = 255, z: Double = 0.0) {
             if (alpha < 255) GlStateManager.depthMask(false)
             val w2 = width / 2
@@ -43,6 +46,9 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
             if (alpha < 255) GlStateManager.depthMask(true)
         }
 
+        fun renderRectXCentered(width: Int, height: Int, color: Colors, alpha: Int = 255, z: Double = 0.0) =
+            renderRectXCentered(width.toDouble(), height.toDouble(), color, alpha, z)
+
         fun WorldRenderer.color(color: Colors, alpha: Int = 255): WorldRenderer {
             return this.color(color.red, color.green, color.blue, alpha)
         }
@@ -55,7 +61,7 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
         fun String.unformattedWidth(): Int =
             fontRenderer.getStringWidth(this.removeFormatting())
 
-        fun String.draw(seeThruBlocks: Boolean = false) {
+        fun String.draw(seeThruBlocks: Boolean = false, shadow: Boolean = false) {
             GlStateManager.enableTexture2D()
             if (seeThruBlocks) {
                 GlStateManager.depthMask(false)
@@ -65,12 +71,18 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
                 GlStateManager.depthMask(true)
             }
             translateZ(1.0)
-            fontRenderer.drawString(this, 0, 0, -1)
+
+            if (shadow) {
+                fontRenderer.drawStringWithShadow(this, 0f, 0f, -1)
+            } else {
+                fontRenderer.drawString(this, 0, 0, -1)
+            }
+
             translateZ(-1.0)
             GlStateManager.disableTexture2D()
         }
 
-        fun String.drawCentered(seeThruBlocks: Boolean = false) {
+        fun String.drawCentered(seeThruBlocks: Boolean = false, shadow: Boolean = false) {
             GlStateManager.enableTexture2D()
             if (seeThruBlocks) {
                 GlStateManager.depthMask(false)
@@ -80,7 +92,13 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
                 GlStateManager.depthMask(true)
             }
             translateZ(1.0)
-            fontRenderer.drawString(this, -this.width() / 2, 0, -1)
+
+            if (shadow) {
+                fontRenderer.drawStringWithShadow(this, -this.width() / 2f, 0f, -1)
+            } else {
+                fontRenderer.drawString(this, -this.width() / 2, 0, -1)
+            }
+
             translateZ(-1.0)
             GlStateManager.disableTexture2D()
         }

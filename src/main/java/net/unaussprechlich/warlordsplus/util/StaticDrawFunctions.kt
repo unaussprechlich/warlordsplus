@@ -6,7 +6,6 @@ import net.unaussprechlich.renderapi.RenderBasics.Companion.draw
 import net.unaussprechlich.renderapi.RenderBasics.Companion.drawCentered
 import net.unaussprechlich.renderapi.RenderBasics.Companion.renderRect
 import net.unaussprechlich.renderapi.util.MinecraftOpenGlStuff.Companion.translate
-import net.unaussprechlich.renderapi.util.MinecraftOpenGlStuff.Companion.translateX
 
 fun <T : RenderBasics> T.drawSr(sr: Int?) {
     val color = when {
@@ -29,5 +28,4 @@ fun <T : RenderBasics> T.drawSr(sr: Int?) {
     translate(31.0, 0.0, -1.0)
     "${EnumChatFormatting.WHITE}${sr ?: "-"}".drawCentered()
     translate(-33.0, -2.0, 0.0)
-
 }

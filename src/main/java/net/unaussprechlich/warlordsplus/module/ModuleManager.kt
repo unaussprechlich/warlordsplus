@@ -33,9 +33,10 @@ object ModuleManager {
             add(RenderStatsInGame)
             add(StatsDisplayAfterGame)
             add(PowerUpTimer)
-            //add(StatsInLobby)
+            add(StatsInLobby)
+            add(ChatNotifications)
             //add(Troll)
-            //add(Meme)
+            add(Meme)
         }
     }
 

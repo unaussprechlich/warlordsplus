@@ -10,12 +10,16 @@ enum class Sounds(val soundName: String) {
     MEME_T1CHRISTMAS("meme.t1Christmas"),
     MEME_T1GTFO("meme.t1GTFO"),
     MEME_T1KS("meme.t1KS"),
+    MEME_CHATURBATE_TIP_SOUND_SMALL("meme.chaturbate_tip_sound_small"),
+    MEME_CHATURBATE_TIP_SOUND_TINY("meme.chaturbate_tip_sound_tiny"),
+    MEME_MARIO_TEXT_MESSAGE("meme.mario_text_message"),
     MEME_T1THANKSFORGOLD("meme.t1ThanksForGold");
 }
 
 object SoundManager {
 
     fun playSound(sound: Sounds) {
+        println("Playing sound: " + WarlordsPlus.MODID + ":" + sound.soundName)
         Minecraft.getMinecraft().thePlayer.playSound(WarlordsPlus.MODID + ":" + sound.soundName, 10f, 1f)
     }
 

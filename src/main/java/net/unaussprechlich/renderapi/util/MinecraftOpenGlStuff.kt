@@ -97,17 +97,90 @@ abstract class MinecraftOpenGlStuff {
         fun rotateZ(angle: Float) =
             GlStateManager.rotate(angle, 0.0f, 0.0f, 1.0f)
 
-        fun translate(x: Double, y: Double, z: Double) =
+        //Translate
+
+        fun translate(x: Int, y: Int = 0, z: Int = 0) =
+            GlStateManager.translate(x.toFloat(), y.toFloat(), z.toFloat())
+
+        fun translate(x: Double, y: Double = 0.0, z: Double = 0.0) =
             GlStateManager.translate(x, y, z)
+
+        inline fun translate(x: Int, y: Int = 0, z: Int = 0, fn: () -> Unit) {
+            translate(x, y, z)
+            fn()
+            translate(-x, -y, -z)
+        }
+
+        inline fun translate(x: Double, y: Double = 0.0, z: Double = 0.0, fn: () -> Unit) {
+            GlStateManager.translate(x, y, z)
+            fn()
+            GlStateManager.translate(-x, -y, -z)
+        }
+
+        inline fun translate(x: Int, y: Int, fn: () -> Unit) {
+            translate(x, y, 0)
+            fn()
+            translate(-x, -y, 0)
+        }
+
+        inline fun translate(x: Double, y: Double, fn: () -> Unit) {
+            GlStateManager.translate(x, y, 0.0)
+            fn()
+            GlStateManager.translate(-x, -y, 0.0)
+        }
+
+        fun translateX(x: Int) = translate(x, 0, 0)
+
+        inline fun translateX(x: Int, fn: () -> Unit) {
+            translate(x, 0, 0)
+            fn()
+            translate(-x, 0, 0)
+        }
 
         fun translateX(x: Double) =
             GlStateManager.translate(x, 0.0, 0.0)
 
+        inline fun translateX(x: Double, fn: () -> Unit) {
+            GlStateManager.translate(x, 0.0, 0.0)
+            fn()
+            GlStateManager.translate(-x, 0.0, 0.0)
+        }
+
+        fun translateY(y: Int) =
+            translate(0, -y, 0)
+
+        inline fun translateY(y: Int, fn: () -> Unit) {
+            translate(0, y, 0)
+            fn()
+            translate(0, -y, 0)
+        }
+
         fun translateY(y: Double) =
             GlStateManager.translate(0.0, -y, 0.0)
 
+        inline fun translateY(y: Double, fn: () -> Unit) {
+            GlStateManager.translate(0.0, y, 0.0)
+            fn()
+            GlStateManager.translate(0.0, -y, 0.0)
+        }
+
+        fun translateZ(z: Int) =
+            translate(0, 0, z)
+
+        inline fun translateZ(z: Int, fn: () -> Unit) {
+            translate(0, 0, z)
+            fn()
+            translate(0, 0, -z)
+        }
+
         fun translateZ(z: Double) =
             GlStateManager.translate(0.0, 0.0, z)
+
+        inline fun translateZ(z: Double, fn: () -> Unit) {
+            GlStateManager.translate(0.0, 0.0, z)
+            fn()
+            GlStateManager.translate(0.0, 0.0, -z)
+        }
 
         fun scale(amount: Double) =
             GlStateManager.scale(amount, amount, -amount)
