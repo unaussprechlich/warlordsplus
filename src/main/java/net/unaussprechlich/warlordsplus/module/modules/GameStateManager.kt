@@ -92,8 +92,13 @@ object GameStateManager : IModule {
         try {
             //00:00 - 13:23
             if (isIngame) {
-                val time = scoreboardNames[9].removeFormatting().substring(13)
-                return time.substring(0, 2).toInt()
+                if (isTDM) {
+                    val time = scoreboardNames[6].removeFormatting().substring(13)
+                    return time.substring(0, 2).toInt()
+                } else if (isCTF) {
+                    val time = scoreboardNames[9].removeFormatting().substring(13)
+                    return time.substring(0, 2).toInt()
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()

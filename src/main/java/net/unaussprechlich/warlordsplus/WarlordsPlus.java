@@ -11,9 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.unaussprechlich.eventbus.ForgeEventProcessor;
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler;
 import net.unaussprechlich.warlordsplus.module.ModuleManager;
-import net.unaussprechlich.warlordsplus.util.commands.ChangeTargetCommand;
-import net.unaussprechlich.warlordsplus.util.commands.GetPlayerStatsCommand;
-import net.unaussprechlich.warlordsplus.util.commands.SetWinLossCommand;
+import net.unaussprechlich.warlordsplus.util.commands.*;
 
 
 @SideOnly(Side.CLIENT)
@@ -58,6 +56,9 @@ public class WarlordsPlus {
         ClientCommandHandler.instance.registerCommand(new ChangeTargetCommand());
         ClientCommandHandler.instance.registerCommand(new GetPlayerStatsCommand());
         ClientCommandHandler.instance.registerCommand(new SetWinLossCommand());
+        ClientCommandHandler.instance.registerCommand(new SetKillDeathCommand());
+        ClientCommandHandler.instance.registerCommand(new GetEndGameStatsCommand());
+
     }
 
 }

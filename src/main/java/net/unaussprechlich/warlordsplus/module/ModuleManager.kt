@@ -20,7 +20,6 @@ object ModuleManager {
             add(EasyConfigHandler)
             add(ScoreboardManager)
             add(GameStateManager)
-            add(Meme)
             add(DamageAndHealParser)
             add(KillAssistParser)
             add(FlagTakenDetector)
@@ -35,6 +34,9 @@ object ModuleManager {
             add(StatsDisplayAfterGame)
             add(PowerUpTimer)
             add(StatsInLobby)
+            add(ChatNotifications)
+            //add(Troll)
+            add(Meme)
         }
     }
 

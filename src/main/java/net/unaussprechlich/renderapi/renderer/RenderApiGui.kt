@@ -14,8 +14,6 @@ import org.lwjgl.opengl.GL11
 abstract class RenderApiGui<GuiE : RenderGameOverlayEvent> : RenderApi<GuiE>() {
 
     override fun setupRender(e: GuiE) {
-
-
         GlStateManager.pushMatrix()
         //GlStateManager.pushAttrib()
         GlStateManager.disableLighting()
@@ -40,7 +38,6 @@ abstract class RenderApiGui<GuiE : RenderGameOverlayEvent> : RenderApi<GuiE>() {
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
         //GlStateManager.popAttrib()
         GlStateManager.popMatrix()
-
     }
 
     companion object {
@@ -89,7 +86,7 @@ abstract class RenderApiGui<GuiE : RenderGameOverlayEvent> : RenderApi<GuiE>() {
         val yTop: Int
             get() = 0
 
-        protected fun drawItemStackWithText(id: Int, meta: Int, overlay: String?) {
+        fun drawItemStackWithText(id: Int, meta: Int, overlay: String?) {
             GlStateManager.enableBlend()
             RenderHelper.enableStandardItemLighting()
             GlStateManager.color(0.0f, 0.0f, 32.0f)

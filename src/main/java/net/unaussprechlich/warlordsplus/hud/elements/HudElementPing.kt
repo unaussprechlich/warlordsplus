@@ -13,13 +13,18 @@ class HudElementPing : AbstractHudElement() {
     private var lastValidPing = 0
 
     override fun getRenderString(): Array<String> {
-        if (System.currentTimeMillis() >= nextTimeStamp) updatePing()
-        if (Minecraft.getMinecraft().currentServerData.pingToServer > 0) lastValidPing =
-            Minecraft.getMinecraft().currentServerData.pingToServer.toInt()
-
         val renderStrings = ArrayList<String>()
-        if (showPing)
-            renderStrings.add("Ping: $lastValidPing")
+
+        try {
+            if (System.currentTimeMillis() >= nextTimeStamp) updatePing()
+            if (Minecraft.getMinecraft().currentServerData.pingToServer > 0) lastValidPing =
+                Minecraft.getMinecraft().currentServerData.pingToServer.toInt()
+            if (showPing)
+                renderStrings.add("Ping: $lastValidPing")
+        } catch (e: Exception) {
+            renderStrings.add("Ping: NULL")
+        }
+
         return renderStrings.toTypedArray()
     }
 
@@ -38,9 +43,9 @@ class HudElementPing : AbstractHudElement() {
 
         private fun updatePing() {
             nextTimeStamp = System.currentTimeMillis() + pingCooldwonMs
-            if (Minecraft.getMinecraft().currentServerData == null) return
 
             try {
+                if (Minecraft.getMinecraft().currentServerData == null) return
                 GlobalScope.launch {
                     try {
                         serverPinger.ping(Minecraft.getMinecraft().currentServerData)

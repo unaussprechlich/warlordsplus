@@ -33,7 +33,7 @@ object StatsInLobby : IModule, RenderApi.World() {
             scaleForText()
             scale(.95)
             renderRectXCentered(130.0, 300.0, Colors.DEF, 255, -0.5)
-            translateX(-61.0)
+            translateX(-58.0)
             translateY(-4.0)
             drawSr(data.warlordsSr.sR)
             translateY(-11.5)

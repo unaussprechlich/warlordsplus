@@ -7,6 +7,8 @@ import io.ktor.client.features.json.serializer.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -86,12 +88,18 @@ object StatsLoader : IModule {
     fun containsPlayer(name: String) = playerCache.containsKey(name)
     fun getPlayer(name: String) = playerCache[name]
 
+    private val currentlyLoadingMutex = Mutex()
+    private val currentlyLoading: MutableSet<String> = mutableSetOf()
+
     private suspend fun statsRequest(name: String): PlayerCacheEntry {
         try {
             val result = client.get<WarlordsSrApiResponse>("https://warlordssr.unaussprechlich.net/api/$name")
             println("Loaded results for $name")
 
-            currentlyLoading.removeIf { it == name }
+            currentlyLoadingMutex.withLock {
+                if (currentlyLoading.contains(name))
+                    currentlyLoading.remove(name)
+            }
 
             return PlayerCacheEntry(result.data!!)
         } catch (e: ServerResponseException) {
@@ -105,14 +113,18 @@ object StatsLoader : IModule {
         return PlayerCacheEntry(null)
     }
 
-    private val currentlyLoading: ArrayList<String> = arrayListOf()
-
     private fun loadPlayer(name: String) {
         if (playerCache.containsKey(name)) return
-        if (currentlyLoading.contains(name)) return
-        currentlyLoading.add(name)
+
         GlobalScope.launch {
-            playerCache[name] = statsRequest(name)
+            currentlyLoadingMutex.lock()
+            if (!currentlyLoading.contains(name)) {
+                currentlyLoading.add(name)
+                currentlyLoadingMutex.unlock()
+                playerCache[name] = statsRequest(name)
+            } else {
+                currentlyLoadingMutex.unlock()
+            }
         }
     }
 

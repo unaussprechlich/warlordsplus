@@ -4,16 +4,17 @@ import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.unaussprechlich.warlordsplus.OtherPlayers
-import net.unaussprechlich.warlordsplus.Player
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
+import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 
-object ScoreboardComponent : AbstractRenderComponent() {
+object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.ElementType.PLAYER_LIST, true) {
+
     @ConfigPropertyBoolean(
         category = CCategory.SCOREBOARD,
         id = "showNewScoreboard",
@@ -38,16 +39,16 @@ object ScoreboardComponent : AbstractRenderComponent() {
     )
     var setScaleCTFTDM = 100
 
-    override fun render(e: RenderGameOverlayEvent.Pre) {
+    override fun onRender(event: RenderGameOverlayEvent.Pre) {
         try {
             if (showNewScoreboard)
-                renderPlayerlist()
+                renderPlayerList()
         } catch (e: Throwable) {
             e.printStackTrace()
         }
     }
 
-    fun renderPlayerlist() {
+    private fun renderPlayerList() {
 
         if (thePlayer == null) return
 
@@ -61,7 +62,6 @@ object ScoreboardComponent : AbstractRenderComponent() {
         val mostKillsRed = teamRed.map { it.kills }.sorted().reversed()[0]
         val mostKillsBlue = teamBlue.map { it.kills }.sorted().reversed()[0]
 
-        var offset = 0
         val w = 443
 
         val yStart = 25
@@ -75,27 +75,35 @@ object ScoreboardComponent : AbstractRenderComponent() {
             xStart = (xCenter + 50 - setScaleDOM / 2 - ((w * setScaleDOM.toDouble() / 100 / 2)).toInt())
         }
 
-        val xLevel = xStart + 2
-        val xName = xLevel + 53
-        val xKills = xName + 100
-        val xDeaths = xKills + 30
-        val xDone = xDeaths + 40
-        val xReceived = xDone + 60
-        val xKilled = xReceived + 60
+        val xLevel = 2.0
+        val xName = 53.0
+        val xKills = 100.0
+        val xDeaths = 30.0
+        val xDone = 40.0
+        val xReceived = 60.0
+        val xKilled = 60.0
 
+        translate(xStart, yStart)
 
+        renderRect(w, 13, Colors.DEF)
 
-        drawHeaderRect(xStart, yStart, w, 13)
-        drawString(xName, yStart + 3, "Name", false)
-        drawString(xKills, yStart + 3, "Kills", false)
-        drawString(xDeaths, yStart + 3, "Deaths", false)
-        drawString(xDone, yStart + 3, "Given", false)
-        drawString(xReceived, yStart + 3, "Received", false)
-        drawString(xKilled, yStart + 3, "DiedToYou/StoleKill", false)
+        glMatrix {
+            translateY(-3)
+            translateX(xLevel + xName)
+            "Name".draw()
+            translateX(xKills)
+            "Kills".draw()
+            translateX(xDeaths)
+            "Deaths".draw()
+            translateX(xDone)
+            "Given".draw()
+            translateX(xReceived)
+            "Received".draw()
+            translateX(xKilled)
+            "DiedToYou/StoleKill".draw()
+        }
 
-        drawBackgroundRect(xStart, yStart + 14, w, 10 * teamBlue.size)
-
-        val renderLine = fun(p: Player) {
+        fun renderLine(p: net.unaussprechlich.warlordsplus.Player) {
 
             fun hasMostKills(): Boolean {
                 return if (p.team == TeamEnum.BLUE)
@@ -121,62 +129,58 @@ object ScoreboardComponent : AbstractRenderComponent() {
                 return ""
             }
 
-            drawString(
-                xLevel, yStart + 15 + offset,
-                "${if (p.left) "LEFT" else ""}${EnumChatFormatting.GOLD}" +
-                        "${p.warlord.shortName + EnumChatFormatting.RESET} ${if (p.prestiged) EnumChatFormatting.GOLD else ""}" +
-                        "Lv${if (p.level < 10) "0${p.level}" else p.level}"
-            )
-            drawString(
-                xName, yStart + 15 + offset,
-                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color}${p.name}"
-            )
-            drawString(
-                xKills, yStart + 15 + offset,
-                "${if (hasMostKills()) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}"
-            )
-
-            drawString(
-                xDeaths, yStart + 15 + offset,
-                "${if (hasMostDeaths()) EnumChatFormatting.DARK_RED else EnumChatFormatting.RESET}${p.deaths}"
-            )
-
-            if (ThePlayer.team == p.team) {
-                drawString(
-                    xDone, yStart + 15 + offset,
-                    "${EnumChatFormatting.GREEN}${p.healingReceived}"
-                )
-
-                drawString(
-                    xReceived, yStart + 15 + offset,
-                    "${EnumChatFormatting.DARK_GREEN}${p.healingDone}"
-                )
-                drawString(
-                    xKilled, yStart + 15 + offset,
-                    "${EnumChatFormatting.RESET}${p.stoleKill}"
-                )
-            } else {
-                drawString(
-                    xDone, yStart + 15 + offset,
-                    "${EnumChatFormatting.RED}${p.damageReceived}"
-                )
-                drawString(
-                    xReceived, yStart + 15 + offset,
-                    "${EnumChatFormatting.DARK_RED}${p.damageDone}"
-                )
-                drawString(
-                    xKilled, yStart + 15 + offset,
-                    "${EnumChatFormatting.RESET}${p.died}"
-                )
+            fun isPrestige(): String {
+                return if (p.prestiged)
+                    EnumChatFormatting.GOLD.toString()
+                else ""
             }
 
-            offset += 10
+            fun level(level: Int): String {
+                return if (level < 10)
+                    "0${level}"
+                else level.toString()
+            }
+
+            glMatrix {
+                translateX(xLevel)
+                "${if (p.left) "LEFT" else ""}${EnumChatFormatting.GOLD}${p.warlord.shortName}${EnumChatFormatting.RESET} ${isPrestige()}Lv${
+                    level(
+                        p.level
+                    )
+                }".draw()
+                translateX(xName)
+                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color.toString()}${p.name}".draw()
+                translateX(xKills)
+                "${if (hasMostKills()) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}".draw()
+                translateX(xDeaths)
+                "${if (hasMostDeaths()) EnumChatFormatting.DARK_RED else EnumChatFormatting.RESET}${p.deaths}".draw()
+                if (ThePlayer.team == p.team) {
+                    translateX(xDone)
+                    "${EnumChatFormatting.GREEN}${p.healingReceived}".draw()
+                    translateX(xReceived)
+                    "${EnumChatFormatting.DARK_GREEN}${p.healingDone}".draw()
+                    translateX(xKilled)
+                    "${EnumChatFormatting.RESET}${p.stoleKill}".draw()
+                } else {
+                    translateX(xDone)
+                    "${EnumChatFormatting.RED}${p.damageReceived}".draw()
+                    translateX(xReceived)
+                    "${EnumChatFormatting.DARK_RED}${p.damageDone}".draw()
+                    translateX(xKilled)
+                    "${EnumChatFormatting.RESET}${p.died}".draw()
+                }
+            }
+
+            translateY(-10)
         }
-        teamBlue.forEach(renderLine)
 
-        offset += 1
-        drawBackgroundRect(xStart, yStart + 14 + offset, w, 10 * teamRed.size)
+        translateY(-14)
+        renderRect(w, 10 * teamBlue.size, Colors.DEF, 100)
+        teamBlue.forEach(::renderLine)
 
-        teamRed.forEach(renderLine)
+        translateY(-1)
+        renderRect(w, 10 * teamRed.size, Colors.DEF, 100)
+
+        teamRed.forEach(::renderLine)
     }
 }
