@@ -239,7 +239,7 @@ object ChatDetector : IModule {
     ) : IEvent {
 
         fun isThePlayer(): Boolean {
-            return Minecraft.getMinecraft().thePlayer != null && playerName != Minecraft.getMinecraft().thePlayer.name
+            return Minecraft.getMinecraft().thePlayer != null && playerName == Minecraft.getMinecraft().thePlayer.name
         }
     }
 }
