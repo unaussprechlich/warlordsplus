@@ -24,7 +24,8 @@ object Meme : IModule {
             playSoundForEvent(Sounds.MEME_CHATURBATE_TIP_SOUND_TINY)
         }
         EventBus.register<ChatDetector.ChatMessageEvent> {
-            playSoundForEvent(Sounds.MEME_MARIO_TEXT_MESSAGE)
+            if (!it.isThePlayer())
+                playSoundForEvent(Sounds.MEME_MARIO_TEXT_MESSAGE)
         }
     }
 

@@ -60,7 +60,7 @@ public enum CCategory {
     ENUM_GENERAL("General", EnumChatFormatting.GOLD),
     ENUM_HUD("Hud", EnumChatFormatting.GOLD),
     ENUM_STATS("Stats", EnumChatFormatting.GOLD),
-    ENUM_CHAT("Hud", EnumChatFormatting.WHITE),
+    ENUM_CHAT("Chat", EnumChatFormatting.WHITE),
     ENUM_RENDERER("Renderer", EnumChatFormatting.GOLD),
     ENUM_SCOREBOARD("Scoreboard", EnumChatFormatting.GOLD),
     ENUM_MODULES("Modules", EnumChatFormatting.GOLD);

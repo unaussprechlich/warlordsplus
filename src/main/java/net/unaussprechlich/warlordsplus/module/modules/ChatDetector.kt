@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
+import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
@@ -229,11 +230,16 @@ object ChatDetector : IModule {
     }
 
     data class ChatMessageEvent(
-            val type: ChatType,
-            val playerName: String,
-            val playerNameFormatted: String,
-            val message: String,
-            val rank: HypixelRank,
-            val time: Long = System.currentTimeMillis()
-    ) : IEvent
+        val type: ChatType,
+        val playerName: String,
+        val playerNameFormatted: String,
+        val message: String,
+        val rank: HypixelRank,
+        val time: Long = System.currentTimeMillis()
+    ) : IEvent {
+
+        fun isThePlayer(): Boolean {
+            return Minecraft.getMinecraft().thePlayer != null && playerName != Minecraft.getMinecraft().thePlayer.name
+        }
+    }
 }
