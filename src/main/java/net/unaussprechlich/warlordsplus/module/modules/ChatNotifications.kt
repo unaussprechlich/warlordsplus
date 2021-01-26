@@ -19,8 +19,7 @@ object ChatNotifications : RenderApi.Gui<RenderGameOverlayEvent.Chat>(), IModule
 
     init {
         EventBus.register<ChatDetector.ChatMessageEvent> {
-            if (isEnabled && Minecraft.getMinecraft().thePlayer != null && it.playerName != Minecraft.getMinecraft().thePlayer.name) {
-                println(it)
+            if (!it.isThePlayer()) {
                 messages.add(it)
             }
         }
@@ -83,9 +82,9 @@ object ChatNotifications : RenderApi.Gui<RenderGameOverlayEvent.Chat>(), IModule
         category = CCategory.CHAT,
         id = "duration",
         comment = "The duartion in ms for showing the chat notification",
-        def = 2000
+        def = 10000
     )
-    var duration = 2000
+    var duration = 10000
 
     @ConfigPropertyInt(
         category = CCategory.CHAT,
