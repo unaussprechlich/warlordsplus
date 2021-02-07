@@ -12,6 +12,7 @@ enum class Sounds(val soundName: String) {
     MEME_T1KS("meme.t1KS"),
     MEME_CHATURBATE_TIP_SOUND_SMALL("meme.chaturbate_tip_sound_small"),
     MEME_CHATURBATE_TIP_SOUND_TINY("meme.chaturbate_tip_sound_tiny"),
+    MEME_GRINDR_NOTIFICATION("meme.grindr_notification"),
     MEME_MARIO_TEXT_MESSAGE("meme.mario_text_message"),
     MEME_T1THANKSFORGOLD("meme.t1ThanksForGold");
 }

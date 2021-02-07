@@ -27,9 +27,9 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
-        maven { url = uri("http://files.minecraftforge.net/maven") }
+        maven { url = uri("https://files.minecraftforge.net/maven") }
         maven {
-            setUrl("http://repo.spongepowered.org/maven")
+            setUrl("https://repo.spongepowered.org/maven")
         }
         maven {
             setUrl("https://plugins.gradle.org/m2/")
@@ -99,12 +99,12 @@ configure<ForgeExtension> {
 repositories {
     jcenter()
     mavenCentral()
-    "http://dl.bintray.com/kotlin".let {
+    "https://dl.bintray.com/kotlin".let {
         maven { setUrl("$it/ktor") }
         maven { setUrl("$it/kotlinx") }
     }
     maven {
-        setUrl("http://repo.spongepowered.org/maven")
+        setUrl("https://repo.spongepowered.org/maven")
     }
     maven {
         setUrl("https://plugins.gradle.org/m2/")

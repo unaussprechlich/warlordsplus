@@ -25,7 +25,7 @@ object Meme : IModule {
         }
         EventBus.register<ChatDetector.ChatMessageEvent> {
             if (!it.isThePlayer())
-                playSoundForEvent(Sounds.MEME_MARIO_TEXT_MESSAGE)
+                playSoundForEvent(Sounds.MEME_GRINDR_NOTIFICATION)
         }
     }
 
