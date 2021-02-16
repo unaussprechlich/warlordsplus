@@ -200,13 +200,17 @@ object OtherPlayers : IModule {
 
     @SubscribeEvent
     fun onPlayerName(e: PlayerEvent.NameFormat) {
-        playersMap.filter {
-            it.value.spec != SpecsEnum.NONE
-        }.filter {
-            it.value.name == e.username
-        }.forEach {
-            e.displayname =
-                "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.icon}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}"
+        if (GameStateManager.isIngame) {
+            playersMap.filter {
+                it.value.spec != SpecsEnum.NONE
+            }.filter {
+                it.value.name == e.username
+            }.forEach {
+                e.displayname =
+                    "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.icon}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}"
+            }
+        } else {
+            e.displayname = e.username
         }
     }
 

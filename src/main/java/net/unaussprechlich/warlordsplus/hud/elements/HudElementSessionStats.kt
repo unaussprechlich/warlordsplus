@@ -11,6 +11,7 @@ import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 import net.unaussprechlich.warlordsplus.util.removeFormatting
+import net.unaussprechlich.warlordsplus.util.removeSpaces
 import java.util.*
 import kotlin.math.abs
 
@@ -32,7 +33,7 @@ object HudElementSessionStats : AbstractHudElement() {
                 totalPlayerDeaths++
             else if (message.startsWith("You killed"))
                 totalPlayerKills++
-            else if (message.startsWith("Winner")) {
+            else if (message.removeSpaces().startsWith("Winner")) {
                 if (message.contains("BLU") && ThePlayer.team == TeamEnum.BLUE || message.contains("RED") && ThePlayer.team == TeamEnum.RED) {
                     totalWins++
                     if (streak > 0)
