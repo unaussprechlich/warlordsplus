@@ -10,8 +10,8 @@ import net.unaussprechlich.warlordsplus.util.contain
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import java.util.regex.Pattern
 
-private const val SOMEBODY_DID = "\u00AB"
-private const val YOU_DID = "\u00BB"
+const val SOMEBODY_DID = "\u00AB"
+const val YOU_DID = "\u00BB"
 
 private val numberPattern = Pattern.compile("\\s[0-9]+\\s")
 
@@ -149,7 +149,7 @@ object DamageAndHealParser : IModule {
                     }
                 }
 
-                SkillDetector.handleSkillUsed(msg, amount, isCrit, msg.contains("absorbed"))
+                //SkillDetector.handleSkillUsed(msg, amount, isCrit, msg.contains("absorbed"))
             }
         } catch (throwable: Throwable) {
 

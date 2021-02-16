@@ -14,12 +14,36 @@ enum class WarlordsEnum(val classname: String, val shortName: String) {
     NONE("NONE", "NONE")
 }
 
-enum class SpecsEnum(val classname: String) {
-    AVENGER("Avenger"), CRUSADER("Crusader"), PROTECTOR("Protector"),
-    BERSERKER("Berserker"), DEFENDER("Defender"), REVENANT("Revenant"),
-    PYROMANCER("Pyromancer"), CRYOMANCER("Cryomancer"), AQUAMANCER("Aquamancer"),
-    THUNDERLORD("Thunderlord"), SPIRITGUARD("Spiritguard"), EARTHWARDEN("Earthwarden"),
-    NONE("NONE")
+enum class SpecsEnum(val classname: String, val weapon: String, val icon: String) {
+    AVENGER("Avenger", "Avenger", "${EnumChatFormatting.RED}銌"), CRUSADER(
+        "Crusader",
+        "Crusader",
+        "${EnumChatFormatting.YELLOW}鉰"
+    ),
+    PROTECTOR("Protector", "Protector", "${EnumChatFormatting.GREEN}銀"),
+    BERSERKER("Berserker", "35%", "${EnumChatFormatting.RED}銌"), DEFENDER(
+        "Defender",
+        "25%",
+        "${EnumChatFormatting.YELLOW}鉰"
+    ),
+    REVENANT("Revenant", "crippling", "${EnumChatFormatting.GREEN}銀"),
+    PYROMANCER("Pyromancer", "Fireball", "${EnumChatFormatting.RED}銌"), CRYOMANCER(
+        "Cryomancer",
+        "Frostbolt",
+        "${EnumChatFormatting.YELLOW}鉰"
+    ),
+    AQUAMANCER("Aquamancer", "Water", "${EnumChatFormatting.GREEN}銀"),
+    THUNDERLORD("Thunderlord", "Lightning", "${EnumChatFormatting.RED}銌"), SPIRITGUARD(
+        "Spiritguard",
+        "Fallen",
+        "${EnumChatFormatting.YELLOW}鉰"
+    ),
+    EARTHWARDEN("Earthwarden", "Earthen", "${EnumChatFormatting.GREEN}銀"),
+    NONE("NONE", "NONE", "")
+}
+
+enum class SpecsEnumSuper() {
+    DAMAGE, TANK, HEALER, NONE
 }
 
 enum class HypixelRank(val rankName: String, rankNameFormatted: String, color: ChatFormatting) {

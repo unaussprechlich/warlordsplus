@@ -7,10 +7,14 @@ import net.minecraftforge.client.event.RenderPlayerEvent
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
+import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.InputEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
+import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
+import net.unaussprechlich.warlordsplus.module.modules.HotKeyCanceler
 
 object ForgeEventProcessor {
 
@@ -85,5 +89,20 @@ object ForgeEventProcessor {
     fun onPlayerEvent(event: EntityJoinWorldEvent) {
         if (!isDesiredGame) return
         EventBus.post(event)
+    }
+
+    @SubscribeEvent
+    fun onPlayerName(event: PlayerEvent.NameFormat) {
+        if (!isDesiredGame) return
+        OtherPlayers.onPlayerName(event)
+        EventBus.post(event)
+    }
+
+    @SubscribeEvent
+    fun onKeyPress(event: InputEvent.KeyInputEvent?) {
+        if (!isDesiredGame) return
+        HotKeyCanceler.onKeyPress(event)
+        EventBus.post(event)
+
     }
 }

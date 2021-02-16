@@ -51,6 +51,9 @@ object ThePlayer : IModule {
     //bers + defender
     var waveCounter = 0
 
+    //bers
+    var lustCounter = 0
+
     //defender
     var interveneCounter = 0
 
@@ -68,7 +71,7 @@ object ThePlayer : IModule {
     var breathCounter = 0
 
     //pyro
-    var ballCounter = 0
+    var FireballCounter = 0
     var burstCounter = 0
 
     //aqua

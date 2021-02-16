@@ -70,7 +70,8 @@ data class KillEvent(
     val player: String,
     val deathPlayer: String,
     val time: Int,
-    val respawn: Int
+    val respawn: Int,
+    val sysTime: Long = System.currentTimeMillis()
 ) : IEvent
 
 data class KillRatioEvent(

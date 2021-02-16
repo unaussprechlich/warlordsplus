@@ -89,5 +89,59 @@
         "stream": true
       }
     ]
+  },
+  "meme.1": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/1",
+        "stream": true
+      }
+    ]
+  },
+  "meme.2": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/2",
+        "stream": true
+      }
+    ]
+  },
+  "meme.3": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/3",
+        "stream": true
+      }
+    ]
+  },
+  "meme.4": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/4",
+        "stream": true
+      }
+    ]
+  },
+  "meme.5": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/5",
+        "stream": true
+      }
+    ]
+  },
+  "meme.cyt0": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/cyt0",
+        "stream": true
+      }
+    ]
   }
 }

@@ -5,7 +5,6 @@ import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.IChatComponent
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.ThePlayer
@@ -15,6 +14,7 @@ import net.unaussprechlich.warlordsplus.hud.elements.HudElementKillParticipation
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementTotalKills
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.TeamEnum
+import net.unaussprechlich.warlordsplus.util.removeSpaces
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.StringSelection
@@ -32,15 +32,17 @@ object StatsDisplayAfterGame : IModule {
             showStats = true
             counter = 0
         }
+        EventBus.register(::onChat)
     }
 
-    @SubscribeEvent
-    fun onChatMessage(e: ClientChatReceivedEvent) {
+    fun onChat(e: ClientChatReceivedEvent) {
         if (GameStateManager.notIngame) return
+
         val message = e.message.formattedText
-        if (message.contains("Winner")) {
+        if (e.message.unformattedText.removeSpaces().startsWith("Winner")) {
             redKills = HudElementTotalKills.redKills
             blueKills = HudElementTotalKills.blueKills
+            //addStatsToClipboard(message)
         }
         if (GameStateManager.isIngame) {
             if (message.contains("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")) {
@@ -52,7 +54,6 @@ object StatsDisplayAfterGame : IModule {
                         Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
                         displayScoreboard()
                         Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
-                        addStatsToClipboard(message)
                         showStats = false
                     }
                     counter = 0
@@ -62,7 +63,6 @@ object StatsDisplayAfterGame : IModule {
     }
 
     fun displayStats() {
-        val player: String = Minecraft.getMinecraft().thePlayer.displayNameString
         val stats: IChatComponent = ChatComponentText(
             "${EnumChatFormatting.GRAY}Hits: ${EnumChatFormatting.WHITE}${HudElementHitCounter.totalHits}${EnumChatFormatting.GOLD} Energy Given ${EnumChatFormatting.WHITE}${ThePlayer.energyGivenCounter}${EnumChatFormatting.GOLD} Energy Received ${EnumChatFormatting.WHITE}${ThePlayer.energyReceivedCounter}${"\n"}" +
                     "${EnumChatFormatting.GOLD}KP: ${EnumChatFormatting.WHITE}${(HudElementKillParticipation.playerKills / HudElementKillParticipation.numberOfTeamKills.toDouble() * 100).roundToInt()}%${EnumChatFormatting.BLUE} Blue Kills: ${EnumChatFormatting.WHITE}$blueKills${EnumChatFormatting.RED} Red Kills: ${EnumChatFormatting.WHITE}$redKills${"\n"}" +
@@ -86,13 +86,13 @@ object StatsDisplayAfterGame : IModule {
             if (ThePlayer.team == TeamEnum.BLUE) {
                 Minecraft.getMinecraft().thePlayer.addChatMessage(
                     ChatComponentText(
-                        "${EnumChatFormatting.WHITE}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${EnumChatFormatting.BLUE}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.healingReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_GREEN}${player.healingDone}${EnumChatFormatting.WHITE}"
+                        "${EnumChatFormatting.WHITE}${player.warlord.shortName}${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${player.spec.icon} ${EnumChatFormatting.BLUE}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.healingReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_GREEN}${player.healingDone}${if (player.picks > 0) "${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GOLD}Picks: ${EnumChatFormatting.GREEN}${player.picks}" else ""}${if (player.caps > 0) " ${EnumChatFormatting.WHITE}- ${EnumChatFormatting.GOLD}Caps: ${EnumChatFormatting.RED}${player.caps}" else ""}${if (player.returns > 0) " ${EnumChatFormatting.WHITE}- ${EnumChatFormatting.GOLD}Returns: ${EnumChatFormatting.BLUE}${player.returns}" else ""}"
                     )
                 )
             } else {
                 Minecraft.getMinecraft().thePlayer.addChatMessage(
                     ChatComponentText(
-                        "${EnumChatFormatting.WHITE}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${EnumChatFormatting.BLUE}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.RED}${player.damageReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_RED}${player.damageDone}${EnumChatFormatting.WHITE}"
+                        "${EnumChatFormatting.WHITE}${player.warlord.shortName}${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${player.spec.icon} ${EnumChatFormatting.BLUE}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.RED}${player.damageReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_RED}${player.damageDone}${if (player.picks > 0) "${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GOLD}Picks: ${EnumChatFormatting.GREEN}${player.picks}" else ""}${if (player.caps > 0) " ${EnumChatFormatting.WHITE}- ${EnumChatFormatting.GOLD}Caps: ${EnumChatFormatting.RED}${player.caps}" else ""}${if (player.returns > 0) " ${EnumChatFormatting.WHITE}- ${EnumChatFormatting.GOLD}Returns: ${EnumChatFormatting.BLUE}${player.returns}" else ""}"
                     )
                 )
             }
@@ -103,13 +103,13 @@ object StatsDisplayAfterGame : IModule {
             if (ThePlayer.team == TeamEnum.RED) {
                 Minecraft.getMinecraft().thePlayer.addChatMessage(
                     ChatComponentText(
-                        "${EnumChatFormatting.WHITE}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${EnumChatFormatting.RED}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.healingReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_GREEN}${player.healingDone}${EnumChatFormatting.WHITE}"
+                        "${EnumChatFormatting.WHITE}${player.warlord.shortName}${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${player.spec.icon} ${EnumChatFormatting.RED}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.healingReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_GREEN}${if (player.picks > 0) "${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GOLD}Picks: ${EnumChatFormatting.GREEN}${player.picks}" else ""}${if (player.caps > 0) " ${EnumChatFormatting.WHITE}- ${EnumChatFormatting.GOLD}Caps: ${EnumChatFormatting.BLUE}${player.caps}" else ""}${if (player.returns > 0) " ${EnumChatFormatting.WHITE}- ${EnumChatFormatting.GOLD}Returns: ${EnumChatFormatting.RED}${player.returns}" else ""}"
                     )
                 )
             } else {
                 Minecraft.getMinecraft().thePlayer.addChatMessage(
                     ChatComponentText(
-                        "${EnumChatFormatting.WHITE}${player.warlord.shortName} ${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${EnumChatFormatting.RED}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.RED}${player.damageReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_RED}${player.damageDone}${EnumChatFormatting.WHITE}"
+                        "${EnumChatFormatting.WHITE}${player.warlord.shortName}${if (player.prestiged) EnumChatFormatting.GOLD else EnumChatFormatting.WHITE}[${player.level}]${player.spec.icon} ${EnumChatFormatting.RED}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GREEN}${player.kills}${EnumChatFormatting.WHITE}:${EnumChatFormatting.RED}${player.deaths}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.RED}${player.damageReceived}${EnumChatFormatting.WHITE}:${EnumChatFormatting.DARK_RED}${player.damageDone}${if (player.picks > 0) "${EnumChatFormatting.WHITE} - ${EnumChatFormatting.GOLD}Picks: ${EnumChatFormatting.GREEN}${player.picks}" else ""}${if (player.caps > 0) " ${EnumChatFormatting.WHITE}- ${EnumChatFormatting.GOLD}Caps: ${EnumChatFormatting.BLUE}${player.caps}" else ""}${if (player.returns > 0) " ${EnumChatFormatting.WHITE}- ${EnumChatFormatting.GOLD}Returns: ${EnumChatFormatting.RED}${player.returns}" else ""}"
                     )
                 )
             }
@@ -124,30 +124,30 @@ object StatsDisplayAfterGame : IModule {
         val teamRed = players.filter { it.team == TeamEnum.RED }.sortedByDescending { it.level }
         var endGameStats = "Winners:"
         if (winner.contains("BLU")) {
-            EnumChatFormatting.BLUE
             teamBlue.forEach {
-                endGameStats += "${it.name}, "
+                endGameStats += "${it.uuid.toString().replace("-", "")}[${it.kills}:${it.deaths}],"
             }
-            EnumChatFormatting.RED
-            endGameStats += "\nLosers:"
+            endGameStats = endGameStats.substring(0, endGameStats.length - 1)
+            endGameStats += "Losers:"
             teamRed.forEach {
-                endGameStats += "${it.name}, "
+                endGameStats += "${it.uuid.toString().replace("-", "")}[${it.kills}:${it.deaths}],"
             }
         } else {
-            EnumChatFormatting.RED
             teamRed.forEach {
-                endGameStats += "${it.name}, "
+                endGameStats += "${it.uuid.toString().replace("-", "")}[${it.kills}:${it.deaths}],"
             }
-            EnumChatFormatting.BLUE
-            endGameStats += "\n\nLosers:"
+            endGameStats = endGameStats.substring(0, endGameStats.length - 1)
+            endGameStats += "Losers:"
             teamBlue.forEach {
-                endGameStats += "${it.name}, "
+                endGameStats += "${it.uuid.toString().replace("-", "")}[${it.kills}:${it.deaths}],"
             }
         }
+        endGameStats = endGameStats.substring(0, endGameStats.length - 1)
+        println(endGameStats)
         val selection = StringSelection(endGameStats)
         val clipboard: Clipboard = Toolkit.getDefaultToolkit().systemClipboard
         clipboard.setContents(selection, selection)
-        Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText(endGameStats))
     }
+
 
 }

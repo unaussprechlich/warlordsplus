@@ -49,7 +49,7 @@ class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
                     )
                     val stats: IChatComponent = ChatComponentText(
                         "${EnumChatFormatting.GOLD}General Stats: \n" +
-                                (if (data.playername == "sumSmash") "  D=====8\n" else "") +
+                                (if (data.playername == "sumSmash") "  Leaderboard Player BTW\n" else "") +
                                 "${EnumChatFormatting.GRAY}  SR: ${EnumChatFormatting.WHITE}${data.warlordsSr?.sR}\n" +
                                 "${EnumChatFormatting.GRAY}  Plays: ${EnumChatFormatting.WHITE}${data.warlordsSr?.plays}\n" +
                                 "${EnumChatFormatting.GRAY}  Afks/Leaves: ${EnumChatFormatting.WHITE}${data.warlordsHypixel?.penalty}\n" +

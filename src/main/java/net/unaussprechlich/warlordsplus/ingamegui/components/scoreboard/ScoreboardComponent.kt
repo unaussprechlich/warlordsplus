@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.ingamegui.components.scoreboard
 
+import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderGameOverlayEvent
@@ -143,11 +144,11 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
 
             glMatrix {
                 translateX(xLevel)
-                "${if (p.left) "LEFT" else ""}${EnumChatFormatting.GOLD}${p.warlord.shortName}${EnumChatFormatting.RESET} ${isPrestige()}Lv${
+                "${if (p.left) "LEFT" else ""}${EnumChatFormatting.GOLD}${p.warlord.shortName}${EnumChatFormatting.RESET} ${isPrestige()}${
                     level(
                         p.level
                     )
-                }".draw()
+                } ${if (p.name == Minecraft.getMinecraft().thePlayer.displayNameString) ThePlayer.spec.icon else p.spec.icon}".draw()
                 translateX(xName)
                 "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color.toString()}${p.name}".draw()
                 translateX(xKills)
@@ -175,12 +176,13 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         }
 
         translateY(-14)
-        renderRect(w, 10 * teamBlue.size, Colors.DEF, 100)
+        renderRect(w, 10 * teamBlue.size + 1, Colors.DEF, 100)
+        translateY(-2)
         teamBlue.forEach(::renderLine)
 
         translateY(-1)
-        renderRect(w, 10 * teamRed.size, Colors.DEF, 100)
-
+        renderRect(w, 10 * teamRed.size + 1, Colors.DEF, 100)
+        translateY(-2)
         teamRed.forEach(::renderLine)
     }
 }

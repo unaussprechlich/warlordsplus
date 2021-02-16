@@ -34,6 +34,18 @@ object GameStateManager : IModule {
     var isDOM: Boolean = false
         private set
 
+    var inLobby: Boolean = false
+        private set
+
+    var previousSec: Int = -1
+        private set
+
+    var bluePoints: Int = 0
+        private set
+
+    var redPoints: Int = 0
+        private set
+
     init {
         EventBus.register<ClientChatReceivedEvent> {
             if (isWarlords || it.type == 0.toByte()) {
@@ -85,6 +97,25 @@ object GameStateManager : IModule {
                 } catch (e: Exception) {
                 }
             }
+            val currentSecond =
+                scoreboardNames[9].removeFormatting().substring(scoreboardNames[9].removeFormatting().length - 2)
+                    .toInt()
+            if (currentSecond != previousSec) {
+                EventBus.post(SecondEvent(currentSecond))
+                previousSec = currentSecond
+            }
+
+            bluePoints =
+                scoreboardNames[12].removeFormatting().substring(5, scoreboardNames[12].removeFormatting().indexOf("/"))
+                    .toInt()
+            redPoints =
+                scoreboardNames[11].removeFormatting().substring(5, scoreboardNames[11].removeFormatting().indexOf("/"))
+                    .toInt()
+        }
+        try {
+            inLobby = isWarlords && scoreboardNames[10].removeFormatting().contains("Map:")
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -97,7 +128,7 @@ object GameStateManager : IModule {
                     return time.substring(0, 2).toInt()
                 } else if (isCTF) {
                     val time = scoreboardNames[9].removeFormatting().substring(13)
-                    return time.substring(0, 2).toInt()
+                    //return time.substring(0, 2).toInt()
                 }
             }
         } catch (e: Exception) {
@@ -110,3 +141,4 @@ object GameStateManager : IModule {
 data class ResetEvent(val time: Long = System.currentTimeMillis()) : IEvent
 data class IngameChangedEvent(val ingame: Boolean) : IEvent
 data class RespawnEvent(val time: Long = System.currentTimeMillis()) : IEvent
+data class SecondEvent(val minute: Int) : IEvent

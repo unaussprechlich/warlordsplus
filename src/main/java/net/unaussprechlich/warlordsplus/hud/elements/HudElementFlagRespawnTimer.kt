@@ -4,16 +4,17 @@ import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.ThePlayer
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
+import net.unaussprechlich.warlordsplus.module.modules.SecondEvent
 import net.unaussprechlich.warlordsplus.util.TeamEnum
-import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
-import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
-class HudElementFlagRespawnTimer : AbstractHudElement(), IUpdateConsumer, IChatConsumer {
+object HudElementFlagRespawnTimer : AbstractHudElement() {
 
     var timer = 0
 
@@ -21,7 +22,23 @@ class HudElementFlagRespawnTimer : AbstractHudElement(), IUpdateConsumer, IChatC
         EventBus.register<ResetEvent> {
             timer = 0
         }
+        EventBus.register<ClientChatReceivedEvent> {
+            val message = it.message.formattedText.removeFormatting()
+            if (message.contains("has captured the")) {
+                if (ThePlayer.team == TeamEnum.BLUE && message.contains("RED") || ThePlayer.team == TeamEnum.RED && message.contains(
+                        "BLU"
+                    )
+                ) {
+                    timer = 14
+                }
+            }
+        }
+        EventBus.register<SecondEvent> {
+            if (timer >= 0)
+                timer--
+        }
     }
+
 
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
@@ -49,30 +66,14 @@ class HudElementFlagRespawnTimer : AbstractHudElement(), IUpdateConsumer, IChatC
     }
 
     override fun isEnabled(): Boolean {
-        return true
+        return show
     }
 
-    private var tick = 0
-    override fun update() {
-        tick = if (tick >= 20) {
-            0
-        } else {
-            tick++
-            return
-        }
-        if (timer >= 0)
-            timer--
-    }
-
-    override fun onChat(e: ClientChatReceivedEvent) {
-        val message = e.message.formattedText
-        if (message.contains("captured")) {
-            if (ThePlayer.team == TeamEnum.BLUE && message.contains("RED") || ThePlayer.team == TeamEnum.RED && message.contains(
-                    "BLU"
-                )
-            ) {
-                timer = 16
-            }
-        }
-    }
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showFlagRespawn",
+        comment = "Enable or disable the Flag respawn counter",
+        def = true
+    )
+    var show = true
 }
