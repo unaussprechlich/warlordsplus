@@ -12,19 +12,10 @@ import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
  */
 object HudElementSpec : AbstractHudElement() {
 
-    @ConfigPropertyBoolean(
-        category = CCategory.HUD,
-        id = "showSpec",
-        comment = "Display the Spec",
-        def = true
-    )
-    var showSpec = false
-
-
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
-        if (showSpec)
-            renderStrings.add("Spec: " + ThePlayer.spec.classname)
+
+        renderStrings.add("Spec: " + ThePlayer.spec.classname)
 
         return renderStrings.toTypedArray()
     }
@@ -34,6 +25,14 @@ object HudElementSpec : AbstractHudElement() {
     }
 
     override fun isEnabled(): Boolean {
-        return GameStateManager.isIngame
+        return showSpec
     }
+
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showSpec",
+        comment = "Display the Spec",
+        def = false
+    )
+    var showSpec = false
 }

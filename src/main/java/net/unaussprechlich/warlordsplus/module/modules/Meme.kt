@@ -4,6 +4,7 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.renderapi.util.MinecraftOpenGlStuff
 import net.unaussprechlich.eventbus.ForgeEventProcessor
 import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.config.CCategory
@@ -15,6 +16,9 @@ import net.unaussprechlich.warlordsplus.util.Sounds
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.tan
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.tan
 
 object Meme : IModule {
 
@@ -22,9 +26,9 @@ object Meme : IModule {
         category = CCategory.MODULES,
         id = "disableMemeModule",
         comment = "Disable the MemeModule.",
-        def = false
+        def = true
     )
-    var disabled = false
+    var disabled = true
 
     init {
         EventBus.register<EnergyReceivedEvent> {
@@ -34,6 +38,7 @@ object Meme : IModule {
             if (!it.isThePlayer())
                 playSoundForEvent(Sounds.MEME_GRINDR_NOTIFICATION)
         }
+        EventBus.register(::onChat)
     }
 
     private fun playSoundForEvent(sound: Sounds) {
@@ -75,8 +80,8 @@ object Meme : IModule {
         }
     }
 
-    @SubscribeEvent
-    fun onChatMessage(event: ClientChatReceivedEvent) {
+
+    fun onChat(event: ClientChatReceivedEvent) {
         try {
             if (event.message.unformattedText.contains("ricky")) {
                 WorldRenderer.runningFor = 213
@@ -89,7 +94,31 @@ object Meme : IModule {
         if (disabled || GameStateManager.notIngame) return
 
         try {
-            val message = event.message.unformattedText
+            val message = event.message.unformattedText.removeFormatting()
+
+            if (message.contains("killed cyt0_")) {
+                SoundManager.playSound(Sounds.MEME_CYT0)
+            }
+
+            if (message.startsWith("The gates will fall")) {
+                when {
+                    event.message.unformattedText.contains("5") -> {
+                        SoundManager.playSound(Sounds.MEME_5)
+                    }
+                    event.message.unformattedText.contains("4") -> {
+                        SoundManager.playSound(Sounds.MEME_4)
+                    }
+                    event.message.unformattedText.contains("3") -> {
+                        SoundManager.playSound(Sounds.MEME_3)
+                    }
+                    event.message.unformattedText.contains("2") -> {
+                        SoundManager.playSound(Sounds.MEME_2)
+                    }
+                    event.message.unformattedText.contains("1") -> {
+                        SoundManager.playSound(Sounds.MEME_1)
+                    }
+                }
+            }
 
             if (
                 message.startsWith("[BLU] ")
@@ -127,6 +156,24 @@ object Meme : IModule {
                 //TODO intervene -> Chaturbate small
                 //TODO energy recieved -> Chaturbate tiny
             }
+/*
+            if(event.message.unformattedText.removeSpaces().startsWith("Winner")) {
+                if(message.contains("BLU") && ThePlayer.team == TeamEnum.BLUE || message.contains("RED") && ThePlayer.team == TeamEnum.RED) {
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("LUCK WIN"))
+                } else {
+                    when((Math.random() * 6).toInt()) {
+                        0 -> Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("YOU'RE SO DOGSHIT LMAO"))
+                        1 -> Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("HOLY FUCK YOU SUCK"))
+                        2 -> Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("AREN'T YOU A LEADERBOARD PLAYER?"))
+                        3 -> Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("????????????"))
+                        4 -> Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("QUIT THE GAME"))
+                        5 -> Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("YOU FUCKING BOT"))
+
+                    }
+                }
+            }
+ */
+
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
         }

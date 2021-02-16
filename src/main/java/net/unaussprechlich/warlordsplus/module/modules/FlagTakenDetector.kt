@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.util.contain
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object FlagTakenDetector : IModule {
@@ -16,18 +15,29 @@ object FlagTakenDetector : IModule {
         if (!GameStateManager.isWarlords || e.type == 2.toByte()) return
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
-            if (textMessage.contains("picked up the")) {
-                var player = textMessage.substring(0, textMessage.indexOf("picked") - 1)
-                EventBus.post(FlagTakenEvent(player, true))
-            } else if (textMessage.contains("has dropped the")) {
-                var player = textMessage.substring(0, textMessage.indexOf("has") - 1)
-                EventBus.post(FlagTakenEvent(player, false))
-            } else if (textMessage.contains("captured")) {
-                var player = textMessage.substring(0, textMessage.indexOf("captured") - 1)
-                EventBus.post(FlagTakenEvent(player, false))
-            } else if (textMessage.contains("Sending you to")) {
-                var player = Minecraft.getMinecraft().thePlayer.displayNameString;
-                EventBus.post(FlagTakenEvent(player, false));
+            when {
+                textMessage.contains("picked up the") -> {
+                    var player = textMessage.substring(0, textMessage.indexOf("picked") - 1)
+                    EventBus.post(FlagTakenEvent(player, true))
+                    EventBus.post(FlagPickedEvent(player))
+                }
+                textMessage.contains("has dropped the") -> {
+                    var player = textMessage.substring(0, textMessage.indexOf("has") - 1)
+                    EventBus.post(FlagTakenEvent(player, false))
+                }
+                textMessage.contains("captured") -> {
+                    var player = textMessage.substring(0, textMessage.indexOf("captured") - 1)
+                    EventBus.post(FlagTakenEvent(player, false))
+                    EventBus.post(FlagCapturedEvent(player))
+                }
+                textMessage.contains("returned") -> {
+                    var player = textMessage.substring(0, textMessage.indexOf("has") - 1)
+                    EventBus.post(FlagReturnedEvent(player))
+                }
+                textMessage.contains("Sending you to") -> {
+                    var player = Minecraft.getMinecraft().thePlayer.displayNameString;
+                    EventBus.post(FlagTakenEvent(player, false));
+                }
             }
 
         } catch (throwable: Throwable) {
@@ -40,4 +50,16 @@ object FlagTakenDetector : IModule {
 data class FlagTakenEvent(
     var playerWithFlag: String,
     var hasFlag: Boolean
+) : IEvent
+
+data class FlagPickedEvent(
+    var playerThatPicked: String
+) : IEvent
+
+data class FlagCapturedEvent(
+    var playerThatCaptured: String
+) : IEvent
+
+data class FlagReturnedEvent(
+    var playerThatReturned: String
 ) : IEvent

@@ -30,7 +30,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
             renderStrings.add(EnumChatFormatting.DARK_RED.toString() + "Damage Taken: " + damageTakenCounter)
         if (showHealingReceived)
             renderStrings.add(EnumChatFormatting.DARK_GREEN.toString() + "Healing Received: " + healingReceivedCounter)
-        if (showEnergyGiven && spec == SpecsEnum.CRUSADER) //specialization === Player.Classes.CRUSADER
+        if (showEnergyGiven && spec == SpecsEnum.CRUSADER)
             renderStrings.add(EnumChatFormatting.YELLOW.toString() + "Energy Given: " + energyGivenCounter)
         if (showEnergyReceived && energyReceivedCounter > 0)
             renderStrings.add(EnumChatFormatting.YELLOW.toString() + "Energy Received: " + energyReceivedCounter)

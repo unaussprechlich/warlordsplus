@@ -34,18 +34,31 @@ object GameStateManager : IModule {
     var isDOM: Boolean = false
         private set
 
+    var inLobby: Boolean = false
+        private set
+
+    var previousSec: Int = -1
+        private set
+
+    var bluePoints: Int = 0
+        private set
+
+    var redPoints: Int = 0
+        private set
+
     init {
         EventBus.register<ClientChatReceivedEvent> {
-            if (isWarlords || it.type == 0.toByte()) {
-                try {
-                    val message = it.message.formattedText
-                    if (message == "§r§eThe gates will fall in §r§c5 §r§eseconds!§r" || message == "§r§eThe gates will fall in §r§c1 §r§eseconds!§r") {
-                        EventBus.post(ResetEvent())
-                    }
-                } catch (throwable: Throwable) {
-                    throwable.printStackTrace()
+            //if (it.isChat()) {
+            try {
+                val message = it.message.unformattedText.removeFormatting()
+                if (message == "The gates will fall in 5 seconds!" || message == "The gates will fall in 1 second!") {
+                    EventBus.post(ResetEvent())
+                    println("RESET EVENT")
                 }
+            } catch (throwable: Throwable) {
+                throwable.printStackTrace()
             }
+            //}
         }
     }
 
@@ -56,35 +69,76 @@ object GameStateManager : IModule {
             && !Minecraft.getMinecraft().isGamePaused
             && Minecraft.getMinecraft().thePlayer != null
         ) return
+        try {
+            isWarlords = scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))
 
-        isWarlords = scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))
+            val ingame = (isWarlords
+                    && (scoreboardNames.size == 15 || scoreboardNames.size == 12)
+                    && (scoreboardNames[9].contains("Wins in:")
+                    || scoreboardNames[9].contains("Time Left:")
+                    || scoreboardNames[6].contains("Wins in:")
+                    || scoreboardNames[6].contains("Time Left:")))
 
-        val ingame = (isWarlords
-                && (scoreboardNames.size == 15 || scoreboardNames.size == 12)
-                && (scoreboardNames[9].contains("Wins in:")
-                || scoreboardNames[9].contains("Time Left:")
-                || scoreboardNames[6].contains("Wins in:")
-                || scoreboardNames[6].contains("Time Left:")))
+            if (ingame != isIngame) {
+                isIngame = ingame
+                EventBus.post(IngameChangedEvent(isIngame))
+            }
 
-        if (ingame != isIngame) {
-            isIngame = ingame
-            EventBus.post(IngameChangedEvent(isIngame))
-        }
+            if (isIngame) {
+                isCTF = scoreboardNames[7].removeFormatting().contains("RED Flag")
+                isTDM = scoreboardNames[9].removeFormatting().contains("BLU:")
+                isDOM = scoreboardNames[11].removeFormatting().contain("/2000")
 
-        if (isIngame) {
-            isCTF = scoreboardNames[7].removeFormatting().contains("RED Flag")
-            isTDM = scoreboardNames[9].removeFormatting().contains("BLU:")
-            isDOM = scoreboardNames[11].removeFormatting().contain("/2000")
-
-            if (isCTF) {
-                val colon = scoreboardNames[9].lastIndexOf(":")
-                val after = scoreboardNames[9].substring(colon + 1, colon + 3)
-                try {
-                    if (after.toInt() % 12 == 0)
-                        EventBus.post(RespawnEvent())
-                } catch (e: Exception) {
+                if (isCTF) {
+                    val colon = scoreboardNames[9].lastIndexOf(":")
+                    val after = scoreboardNames[9].substring(colon + 1, colon + 3)
+                    try {
+                        if (after.toInt() % 12 == 0)
+                            EventBus.post(RespawnEvent())
+                    } catch (e: Exception) {
+                    }
+                }
+                if (isCTF || isDOM) {
+                    bluePoints =
+                        scoreboardNames[12].removeFormatting()
+                            .substring(5, scoreboardNames[12].removeFormatting().indexOf("/"))
+                            .toInt()
+                    redPoints =
+                        scoreboardNames[11].removeFormatting()
+                            .substring(5, scoreboardNames[11].removeFormatting().indexOf("/"))
+                            .toInt()
+                    val currentSecond =
+                        scoreboardNames[9].removeFormatting()
+                            .substring(scoreboardNames[9].removeFormatting().length - 2)
+                            .toInt()
+                    if (currentSecond != previousSec) {
+                        EventBus.post(SecondEvent(currentSecond))
+                        previousSec = currentSecond
+                    }
+                }
+                if (isTDM) {
+                    bluePoints =
+                        scoreboardNames[9].removeFormatting()
+                            .substring(5, scoreboardNames[9].removeFormatting().indexOf("/"))
+                            .toInt()
+                    redPoints =
+                        scoreboardNames[8].removeFormatting()
+                            .substring(5, scoreboardNames[8].removeFormatting().indexOf("/"))
+                            .toInt()
+                    val currentSecond =
+                        scoreboardNames[6].removeFormatting()
+                            .substring(scoreboardNames[6].removeFormatting().length - 2)
+                            .toInt()
+                    if (currentSecond != previousSec) {
+                        EventBus.post(SecondEvent(currentSecond))
+                        previousSec = currentSecond
+                    }
                 }
             }
+            inLobby = isWarlords && scoreboardNames[10].removeFormatting().contains("Map:")
+
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -97,7 +151,7 @@ object GameStateManager : IModule {
                     return time.substring(0, 2).toInt()
                 } else if (isCTF) {
                     val time = scoreboardNames[9].removeFormatting().substring(13)
-                    return time.substring(0, 2).toInt()
+                    //return time.substring(0, 2).toInt()
                 }
             }
         } catch (e: Exception) {
@@ -110,3 +164,4 @@ object GameStateManager : IModule {
 data class ResetEvent(val time: Long = System.currentTimeMillis()) : IEvent
 data class IngameChangedEvent(val ingame: Boolean) : IEvent
 data class RespawnEvent(val time: Long = System.currentTimeMillis()) : IEvent
+data class SecondEvent(val minute: Int) : IEvent

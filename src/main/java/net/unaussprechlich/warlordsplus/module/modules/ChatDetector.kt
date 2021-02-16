@@ -181,9 +181,6 @@ object ChatDetector : IModule {
 
 
     fun onChat(e: ClientChatReceivedEvent) {
-        if (e.type == 2.toByte()) return
-        println(e.message.formattedText)
-
         val msg = e.message.formattedText.removeFormatting()
 
         chatDetectors.filter {

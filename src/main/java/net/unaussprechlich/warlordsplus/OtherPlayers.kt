@@ -1,10 +1,12 @@
 package net.unaussprechlich.warlordsplus
 
 import net.minecraft.client.Minecraft
+import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.util.EnumChatFormatting
+import net.minecraftforge.event.entity.player.PlayerEvent
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
-import net.unaussprechlich.warlordsplus.hud.elements.KPEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.*
 import net.unaussprechlich.warlordsplus.util.*
@@ -12,24 +14,26 @@ import java.util.*
 import java.util.regex.Pattern
 
 
-//TODO [ ] find out/think about what spec they are playing :) Just write a comment with some ideas
-open class Player(val name: String, val uuid : UUID) {
+open class Player(val name: String, val uuid: UUID) {
 
     var kills: Int = 0
     var deaths: Int = 0
-    var killParticipation: Int = 0
-    var damageDone : Int = 0
-    var damageReceived : Int = 0
+    var damageDone: Int = 0
+    var damageReceived: Int = 0
     var healingDone: Int = 0
     var healingReceived: Int = 0
     var warlord = WarlordsEnum.NONE
     var spec = SpecsEnum.NONE
+    var superSpec = SpecsEnumSuper.NONE
     var team = TeamEnum.NONE
     var level = 0
     var prestiged: Boolean = false
     var hasFlag: Boolean = false
     var died: Int = 0
     var stoleKill: Int = 0
+    var picks: Int = 0
+    var returns: Int = 0
+    var caps: Int = 0
     var left: Boolean = false
     var isDead: Boolean = false
     var respawn: Int = -1
@@ -57,11 +61,6 @@ object OtherPlayers : IModule {
             }
             if (it.player in playersMap)
                 playersMap[it.player]!!.kills++
-        }
-
-        EventBus.register<KPEvent> {
-            if (it.player in playersMap)
-                playersMap[it.player]!!.killParticipation = it.amount
         }
 
         EventBus.register<HealingReceivedEvent> {
@@ -96,6 +95,18 @@ object OtherPlayers : IModule {
             playersMap[it.otherPlayer]!!.stoleKill += 1
         }
 
+        EventBus.register<FlagPickedEvent> {
+            playersMap[it.playerThatPicked]!!.picks += 1
+        }
+
+        EventBus.register<FlagCapturedEvent> {
+            playersMap[it.playerThatCaptured]!!.caps += 1
+        }
+
+        EventBus.register<FlagReturnedEvent> {
+            playersMap[it.playerThatReturned]!!.returns += 1
+        }
+
         /* TODO
         EventBus.register<PlayerLeaveEvent> {
             playersMap[it.player]!!.left = it.left
@@ -103,8 +114,7 @@ object OtherPlayers : IModule {
 
     }
 
-    fun getPlayersForNetworkPlayers(networkPlayers : Collection<NetworkPlayerInfo>): Collection<Player> {
-
+    fun getPlayersForNetworkPlayers(networkPlayers: Collection<NetworkPlayerInfo>): Collection<Player> {
         //Filter out if we already have the Player stored
         networkPlayers.filter {
 
@@ -117,8 +127,8 @@ object OtherPlayers : IModule {
                 player.playerTeam.colorPrefix contain it.shortName
             }
 
-        //Create the Player
-        }.map{
+            //Create the Player
+        }.map {
 
             val player = Player(it.gameProfile.name, it.gameProfile.id)
 
@@ -136,28 +146,71 @@ object OtherPlayers : IModule {
 
             //checking if player is prestige
             player.prestiged = it.playerTeam.colorSuffix.contains("${EnumChatFormatting.GOLD}")
-
-            val newMap: MutableMap<String, Player> = mutableMapOf()
-            newMap.putAll(playersMap)
-            for (networkPlayer in networkPlayers) {
-                if (newMap.containsKey(networkPlayer.gameProfile.name)) {
-                    newMap.remove(networkPlayer.gameProfile.name)
-                }
-            }
-            for (mutableEntry in newMap) {
-                if (mutableEntry.value.name == player.name)
-                    player.left = true
-            }
-
             return@map player
 
         }.forEach { playersMap[it.name] = it }
+
+        playersMap.filter {
+            it.value.spec == SpecsEnum.NONE
+        }.forEach { player ->
+            val players = Minecraft.getMinecraft().theWorld.playerEntities
+            players.filter {
+                it is EntityOtherPlayerMP
+                it.name == player.value.name
+            }.filter {
+                it.inventory.firstEmptyStack == 1
+            }.filter {
+                it.inventory.mainInventory[0].tagCompound.toString().contains("Crit")
+            }.map {
+                if (it.inventory.mainInventory[0].tagCompound.toString().contains("LEFT-CLICK")) {
+                    if (player.value.warlord == WarlordsEnum.WARRIOR) {
+                        player.value.spec = SpecsEnum.values()
+                            .firstOrNull { w -> it.inventory.mainInventory[0].tagCompound.toString() contain w.weapon }
+                            ?: SpecsEnum.NONE
+                    } else {
+                        player.value.spec = SpecsEnum.values()
+                            .firstOrNull { w -> it.inventory.mainInventory[0].chatComponent.formattedText contain w.weapon }
+                            ?: SpecsEnum.NONE
+                    }
+                } else if (it.inventory.mainInventory[0].tagCompound.toString().contains("RIGHT-CLICK")) {
+                    player.value.spec = SpecsEnum.values()
+                        .firstOrNull { w -> it.inventory.mainInventory[0].chatComponent.formattedText contain w.classname }
+                        ?: SpecsEnum.NONE
+                }
+            }
+
+            playersMap.filter {
+                it.value.spec != SpecsEnum.NONE
+                it.value.superSpec == SpecsEnumSuper.NONE
+            }.forEach {
+                val player = it.value
+                player.superSpec =
+                    if (player.spec == SpecsEnum.AVENGER || player.spec == SpecsEnum.BERSERKER || player.spec == SpecsEnum.PYROMANCER || player.spec == SpecsEnum.THUNDERLORD) SpecsEnumSuper.DAMAGE
+                    else if (player.spec == SpecsEnum.CRUSADER || player.spec == SpecsEnum.DEFENDER || player.spec == SpecsEnum.CRYOMANCER || player.spec == SpecsEnum.SPIRITGUARD) SpecsEnumSuper.TANK
+                    else if (player.spec == SpecsEnum.PROTECTOR || player.spec == SpecsEnum.REVENANT || player.spec == SpecsEnum.AQUAMANCER || player.spec == SpecsEnum.EARTHWARDEN) SpecsEnumSuper.HEALER
+                    else SpecsEnumSuper.NONE
+            }
+
+        }
+
 
         //Return the players :)
         return playersMap.values
     }
 
-    fun getPlayerForName(name : String) : Player?{
+    @SubscribeEvent
+    fun onPlayerName(e: PlayerEvent.NameFormat) {
+        playersMap.filter {
+            it.value.spec != SpecsEnum.NONE
+        }.filter {
+            it.value.name == e.username
+        }.forEach {
+            e.displayname =
+                "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.icon}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}"
+        }
+    }
+
+    fun getPlayerForName(name: String): Player? {
         return playersMap[name]
     }
 }

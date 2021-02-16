@@ -9,14 +9,14 @@ object IngameGuiManager : IModule{
 
     init {
         with(components) {
-            //add(HealthComponent)
-            //add(EnergyComponent)
-            //add(RedThingyComponent)
-            //add(BlueThingyComponent)
-            //add(PurpleThingyComponent)
-            //add(YellowThingyComponent)
-            //add(HorseComponent)
-            //add(WhoIsWinningComponent)
+//            add(HealthComponent)
+//            add(EnergyComponent)
+//            add(RedThingyComponent)
+//            add(BlueThingyComponent)
+//            add(PurpleThingyComponent)
+//            add(YellowThingyComponent)
+//            add(HorseComponent)
+//            add(WhoIsWinningComponent)
             add(ScoreboardComponent)
         }
     }
