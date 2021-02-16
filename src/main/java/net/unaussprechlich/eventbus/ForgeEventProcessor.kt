@@ -25,6 +25,8 @@ object ForgeEventProcessor {
         MinecraftForge.EVENT_BUS.register(this)
     }
 
+    private var tick = 0
+
     @SubscribeEvent
     fun onClientTickEvent(event: TickEvent.ClientTickEvent) {
         if (event.phase == TickEvent.Phase.END
@@ -34,8 +36,15 @@ object ForgeEventProcessor {
             && isDesiredGame
         ) {
             EventBus.post(event)
+            tick++
+            if (tick == 20) {
+                tick = 0
+                EventBus.post(EverySecond(event))
+            }
         }
     }
+
+    data class EverySecond(val event: TickEvent.ClientTickEvent)
 
     @SubscribeEvent
     fun onRenderWorldLastEvent(event: RenderWorldLastEvent) {

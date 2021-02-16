@@ -93,6 +93,13 @@ configure<ForgeExtension> {
     runDir = "run"
     mappings = "stable_22"
 
+    coreMod = "net.unaussprechlich.mixin.CoreMod"
+
+    clientJvmArgs.add("-Dfml.coreMods.load=$coreMod")
+
+    clientRunArgs.add("--username=${System.getenv()["EMAIL"]}")
+    clientRunArgs.add("--password=${System.getenv()["PASSWORD"]}")
+
     replace(mapOf("@VERSION@" to modVersion))
 }
 
@@ -202,6 +209,14 @@ tasks {
         // copy everything else, thats not the mcmod.info
         from(mainSourceSet.resources.srcDirs) {
             exclude("mcmod.info")
+        }
+
+        //Copy resources if we are in local dev. ForgeGradle seems broken with modern IntelliJ
+        if (System.getenv()["RELEASE_VERSION"] == null) {
+            copy {
+                from("$projectDir/src/main/resources")
+                into("$projectDir/build/classes/java/main")
+            }
         }
     }
 

@@ -72,7 +72,7 @@ object PowerUpTimer : IModule, RenderApi.World() {
                 //translate(x, y, z)
                 translateToPos(it.x, it.y + 3, it.z)
                 autoRotate()
-                scaleForText()
+                scaleForWorldRendering()
                 scale(10.0)
                 "${it.respawnTimer / 20}".drawCentered(seeThruBlocks = true)
             }

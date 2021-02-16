@@ -30,7 +30,7 @@ object StatsInLobby : IModule, RenderApi.World() {
         glMatrix {
             translateToPos(-2518.1, 59.0, 744.5)
             rotateY(90.0f)
-            scaleForText()
+            scaleForWorldRendering()
             scale(.95)
             renderRectXCentered(130.0, 300.0, Colors.DEF, 255, -0.5)
             translateX(-58.0)
@@ -77,7 +77,7 @@ object StatsInLobby : IModule, RenderApi.World() {
         fun EntityArmorStand.renderClassStats(sr: Int?, wl: Double?, dhp: Int?, rank: Int?) {
             glMatrix {
                 translateToPos(this.posX, this.posY + 4, this.posZ)
-                scaleForText()
+                scaleForWorldRendering()
                 rotateY(-90.0f)
                 scale(1.025)
                 renderRectXCentered(70.0, 56.0, Colors.DEF, 255, -0.5)
@@ -150,7 +150,7 @@ object StatsInLobby : IModule, RenderApi.World() {
                         translateToPos(it.posX, it.posY + 1.2, it.posZ)
                         autoRotateX()
                         translate(3.0, 0.0, 0.0)
-                        scaleForText()
+                        scaleForWorldRendering()
                         scale(.95)
                         renderRect(90.0, 55.0, Colors.DEF, 255, -0.5)
                         translate(4.0, 4.0, 0.0)
@@ -171,7 +171,7 @@ object StatsInLobby : IModule, RenderApi.World() {
                     glMatrix {
                         translateToPos(it.posX - .25, it.posY + 1.25, it.posZ - 1.75)
                         autoRotate()
-                        scaleForText()
+                        scaleForWorldRendering()
                         scale(.95)
                         renderRectXCentered(75.0, 30.0, Colors.DEF, 100, -0.5)
                         translateX(-34.0)
@@ -187,7 +187,7 @@ object StatsInLobby : IModule, RenderApi.World() {
                     glMatrix {
                         translateToPos(it.posX - .25, it.posY + 1.25, it.posZ - 1.75)
                         autoRotate()
-                        scaleForText()
+                        scaleForWorldRendering()
                         scale(.95)
                         renderRectXCentered(82.0, 30.0, Colors.DEF, 100, -0.5)
                         translateX(-37.0)
@@ -203,7 +203,7 @@ object StatsInLobby : IModule, RenderApi.World() {
                     glMatrix {
                         translateToPos(it.posX, it.posY + 2, it.posZ)
                         autoRotate()
-                        scaleForText()
+                        scaleForWorldRendering()
                         scale(5.0)
                         translateY(18.5)
                         //renderRectXCentered(10.0, 15.0, Colors.DEF, 100, -0.5)

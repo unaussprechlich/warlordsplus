@@ -1,19 +1,86 @@
 package net.unaussprechlich.renderapi
 
+import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.client.renderer.OpenGlHelper
 import net.minecraft.client.renderer.WorldRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.util.ResourceLocation
+import net.unaussprechlich.renderapi.util.IResourceLocationProvider
 import net.unaussprechlich.renderapi.util.MinecraftOpenGlStuff
 import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.removeFormatting
+import org.lwjgl.opengl.GL11
 
 abstract class RenderBasics : MinecraftOpenGlStuff() {
 
     companion object {
 
-        fun scaleForText() =
+        /**
+         * Scale the renderer to be able to draw inside the world
+         */
+        fun scaleForWorldRendering() =
             GlStateManager.scale(-1.45 * 0.016666668f, -1.45 * 0.016666668f, 1.45 * 0.016666668f)
 
+        fun renderImage(
+            width: Int,
+            height: Int,
+            resourceLocationProvider: IResourceLocationProvider,
+            alpha: Int = 255,
+            z: Double = 0.0
+        ) = renderImage(width.toDouble(), height.toDouble(), resourceLocationProvider.getResourceLocation(), alpha, z)
+
+        fun renderImage(
+            width: Double,
+            height: Double,
+            resourceLocationProvider: IResourceLocationProvider,
+            alpha: Int = 255,
+            z: Double = 0.0
+        ) = renderImage(width, height, resourceLocationProvider.getResourceLocation(), alpha, z)
+
+
+        fun renderImage(
+            width: Double,
+            height: Double,
+            resourceLocation: ResourceLocation,
+            alpha: Int = 255,
+            z: Double = 0.0,
+            red: Int = 255,
+            green: Int = 255,
+            blue: Int = 255
+        ) {
+            if (alpha < 255) GlStateManager.depthMask(false)
+
+            Minecraft.getMinecraft().textureManager.bindTexture(resourceLocation)
+
+            OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 1)
+            GlStateManager.color(red / 1f, green / 1f, blue / 1f, alpha / 255f)
+            GlStateManager.enableBlend()
+            GlStateManager.enableTexture2D()
+
+            //Used to scale the image
+            val f = (1.0f / height).toFloat()
+            val f1 = (1.0f / width).toFloat()
+
+            worldrenderer.begin(
+                7,
+                DefaultVertexFormats.POSITION_TEX
+            )
+            worldrenderer.pos(0.0, 0.0, z).tex(0.0 * f1, 0.0 * f).endVertex()
+            worldrenderer.pos(0.0, height, z).tex(0.0 * f1, height * f).endVertex()
+            worldrenderer.pos(width, height, z).tex(width * f1, height * f).endVertex()
+            worldrenderer.pos(width, 0.0, z).tex(width * f1, 0.0 * f).endVertex()
+            tessellator.draw()
+
+            GlStateManager.disableTexture2D()
+            GlStateManager.disableBlend()
+
+            if (alpha < 255) GlStateManager.depthMask(true)
+        }
+
+        /**
+         * Draws a rectangle
+         */
         fun renderRect(width: Double, height: Double, color: Colors, alpha: Int = 255, z: Double = 0.0) {
             if (alpha < 255) GlStateManager.depthMask(false)
             worldrenderer.begin(
