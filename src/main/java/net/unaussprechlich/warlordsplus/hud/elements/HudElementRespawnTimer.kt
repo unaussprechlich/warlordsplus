@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
+import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.renderapi.RenderApi
@@ -9,6 +10,7 @@ import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
+import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardNames
 import net.unaussprechlich.warlordsplus.module.modules.SecondEvent
 
@@ -17,36 +19,40 @@ import net.unaussprechlich.warlordsplus.module.modules.SecondEvent
  * Description:
  */
 object HudElementRespawnTimer : AbstractHudElement() {
-    private var respawnTimer = 0
+    var respawnTimer = 0
 
     init {
         EventBus.register<SecondEvent> {
             respawnTimer--
-            val colon = scoreboardNames[9].lastIndexOf(":")
-            val after = scoreboardNames[9].substring(colon + 1, colon + 3)
-            if (respawnTimer < 0) respawnTimer = 0
-            try {
-                if (after.toInt() % 12 == 0) {
-                    respawnTimer = 12
+            if (GameStateManager.isCTF) {
+                val colon = scoreboardNames[9].lastIndexOf(":")
+                val after = scoreboardNames[9].substring(colon + 1, colon + 3)
+                if (respawnTimer < 0) respawnTimer = 0
+                try {
+                    if (after.toInt() % 12 == 0) {
+                        respawnTimer = 12
+                    }
+                } catch (e: Exception) {
+                    //respawnTimer = -1
                 }
-            } catch (e: Exception) {
-                //respawnTimer = -1
+            } else if (GameStateManager.isDOM) {
+                if (respawnTimer < 0)
+                    respawnTimer = 17
             }
-            if (!GameStateManager.isDOM) {
-                OtherPlayers.playersMap.forEach { (_, value) ->
-                    if (value.isDead) {
-                        if (value.respawn != -1) {
-                            value.respawn--
-                            if (value.respawn == 0) {
-                                value.isDead = false
-                                value.respawn = -1
-                            }
-                        }
-                        if (GameStateManager.isDOM)
+            OtherPlayers.playersMap.forEach { (_, value) ->
+                if (value.isDead) {
+                    if (value.respawn != -1) {
+                        value.respawn--
+                        if (value.respawn == 0) {
                             value.isDead = false
+                            value.respawn = -1
+                        }
                     }
                 }
             }
+        }
+        EventBus.register<ResetEvent> {
+            respawnTimer = 18
         }
         Renderer
     }
@@ -67,8 +73,26 @@ object HudElementRespawnTimer : AbstractHudElement() {
             glMatrix {
                 translateX(xCenter + 1)
                 translateY(-yCenter - 7)
-                if (respawnTimer != -1)
-                    respawnTimer.toString().drawCentered()
+                if (GameStateManager.isCTF) {
+                    when {
+                        respawnTimer < 5 -> "${EnumChatFormatting.RED}${respawnTimer}".drawCentered()
+                        respawnTimer < 8 -> "${EnumChatFormatting.YELLOW}${respawnTimer}".drawCentered()
+                        else -> "${EnumChatFormatting.GREEN}${respawnTimer}".drawCentered()
+                    }
+                } else if (GameStateManager.isDOM) {
+                    if (respawnTimer < 14) {
+                        if (respawnTimer < 8) {
+                            "${respawnTimer + 8}".drawCentered()
+                        } else
+                            "${respawnTimer}".drawCentered()
+                    } else {
+                        if (respawnTimer < 8)
+                            "${respawnTimer + 8}".drawCentered()
+                        else
+                            "${respawnTimer}".drawCentered()
+                    }
+                }
+
             }
         }
 

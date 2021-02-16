@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
+import net.unaussprechlich.warlordsplus.hud.elements.HudElementRespawnTimer
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
@@ -30,6 +31,12 @@ object KillAssistParser : IModule {
                 }
             } else if (GameStateManager.isTDM) {
                 respawn = 6
+            } else if (GameStateManager.isDOM) {
+                respawn = if (HudElementRespawnTimer.respawnTimer < 8) {
+                    HudElementRespawnTimer.respawnTimer + 8
+                } else {
+                    HudElementRespawnTimer.respawnTimer
+                }
             }
             when {
                 textMessage.contains("was killed by") -> {

@@ -50,14 +50,16 @@ object GameStateManager : IModule {
         EventBus.register<ClientChatReceivedEvent> {
             if (isWarlords || it.type == 0.toByte()) {
                 try {
-                    val message = it.message.formattedText
-                    if (message == "§r§eThe gates will fall in §r§c5 §r§eseconds!§r" || message == "§r§eThe gates will fall in §r§c1 §r§eseconds!§r") {
+                    val message = it.message.unformattedText.removeFormatting()
+                    println(message)
+                    if (message == "The gates will fall in 5 seconds!" || message == "The gates will fall in 1 second!") {
                         EventBus.post(ResetEvent())
+                        println("RESET EVENT")
                     }
                 } catch (throwable: Throwable) {
                     throwable.printStackTrace()
                 }
-            }
+            //}
         }
     }
 
@@ -96,6 +98,14 @@ object GameStateManager : IModule {
                         EventBus.post(RespawnEvent())
                 } catch (e: Exception) {
                 }
+                bluePoints =
+                    scoreboardNames[12].removeFormatting()
+                        .substring(5, scoreboardNames[12].removeFormatting().indexOf("/"))
+                        .toInt()
+                redPoints =
+                    scoreboardNames[11].removeFormatting()
+                        .substring(5, scoreboardNames[11].removeFormatting().indexOf("/"))
+                        .toInt()
             }
             val currentSecond =
                 scoreboardNames[9].removeFormatting().substring(scoreboardNames[9].removeFormatting().length - 2)
@@ -105,12 +115,7 @@ object GameStateManager : IModule {
                 previousSec = currentSecond
             }
 
-            bluePoints =
-                scoreboardNames[12].removeFormatting().substring(5, scoreboardNames[12].removeFormatting().indexOf("/"))
-                    .toInt()
-            redPoints =
-                scoreboardNames[11].removeFormatting().substring(5, scoreboardNames[11].removeFormatting().indexOf("/"))
-                    .toInt()
+
         }
         try {
             inLobby = isWarlords && scoreboardNames[10].removeFormatting().contains("Map:")
