@@ -32,17 +32,19 @@ object HudElementRespawnTimer : AbstractHudElement() {
             } catch (e: Exception) {
                 //respawnTimer = -1
             }
-            OtherPlayers.playersMap.forEach { (_, value) ->
-                if (value.isDead) {
-                    if (value.respawn != -1) {
-                        value.respawn--
-                        if (value.respawn == 0) {
-                            value.isDead = false
-                            value.respawn = -1
+            if (!GameStateManager.isDOM) {
+                OtherPlayers.playersMap.forEach { (_, value) ->
+                    if (value.isDead) {
+                        if (value.respawn != -1) {
+                            value.respawn--
+                            if (value.respawn == 0) {
+                                value.isDead = false
+                                value.respawn = -1
+                            }
                         }
+                        if (GameStateManager.isDOM)
+                            value.isDead = false
                     }
-                    if (GameStateManager.isDOM)
-                        value.isDead = false
                 }
             }
         }
