@@ -159,28 +159,28 @@ object OtherPlayers : IModule {
 
         playersMap.filter {
             it.value.spec == SpecsEnum.NONE
-        }.forEach {
+        }.forEach { player ->
             val players = Minecraft.getMinecraft().theWorld.playerEntities
             players.filter {
                 it is EntityOtherPlayerMP
+                it.name == player.value.name
             }.filter {
                 it.inventory.firstEmptyStack == 1
             }.filter {
                 it.inventory.mainInventory[0].tagCompound.toString().contains("Crit")
-            }.forEach {
-                val player = getPlayerForName(it.name)
+            }.map {
                 if (it.inventory.mainInventory[0].tagCompound.toString().contains("LEFT-CLICK")) {
-                    if (player?.warlord == WarlordsEnum.WARRIOR) {
-                        player.spec = SpecsEnum.values()
+                    if (player.value.warlord == WarlordsEnum.WARRIOR) {
+                        player.value.spec = SpecsEnum.values()
                             .firstOrNull { w -> it.inventory.mainInventory[0].tagCompound.toString() contain w.weapon }
                             ?: SpecsEnum.NONE
                     } else {
-                        player?.spec = SpecsEnum.values()
+                        player.value.spec = SpecsEnum.values()
                             .firstOrNull { w -> it.inventory.mainInventory[0].chatComponent.formattedText contain w.weapon }
                             ?: SpecsEnum.NONE
                     }
                 } else if (it.inventory.mainInventory[0].tagCompound.toString().contains("RIGHT-CLICK")) {
-                    player?.spec = SpecsEnum.values()
+                    player.value.spec = SpecsEnum.values()
                         .firstOrNull { w -> it.inventory.mainInventory[0].chatComponent.formattedText contain w.classname }
                         ?: SpecsEnum.NONE
                 }
@@ -207,17 +207,14 @@ object OtherPlayers : IModule {
 
     @SubscribeEvent
     fun onPlayerName(e: PlayerEvent.NameFormat) {
-        if (GameStateManager.isIngame) {
-            playersMap.filter {
-                it.value.spec != SpecsEnum.NONE
-            }.forEach {
-                e.displayname =
-                    "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.icon}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}"
-            }
-        } else {
-            e.displayname = e.username
+        playersMap.filter {
+            it.value.spec != SpecsEnum.NONE
+        }.filter {
+            it.value.name == e.username
+        }.forEach {
+            e.displayname =
+                "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.icon}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}"
         }
-
     }
 
     fun getPlayerForName(name: String): Player? {

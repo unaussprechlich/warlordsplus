@@ -58,10 +58,11 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         val teamBlue = players.filter { it.team == TeamEnum.BLUE }.sortedByDescending { it.level }
         val teamRed = players.filter { it.team == TeamEnum.RED }.sortedByDescending { it.level }
 
-        val mostDeathsRed = teamRed.map { it.deaths }.sorted().reversed()[0]
-        val mostDeathsBlue = teamBlue.map { it.deaths }.sorted().reversed()[0]
-        val mostKillsRed = teamRed.map { it.kills }.sorted().reversed()[0]
-        val mostKillsBlue = teamBlue.map { it.kills }.sorted().reversed()[0]
+
+        val mostDeathsRed = if (teamRed.isEmpty()) 0 else teamRed.map { it.deaths }.sorted().reversed()[0]
+        val mostDeathsBlue = if (teamBlue.isEmpty()) 0 else teamBlue.map { it.deaths }.sorted().reversed()[0]
+        val mostKillsRed = if (teamRed.isEmpty()) 0 else teamRed.map { it.kills }.sorted().reversed()[0]
+        val mostKillsBlue = if (teamBlue.isEmpty()) 0 else teamBlue.map { it.kills }.sorted().reversed()[0]
 
         val w = 443
 
