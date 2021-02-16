@@ -78,7 +78,7 @@ object SoulbindingCounter : IModule {
                     glMatrix {
                         translateToPos(it.posX, it.posY + 4.75, it.posZ)
                         autoRotate()
-                        scaleForText()
+                        scaleForWorldRendering()
                         scale(10.0)
                         "V".drawCentered()
                     }

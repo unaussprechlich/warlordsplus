@@ -6,10 +6,7 @@ import net.unaussprechlich.warlordsplus.hud.elements.HitEvent
 import net.unaussprechlich.warlordsplus.hud.elements.KPEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.*
-import net.unaussprechlich.warlordsplus.util.SpecsEnum
-import net.unaussprechlich.warlordsplus.util.TeamEnum
-import net.unaussprechlich.warlordsplus.util.contain
-import net.unaussprechlich.warlordsplus.util.removeFormatting
+import net.unaussprechlich.warlordsplus.util.*
 
 
 object ThePlayer : IModule {
@@ -105,6 +102,8 @@ object ThePlayer : IModule {
     var earthlivingCounter = 0
 
     var spec: SpecsEnum = SpecsEnum.NONE
+    var superSpec: SpecsEnumSuper = SpecsEnumSuper.NONE
+    var warlord: WarlordsEnum = WarlordsEnum.NONE
     var team: TeamEnum = TeamEnum.NONE
 
     init {
@@ -129,6 +128,19 @@ object ThePlayer : IModule {
                         it.removeFormatting() contain spec.classname
                     } != null
                 } ?: SpecsEnum.NONE
+
+                superSpec =
+                    if (spec == SpecsEnum.AVENGER || spec == SpecsEnum.BERSERKER || spec == SpecsEnum.PYROMANCER || spec == SpecsEnum.THUNDERLORD) SpecsEnumSuper.DAMAGE
+                    else if (spec == SpecsEnum.CRUSADER || spec == SpecsEnum.DEFENDER || spec == SpecsEnum.CRYOMANCER || spec == SpecsEnum.SPIRITGUARD) SpecsEnumSuper.TANK
+                    else if (spec == SpecsEnum.PROTECTOR || spec == SpecsEnum.REVENANT || spec == SpecsEnum.AQUAMANCER || spec == SpecsEnum.EARTHWARDEN) SpecsEnumSuper.HEALER
+                    else SpecsEnumSuper.NONE
+
+                warlord =
+                    if (spec == SpecsEnum.AVENGER || spec == SpecsEnum.CRUSADER || spec == SpecsEnum.PROTECTOR) WarlordsEnum.PALADIN
+                    else if (spec == SpecsEnum.BERSERKER || spec == SpecsEnum.DEFENDER || spec == SpecsEnum.REVENANT) WarlordsEnum.WARRIOR
+                    else if (spec == SpecsEnum.PYROMANCER || spec == SpecsEnum.CRYOMANCER || spec == SpecsEnum.AQUAMANCER) WarlordsEnum.MAGE
+                    else if (spec == SpecsEnum.THUNDERLORD || spec == SpecsEnum.SPIRITGUARD || spec == SpecsEnum.EARTHWARDEN) WarlordsEnum.SHAMAN
+                    else WarlordsEnum.NONE
 
 
                 team = when {

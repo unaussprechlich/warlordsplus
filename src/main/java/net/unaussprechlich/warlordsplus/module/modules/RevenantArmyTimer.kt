@@ -28,7 +28,7 @@ object RevenantArmyTimer : IModule {
         }
         EventBus.register<SecondEvent> {
             armyTime.forEach {
-                if (it < 0) {
+                if (it < 1) {
                     armyTime.remove(it)
                 }
             }

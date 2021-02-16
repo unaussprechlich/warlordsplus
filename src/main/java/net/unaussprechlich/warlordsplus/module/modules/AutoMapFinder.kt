@@ -22,7 +22,7 @@ object AutoMapFinder : IModule {
         EventBus.register<TickEvent.ClientTickEvent> {
             if (GameStateManager.inLobby && enabled) {
                 try {
-                    if ((scoreboardNames[7].removeFormatting()
+                    if (scoreboardNames[7].removeFormatting().isNotEmpty() && (scoreboardNames[7].removeFormatting()
                             .substring(12, 17) == "00:27" || scoreboardNames[7].removeFormatting()
                             .substring(12, 17) == "00:12") && future < System.currentTimeMillis()
                     ) {

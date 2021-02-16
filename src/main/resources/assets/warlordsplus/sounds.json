@@ -26,6 +26,15 @@
       }
     ]
   },
+  "meme.ricky": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/ricky",
+        "stream": true
+      }
+    ]
+  },
   "meme.t1Christmas": {
     "category": "player",
     "stream": false,

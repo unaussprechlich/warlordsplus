@@ -39,23 +39,23 @@ object KillAssistParser : IModule {
                 }
             }
             when {
-                textMessage.startsWith("was killed by") -> {
+                textMessage.contains("was killed by") -> {
                     val player = textMessage.substring(textMessage.indexOf("by") + 3)
                     val deathPlayer = textMessage.substring(0, textMessage.indexOf("was") - 1)
                     EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute(), respawn))
                 }
-                textMessage.startsWith("You were killed") -> {
+                textMessage.contains("You were killed") -> {
                     val player = textMessage.substring(textMessage.indexOf("by ") + 3)
                     val deathPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
                     EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute(), respawn))
                 }
-                textMessage.startsWith("You killed") -> {
+                textMessage.contains("You killed") -> {
                     val deathPlayer = textMessage.substring(textMessage.indexOf("killed ") + 7)
                     val player = Minecraft.getMinecraft().thePlayer.displayNameString
                     EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute(), respawn))
                     EventBus.post(KillRatioEvent(deathPlayer))
                 }
-                textMessage.startsWith("You assisted") -> {
+                textMessage.contains("You assisted") -> {
                     val playerThatStoleKill =
                         textMessage.substring(textMessage.indexOf("You assisted ") + 13, textMessage.indexOf("in ") - 1)
                     EventBus.post(KillStealEvent(playerThatStoleKill))
