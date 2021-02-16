@@ -10,7 +10,6 @@ import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.hud.elements.DamageHealingAbsorbedEndOfGame
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementHitCounter
-import net.unaussprechlich.warlordsplus.hud.elements.HudElementKillParticipation
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementTotalKills
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.TeamEnum
@@ -18,13 +17,10 @@ import net.unaussprechlich.warlordsplus.util.removeSpaces
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.StringSelection
-import kotlin.math.roundToInt
 
 object StatsDisplayAfterGame : IModule {
 
     var showStats = true
-    var redKills = 0
-    var blueKills = 0
     var counter = 0
 
     init {
@@ -40,8 +36,6 @@ object StatsDisplayAfterGame : IModule {
 
         val message = e.message.formattedText
         if (e.message.unformattedText.removeSpaces().startsWith("Winner")) {
-            redKills = HudElementTotalKills.redKills
-            blueKills = HudElementTotalKills.blueKills
             //addStatsToClipboard(message)
         }
         if (GameStateManager.isIngame) {
@@ -65,7 +59,7 @@ object StatsDisplayAfterGame : IModule {
     fun displayStats() {
         val stats: IChatComponent = ChatComponentText(
             "${EnumChatFormatting.GRAY}Hits: ${EnumChatFormatting.WHITE}${HudElementHitCounter.totalHits}${EnumChatFormatting.GOLD} Energy Given ${EnumChatFormatting.WHITE}${ThePlayer.energyGivenCounter}${EnumChatFormatting.GOLD} Energy Received ${EnumChatFormatting.WHITE}${ThePlayer.energyReceivedCounter}${"\n"}" +
-                    "${EnumChatFormatting.GOLD}KP: ${EnumChatFormatting.WHITE}${(HudElementKillParticipation.playerKills / HudElementKillParticipation.numberOfTeamKills.toDouble() * 100).roundToInt()}%${EnumChatFormatting.BLUE} Blue Kills: ${EnumChatFormatting.WHITE}$blueKills${EnumChatFormatting.RED} Red Kills: ${EnumChatFormatting.WHITE}$redKills${"\n"}" +
+                    "${EnumChatFormatting.GOLD}KP: ${EnumChatFormatting.WHITE}${ThePlayer.killParticipation}%${EnumChatFormatting.BLUE} Blue Kills: ${EnumChatFormatting.WHITE}${HudElementTotalKills.blueKills}${EnumChatFormatting.RED} Red Kills: ${EnumChatFormatting.WHITE}${HudElementTotalKills.redKills}${"\n"}" +
                     "${EnumChatFormatting.DARK_GREEN}Healing Received: ${EnumChatFormatting.WHITE}${ThePlayer.healingReceivedCounter}${EnumChatFormatting.DARK_RED} Damage Received: ${EnumChatFormatting.WHITE}${ThePlayer.damageTakenCounter}${"\n\n"}" +
                     "${EnumChatFormatting.RED}Highest Damage Per Min: ${EnumChatFormatting.WHITE}${DamageHealingAbsorbedEndOfGame.highestDamage}${EnumChatFormatting.RED} At Minute ${EnumChatFormatting.WHITE}${DamageHealingAbsorbedEndOfGame.highestDamageMin}${"\n"}" +
                     "${EnumChatFormatting.GREEN}Highest Healing Per Min: ${EnumChatFormatting.WHITE}${DamageHealingAbsorbedEndOfGame.highestHealing}${EnumChatFormatting.GREEN} At Minute ${EnumChatFormatting.WHITE}${DamageHealingAbsorbedEndOfGame.highestHealingMin}${"\n"}" +

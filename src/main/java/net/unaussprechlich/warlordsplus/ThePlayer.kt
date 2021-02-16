@@ -3,6 +3,7 @@ package net.unaussprechlich.warlordsplus
 import net.minecraft.client.Minecraft
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.hud.elements.HitEvent
+import net.unaussprechlich.warlordsplus.hud.elements.KPEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.*
 import net.unaussprechlich.warlordsplus.util.SpecsEnum
@@ -28,6 +29,9 @@ object ThePlayer : IModule {
     var energyStolenCounter = 0
         private set
     var energyLostCounter = 0
+        private set
+
+    var killParticipation = 0
         private set
 
     //minute
@@ -114,7 +118,7 @@ object ThePlayer : IModule {
             energyGivenCounter = 0
             energyStolenCounter = 0
             energyLostCounter = 0
-
+            killParticipation = 0
 
             minuteStats = Array(15) { IntArray(5) }
 
@@ -176,6 +180,10 @@ object ThePlayer : IModule {
         }
         EventBus.register<EnergyLostEvent> {
             energyLostCounter += it.amount
+        }
+
+        EventBus.register<KPEvent> {
+            killParticipation = it.amount
         }
     }
 }

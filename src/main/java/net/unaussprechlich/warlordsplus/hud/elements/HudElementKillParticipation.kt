@@ -1,6 +1,5 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
-import net.minecraft.client.Minecraft
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
@@ -43,13 +42,12 @@ object HudElementKillParticipation : AbstractHudElement() {
                             numberOfCapsRed++
                         }
                     }
-                    if (message.contains("You killed") || message.contains("You assisted"))
-                        playerKills++
                 }
-                if (message.startsWith("Winner - ")) {
+                if (message.contains("You killed") || message.contains("You assisted"))
+                    playerKills++
+                if (message.contains("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")) {
                     EventBus.post(
                         KPEvent(
-                            Minecraft.getMinecraft().thePlayer.displayNameString,
                             (playerKills / numberOfTeamKills.toDouble() * 100).roundToInt()
                         )
                     )
@@ -114,6 +112,5 @@ object HudElementKillParticipation : AbstractHudElement() {
 }
 
 data class KPEvent(
-    val player: String,
     val amount: Int
 ) : IEvent
