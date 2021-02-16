@@ -143,6 +143,7 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
 
+    embed("com.jagrosh:DiscordIPC:0.4")
 }
 
 val shadowJar: ShadowJar by tasks

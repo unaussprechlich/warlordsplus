@@ -42,8 +42,8 @@ enum class SpecsEnum(val classname: String, val weapon: String, val icon: String
     NONE("NONE", "NONE", "")
 }
 
-enum class SpecsEnumSuper() {
-    DAMAGE, TANK, HEALER, NONE
+enum class SpecsEnumSuper(val specName: String) {
+    DAMAGE("damage"), TANK("defense"), HEALER("healer"), NONE("NONE")
 }
 
 enum class HypixelRank(val rankName: String, rankNameFormatted: String, color: ChatFormatting) {
@@ -97,5 +97,8 @@ enum class HypixelRank(val rankName: String, rankNameFormatted: String, color: C
         ChatFormatting.RED.toString() + "[ADMIN]",
         ChatFormatting.RED
     );
-
 }
+//
+//enum class GameState(val lobbyName: String) {
+//    INLOBBY("In Lobby"), INCTF("Capture the Flag"), INDOM("Domination"), INTDM("Team Deathmatch")
+//}

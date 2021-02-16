@@ -38,7 +38,7 @@ object ModuleManager {
             //add(ChatNotifications)
             add(KillFeed)
             //add(Troll)
-            add(Meme)
+            //add(Meme)
             add(CancelJumpBarOnHorse)
             add(SoulbindingCounter)
             //add(SkillDetector)
@@ -48,6 +48,7 @@ object ModuleManager {
             add(AutoTBag)
             add(RevenantArmyTimer)
         }
+        DiscordRPC.INSTANCE.start()
     }
 
     fun register() {
