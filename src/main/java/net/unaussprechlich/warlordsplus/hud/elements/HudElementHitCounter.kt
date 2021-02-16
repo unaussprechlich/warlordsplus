@@ -9,11 +9,10 @@ import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
-import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import java.util.*
 
-object HudElementHitCounter : AbstractHudElement(), IChatConsumer {
+object HudElementHitCounter : AbstractHudElement() {
 
     var totalHits = 0
 
@@ -21,24 +20,21 @@ object HudElementHitCounter : AbstractHudElement(), IChatConsumer {
         EventBus.register<ResetEvent> {
             totalHits = 0
         }
+        EventBus.register<ClientChatReceivedEvent> {
+            val message: String = it.message.unformattedText.removeFormatting()
+            if (message.contains("You hit")) {
+                EventBus.post(HitEvent(GameStateManager.getMinute()))
+                totalHits++
+            }
+        }
     }
 
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
 
-        if (showHitCounter)
-            renderStrings.add(EnumChatFormatting.WHITE.toString() + "Hit Counter: " + totalHits)
+        renderStrings.add(EnumChatFormatting.WHITE.toString() + "Hit Counter: " + totalHits)
 
         return renderStrings.toTypedArray()
-    }
-
-    override fun onChat(e: ClientChatReceivedEvent) {
-        val message: String = e.message.unformattedText.removeFormatting()
-        if (message.contains("You hit")) {
-            EventBus.post(HitEvent(GameStateManager.getMinute()))
-            totalHits++
-        }
-
     }
 
     override fun isVisible(): Boolean {
@@ -46,7 +42,7 @@ object HudElementHitCounter : AbstractHudElement(), IChatConsumer {
     }
 
     override fun isEnabled(): Boolean {
-        return true
+        return showHitCounter
     }
 
     @ConfigPropertyBoolean(

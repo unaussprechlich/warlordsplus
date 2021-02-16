@@ -12,6 +12,7 @@ import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 class HudElementPing : AbstractHudElement() {
     private var lastValidPing = 0
 
+    //TODO fix crash when you exit multiplayer
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
 
@@ -19,8 +20,7 @@ class HudElementPing : AbstractHudElement() {
             if (System.currentTimeMillis() >= nextTimeStamp) updatePing()
             if (Minecraft.getMinecraft().currentServerData.pingToServer > 0) lastValidPing =
                 Minecraft.getMinecraft().currentServerData.pingToServer.toInt()
-            if (showPing)
-                renderStrings.add("Ping: $lastValidPing")
+            renderStrings.add("Ping: $lastValidPing")
         } catch (e: Exception) {
             renderStrings.add("Ping: NULL")
         }
@@ -29,11 +29,11 @@ class HudElementPing : AbstractHudElement() {
     }
 
     override fun isVisible(): Boolean {
-        return true
+        return showPing
     }
 
     override fun isEnabled(): Boolean {
-        return true
+        return showPing
     }
 
     companion object {

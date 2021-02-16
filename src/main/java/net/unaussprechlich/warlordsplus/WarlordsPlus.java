@@ -53,11 +53,16 @@ public class WarlordsPlus {
         MinecraftForge.EVENT_BUS.register(this);
         ForgeEventProcessor.INSTANCE.init();
         ModuleManager.INSTANCE.register();
+
         ClientCommandHandler.instance.registerCommand(new ChangeTargetCommand());
         ClientCommandHandler.instance.registerCommand(new GetPlayerStatsCommand());
         ClientCommandHandler.instance.registerCommand(new SetWinLossCommand());
         ClientCommandHandler.instance.registerCommand(new SetKillDeathCommand());
         ClientCommandHandler.instance.registerCommand(new GetEndGameStatsCommand());
+        ClientCommandHandler.instance.registerCommand(SpecWinCommand.INSTANCE);
+        ClientCommandHandler.instance.registerCommand(new RemoveSpec());
+        ClientCommandHandler.instance.registerCommand(new Reset());
+        ClientCommandHandler.instance.registerCommand(new DisableAutoJoin());
 
     }
 

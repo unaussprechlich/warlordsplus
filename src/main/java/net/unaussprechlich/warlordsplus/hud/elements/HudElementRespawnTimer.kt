@@ -1,69 +1,103 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraft.util.EnumChatFormatting
+import net.minecraftforge.client.event.RenderGameOverlayEvent
+import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
+import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardNames
-import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
+import net.unaussprechlich.warlordsplus.module.modules.SecondEvent
 
 /**
  * HudElementRespawnTimer Created by Alexander on 03.05.2020.
  * Description:
  */
-class HudElementRespawnTimer : AbstractHudElement(), IUpdateConsumer {
-    private var respawnTimer = 0
-    override fun getRenderString(): Array<String> {
-        val renderStrings = ArrayList<String>()
+object HudElementRespawnTimer : AbstractHudElement() {
+    var respawnTimer = 0
 
-        if (showRespawnTimer && GameStateManager.isCTF) {
-            when {
-                respawnTimer - 1 < 5 ->
-                    renderStrings.add(EnumChatFormatting.RED.toString() + "Respawn: " + (respawnTimer - 1))
-                respawnTimer - 1 < 8 ->
-                    renderStrings.add(EnumChatFormatting.YELLOW.toString() + "Respawn: " + (respawnTimer - 1))
-                else ->
-                    renderStrings.add(EnumChatFormatting.GREEN.toString() + "Respawn: " + (respawnTimer - 1))
+    init {
+        EventBus.register<SecondEvent> {
+            respawnTimer--
+            if (GameStateManager.isCTF) {
+                val colon = scoreboardNames[9].lastIndexOf(":")
+                val after = scoreboardNames[9].substring(colon + 1, colon + 3)
+                if (respawnTimer < 0) respawnTimer = 0
+                try {
+                    if (after.toInt() % 12 == 0) {
+                        respawnTimer = 12
+                    }
+                } catch (e: Exception) {
+                    //respawnTimer = -1
+                }
+            } else if (GameStateManager.isDOM) {
+                if (respawnTimer < 0)
+                    respawnTimer = 17
+            }
+            OtherPlayers.playersMap.forEach { (_, value) ->
+                if (value.isDead) {
+                    if (value.respawn != -1) {
+                        value.respawn--
+                        if (value.respawn == 0) {
+                            value.isDead = false
+                            value.respawn = -1
+                        }
+                    }
+                }
             }
         }
+        EventBus.register<ResetEvent> {
+            respawnTimer = 18
+        }
+        Renderer
+    }
+
+
+    override fun getRenderString(): Array<String> {
+        val renderStrings = ArrayList<String>()
 
         return renderStrings.toTypedArray()
     }
 
-    private var tick = 0
-    override fun update() {
-        tick = if (tick >= 20) {
-            0
-        } else {
-            tick++
-            return
+    object Renderer : RenderApi.Gui<RenderGameOverlayEvent.Text>() {
+        init {
+            EventBus.register(::render)
         }
-        respawnTimer--
-        val colon = scoreboardNames[9].lastIndexOf(":")
-        val after = scoreboardNames[9].substring(colon + 1, colon + 3)
-        if (respawnTimer < 0) respawnTimer = 0
-        try {
-            if (after.toInt() % 12 == 0) {
-                respawnTimer = 12
-            }
-        } catch (e: Exception) {
-            //respawnTimer = -1
-        }
-        OtherPlayers.playersMap.forEach { (_, value) ->
-            if (value.isDead) {
-                if (value.respawn != -1) {
-                    value.respawn--
-                    if (value.respawn == 0) {
-                        value.isDead = false
-                        value.respawn = -1
+
+        override fun onRender(event: RenderGameOverlayEvent.Text) {
+            glMatrix {
+                translateX(xCenter + 1)
+                translateY(-yCenter - 7)
+                if (GameStateManager.isCTF) {
+                    when {
+                        respawnTimer < 5 -> "${EnumChatFormatting.RED}${respawnTimer}".drawCentered()
+                        respawnTimer < 8 -> "${EnumChatFormatting.YELLOW}${respawnTimer}".drawCentered()
+                        else -> "${EnumChatFormatting.GREEN}${respawnTimer}".drawCentered()
+                    }
+                } else if (GameStateManager.isDOM) {
+                    if (respawnTimer < 14) {
+                        if (respawnTimer < 8) {
+                            "${respawnTimer + 8}".drawCentered()
+                        } else
+                            "${respawnTimer}".drawCentered()
+                    } else {
+                        if (respawnTimer < 8)
+                            "${respawnTimer + 8}".drawCentered()
+                        else
+                            "${respawnTimer}".drawCentered()
                     }
                 }
-                if (GameStateManager.isDOM)
-                    value.isDead = false
+
             }
+        }
+
+        override fun shouldRender(e: RenderGameOverlayEvent.Text): Boolean {
+            return isIngame
         }
     }
 
@@ -72,16 +106,16 @@ class HudElementRespawnTimer : AbstractHudElement(), IUpdateConsumer {
     }
 
     override fun isEnabled(): Boolean {
-        return true
+        return showRespawnTimer
     }
 
-    companion object {
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showRespawnTimer",
-            comment = "Enable or disable the Respawn Timer",
-            def = true
-        )
-        var showRespawnTimer = false
-    }
+
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showRespawnTimer",
+        comment = "Enable or disable the Respawn Timer",
+        def = true
+    )
+    var showRespawnTimer = false
+
 }

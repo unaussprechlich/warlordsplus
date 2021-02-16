@@ -2,7 +2,6 @@ package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.module.IModule
@@ -24,6 +23,8 @@ object ChatDetector : IModule {
             add(BlueShoutChatDetector)
             add(RedShoutChatDetector)
         }
+
+        EventBus.register(::onChat)
     }
 
     /*
@@ -178,11 +179,8 @@ object ChatDetector : IModule {
 
     }
 
-    @SubscribeEvent
-    fun chat(e: ClientChatReceivedEvent) {
-        if (e.type == 2.toByte()) return
-        println(e.message.formattedText)
 
+    fun onChat(e: ClientChatReceivedEvent) {
         val msg = e.message.formattedText.removeFormatting()
 
         chatDetectors.filter {

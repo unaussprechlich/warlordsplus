@@ -9,6 +9,7 @@ import net.unaussprechlich.warlordsplus.ingamegui.IngameGuiManager
 import net.unaussprechlich.warlordsplus.module.modules.*
 import net.unaussprechlich.warlordsplus.module.modules.stats.StatsDisplayRenderer
 import net.unaussprechlich.warlordsplus.module.modules.stats.StatsLoader
+import net.unaussprechlich.warlordsplus.module.modulesd.RenderVignette
 
 @UnstableDefault
 object ModuleManager {
@@ -34,9 +35,18 @@ object ModuleManager {
             add(StatsDisplayAfterGame)
             add(PowerUpTimer)
             add(StatsInLobby)
-            add(ChatNotifications)
+            //add(ChatNotifications)
+            add(KillFeed)
             //add(Troll)
             add(Meme)
+            add(CancelJumpBarOnHorse)
+            add(SoulbindingCounter)
+            //add(SkillDetector)
+            add(RenderVignette)
+            add(AutoMapFinder)
+            //add(MotivationalMessages)
+            add(AutoTBag)
+            add(RevenantArmyTimer)
         }
     }
 

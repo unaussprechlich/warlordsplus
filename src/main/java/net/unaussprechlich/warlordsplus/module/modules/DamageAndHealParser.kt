@@ -5,14 +5,13 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
-import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.contain
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import java.util.regex.Pattern
 
-private const val SOMEBODY_DID = "\u00AB"
-private const val YOU_DID = "\u00BB"
+const val SOMEBODY_DID = "\u00AB"
+const val YOU_DID = "\u00BB"
 
 private val numberPattern = Pattern.compile("\\s[0-9]+\\s")
 
@@ -28,7 +27,7 @@ object DamageAndHealParser : IModule {
 
             var otherPlayer = ""
             val amount = getDamageOrHealthValue(msg)
-            val crit = msg contain "!"
+            val isCrit = msg contain "!"
 
             if (e.message.unformattedText contain SOMEBODY_DID) {
 
@@ -61,14 +60,22 @@ object DamageAndHealParser : IModule {
                             HealingReceivedEvent(
                                 amount,
                                 otherPlayer,
-                                crit,
+                                isCrit,
                                 false,
                                 GameStateManager.getMinute()
                             )
                         )
                     }
                     msg.contains("damage") -> {
-                        EventBus.post(DamageTakenEvent(amount, otherPlayer, crit, false, GameStateManager.getMinute()))
+                        EventBus.post(
+                            DamageTakenEvent(
+                                amount,
+                                otherPlayer,
+                                isCrit,
+                                false,
+                                GameStateManager.getMinute()
+                            )
+                        )
 
                         //Player lost Energy from otherPlayer's Avenger's Strike
                         if (msg.contains("Avenger's Strike"))
@@ -94,15 +101,31 @@ object DamageAndHealParser : IModule {
 
                     msg.contains("health") && !msg.contain("you") -> {
                         otherPlayer = msg.substring(msg.indexOf("healed ") + 7, msg.indexOf("for") - 1)
-                        EventBus.post(HealingGivenEvent(amount, otherPlayer, crit, false, GameStateManager.getMinute()))
+                        EventBus.post(
+                            HealingGivenEvent(
+                                amount,
+                                otherPlayer,
+                                isCrit,
+                                false,
+                                GameStateManager.getMinute()
+                            )
+                        )
                     }
                     msg.contains("health") -> {
                         otherPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
-                        EventBus.post(HealingGivenEvent(amount, otherPlayer, crit, false, GameStateManager.getMinute()))
+                        EventBus.post(
+                            HealingGivenEvent(
+                                amount,
+                                otherPlayer,
+                                isCrit,
+                                false,
+                                GameStateManager.getMinute()
+                            )
+                        )
                     }
                     msg.contains("damage") -> {
                         otherPlayer = msg.substring(msg.indexOf("hit ") + 4, msg.indexOf("for") - 1)
-                        EventBus.post(DamageDoneEvent(amount, otherPlayer, crit, false, GameStateManager.getMinute()))
+                        EventBus.post(DamageDoneEvent(amount, otherPlayer, isCrit, false, GameStateManager.getMinute()))
 
                         //Player's Avenger's Strike stole energy from otherPlayer
                         if (msg.contains("Avengers Strike"))
@@ -118,53 +141,16 @@ object DamageAndHealParser : IModule {
                             DamageAbsorbedEvent(
                                 amount,
                                 otherPlayer,
-                                crit,
+                                isCrit,
                                 true,
                                 GameStateManager.getMinute()
                             )
                         )
                     }
                 }
+
+                //SkillDetector.handleSkillUsed(msg, amount, isCrit, msg.contains("absorbed"))
             }
-
-            if ("Your" in msg) {
-                when {
-                    "strike" in msg -> ThePlayer.strikeCounter++
-                    "Consecrate" in msg -> ThePlayer.consecrateCounter++
-                    "Infusion" in msg -> ThePlayer.infusionCounter++
-                    "Holy" in msg -> ThePlayer.holyCounter++
-                    "Slam" in msg -> ThePlayer.slamCounter++
-                    "Wave " in msg -> ThePlayer.waveCounter++
-                    "intervene" in msg -> ThePlayer.interveneCounter++
-                    "Charge" in msg -> ThePlayer.chargeCounter++
-                    "Orb" in msg -> ThePlayer.orbCounter++
-                    "Warp" in msg -> ThePlayer.warpCounter++
-                    "Bolt" in msg -> ThePlayer.boltCounter++
-                    "Breath" in msg -> ThePlayer.breathCounter++
-                    "ball" in msg -> ThePlayer.ballCounter++
-                    "Flame" in msg -> ThePlayer.burstCounter++
-                    "Rain" in msg -> ThePlayer.rainCounter++
-                    "Chain" in msg -> ThePlayer.chainCounter++
-                    "Totem" in msg -> ThePlayer.totemCounter++
-                    "Lightning" in msg -> ThePlayer.lightningBoltCounter++
-                    "Windfury" in msg -> ThePlayer.furyCounter++
-                    "Rod" in msg -> ThePlayer.rodCounter++
-                    "Soul" in msg -> ThePlayer.soulsCounter++
-                    "Soulbinding" in msg -> ThePlayer.bindingCounter++
-                    "Spike" in msg -> ThePlayer.spikeCounter++
-                    "Boulder" in msg -> ThePlayer.boulderCounter++
-                    "Earthliving" in msg -> ThePlayer.earthlivingCounter++
-                    "Debt" in msg -> {
-                        if ("healed" in msg) ThePlayer.debtHealedCounter++ else ThePlayer.debtDamagedCounter++
-                    }
-                    "Army" in msg -> {
-                        ThePlayer.undyingCounter += msg.substring(msg.indexOf("allies") - 3)
-                                .toInt(msg.indexOf("allies")) //TODO
-                    }
-                }
-            }
-
-
         } catch (throwable: Throwable) {
 
         }
@@ -188,6 +174,7 @@ object DamageAndHealParser : IModule {
         return 0
     }
 }
+
 
 /**
  * A data class that can be Posted onto the EventBus

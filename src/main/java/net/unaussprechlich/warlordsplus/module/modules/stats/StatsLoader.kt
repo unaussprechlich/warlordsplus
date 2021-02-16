@@ -64,12 +64,16 @@ object StatsLoader : IModule {
 
     private fun onClientTick(@Suppress("UNUSED_PARAMETER") event: TickEvent.ClientTickEvent) {
         if (System.currentTimeMillis() - lastTimeChecked > 10000) {
-            playerCache.filter { it.value.validUntil < System.currentTimeMillis() }.keys.forEach {
-                try {
-                    playerCache.remove(it)
-                } catch (e: Exception) {
-                    e.printStackTrace()
+            try {
+                playerCache.filter { it.value.validUntil < System.currentTimeMillis() }.keys.forEach {
+                    try {
+                        playerCache.remove(it)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
