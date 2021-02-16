@@ -2,9 +2,7 @@ package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderWorldLastEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
-import net.unaussprechlich.renderapi.util.MinecraftOpenGlStuff
 import net.unaussprechlich.eventbus.ForgeEventProcessor
 import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.config.CCategory
@@ -13,12 +11,9 @@ import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.ImageRegistry
 import net.unaussprechlich.warlordsplus.util.SoundManager
 import net.unaussprechlich.warlordsplus.util.Sounds
+import net.unaussprechlich.warlordsplus.util.removeFormatting
 import kotlin.math.cos
 import kotlin.math.sin
-import kotlin.math.tan
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.tan
 
 object Meme : IModule {
 
@@ -66,14 +61,11 @@ object Meme : IModule {
                 scaleForWorldRendering()
                 scale(.95)
                 translate(-500, -500, 500) {
-                    if (runningFor < 213 - 3) {
-                        val sin = sin((System.currentTimeMillis() % 1000) / 1000.0 * Math.PI * 2)
-                        val cos = cos((System.currentTimeMillis() % 1000) / 1000.0 * Math.PI * 2)
-                        val tan = tan((System.currentTimeMillis() % 1000) / 1000.0 * Math.PI * 2)
-                        rotateY(cos.toFloat() * 8f)
-                        rotateX(cos.toFloat() * 2f)
-                        translate(sin * 50, cos * 50, 0.0)
-                    }
+                    val sin = sin((System.currentTimeMillis() % 1000) / 1000.0 * Math.PI * 2)
+                    val cos = cos((System.currentTimeMillis() % 1000) / 1000.0 * Math.PI * 2)
+                    rotateY(cos.toFloat() * 8f)
+                    rotateX(cos.toFloat() * 2f)
+                    translate(sin * 50, cos * 50, 0.0)
                     renderImage(1000.0, 1000.0, ImageRegistry.MEME_RICK_ROLL)
                 }
             }
