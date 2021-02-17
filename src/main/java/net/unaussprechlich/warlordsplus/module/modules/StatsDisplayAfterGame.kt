@@ -36,7 +36,7 @@ object StatsDisplayAfterGame : IModule {
 
         val message = e.message.formattedText
         if (e.message.unformattedText.removeSpaces().startsWith("Winner")) {
-            //addStatsToClipboard(message)
+            addStatsToClipboard(message)
         }
         if (GameStateManager.isIngame) {
             if (message.contains("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")) {
