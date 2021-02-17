@@ -1,6 +1,7 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
 import com.jagrosh.discordipc.entities.RichPresence
+import com.jagrosh.discordipc.entities.pipe.PipeStatus
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -144,6 +145,9 @@ object GameStateManager : IModule {
                 .contains("Map:") || scoreboardNames[9].removeFormatting().contains("Map:"))
 
             if (isWarlords) {
+                if (DiscordRPC.client.status != PipeStatus.CONNECTED) {
+                    DiscordRPC.start()
+                }
                 val builder = RichPresence.Builder()
                 builder.setDetails(getLobby())
                 if (inLobby) {
@@ -158,7 +162,13 @@ object GameStateManager : IModule {
                     builder.setStartTimestamp(OffsetDateTime.now())
                     builder.setEndTimestamp(OffsetDateTime.now().plusSeconds(getTimeLeftGame()))
                 }
-                DiscordRPC.INSTANCE.client.sendRichPresence(builder.build())
+                DiscordRPC.client.sendRichPresence(builder.build())
+
+            }
+            if (!isWarlords) {
+                if (DiscordRPC.client.status == PipeStatus.CONNECTED) {
+                    DiscordRPC.client.close()
+                }
             }
 
         } catch (e: Exception) {

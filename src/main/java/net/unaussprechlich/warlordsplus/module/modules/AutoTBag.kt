@@ -26,7 +26,7 @@ object AutoTBag : IModule {
                 val below: Block = blockStateBelow.block
 
                 if (below == Blocks.sapling && !Minecraft.getMinecraft().thePlayer.isRidingHorse) {
-                    if (System.currentTimeMillis() / 100 % 2 == 0L) {
+                    if (System.currentTimeMillis() / ((Math.random() * 50) + 100).toInt() % 2 == 0L) {
                         KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode, true)
                     } else {
                         KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode, false)

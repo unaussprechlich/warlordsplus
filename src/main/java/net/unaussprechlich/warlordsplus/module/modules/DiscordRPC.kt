@@ -7,17 +7,17 @@ import com.jagrosh.discordipc.exceptions.NoDiscordClientException
 import java.io.FileNotFoundException
 
 
-class DiscordRPC : IPCListener {
+object DiscordRPC : IPCListener {
     private val builder: RichPresence.Builder = RichPresence.Builder()
     val client: IPCClient = IPCClient(811200780673220649)
 
     fun start() {
         try {
             //if (enabled) {
-                client.setListener(object : IPCListener {
-                    override fun onReady(client: IPCClient) {
-                        client.sendRichPresence(builder.build())
-                    }
+            client.setListener(object : IPCListener {
+                override fun onReady(client: IPCClient) {
+                    client.sendRichPresence(builder.build())
+                }
                 })
                 client.connect()
                 client.sendRichPresence(builder.build())
@@ -61,10 +61,6 @@ class DiscordRPC : IPCListener {
             .setLargeImage(largeImage)
             .setSmallImage(smallImage)
         client.sendRichPresence(builder.build())
-    }
-
-    companion object {
-        var INSTANCE = DiscordRPC()
     }
 
 //    @ConfigPropertyBoolean(

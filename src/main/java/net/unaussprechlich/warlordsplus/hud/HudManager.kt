@@ -60,7 +60,7 @@ object HudManager : RenderApi.Gui<RenderGameOverlayEvent.Text>(), IModule {
         EventBus.register(::render)
 
         hudElements.add(HudElementFps())
-        hudElements.add(HudElementPing())
+        hudElements.add(HudElementPing)
         hudElements.add(HudElementRespawnTimer)
         hudElements.add(HudElementFlagRespawnTimer)
         hudElements.add(HudElementRegenTimer())

@@ -47,8 +47,8 @@ object ModuleManager {
             //add(MotivationalMessages)
             add(AutoTBag)
             add(RevenantArmyTimer)
+            add(Excuses)
         }
-        DiscordRPC.INSTANCE.start()
     }
 
     fun register() {
