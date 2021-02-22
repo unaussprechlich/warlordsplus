@@ -1,6 +1,7 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraft.util.EnumChatFormatting
+import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.ThePlayer.damageDoneCounter
 import net.unaussprechlich.warlordsplus.ThePlayer.damageTakenCounter
 import net.unaussprechlich.warlordsplus.ThePlayer.energyGivenCounter
@@ -13,6 +14,7 @@ import net.unaussprechlich.warlordsplus.ThePlayer.spec
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
 import net.unaussprechlich.warlordsplus.util.SpecsEnum
 import java.util.*
@@ -23,9 +25,9 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
         val renderStrings = ArrayList<String>()
         if (showDamageDone)
-            renderStrings.add(EnumChatFormatting.RED.toString() + "Damage: " + damageDoneCounter)
+            renderStrings.add(EnumChatFormatting.RED.toString() + "Damage: " + damageDoneCounter + ":${ThePlayer.minuteStats[GameStateManager.getMinute()][3]}")
         if (showHealingDone)
-            renderStrings.add(EnumChatFormatting.GREEN.toString() + "Healing: " + healingGivenCounter)
+            renderStrings.add(EnumChatFormatting.GREEN.toString() + "Healing: " + healingGivenCounter + ":${ThePlayer.minuteStats[GameStateManager.getMinute()][4]}")
         if (showDamageTaken)
             renderStrings.add(EnumChatFormatting.DARK_RED.toString() + "Damage Taken: " + damageTakenCounter)
         if (showHealingReceived)

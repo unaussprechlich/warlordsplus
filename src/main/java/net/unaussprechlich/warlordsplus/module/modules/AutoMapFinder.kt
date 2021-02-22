@@ -42,7 +42,7 @@ object AutoMapFinder : IModule {
         EventBus.register<ClientChatReceivedEvent> {
             if (GameStateManager.inLobby && enabled) {
                 if (it.message.unformattedText.removeFormatting() == "The game starts in 30 seconds!") {
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}YOU HAVE AUTO REJOIN ENABLED"))
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}YOU HAVE AUTO REJOIN FOR PRIVATE GAMES ENABLED"))
                     val chatComponent = ChatComponentText("${EnumChatFormatting.GOLD}CLICK HERE TO DISABLE")
                     chatComponent.chatStyle.chatHoverEvent =
                         HoverEvent(HoverEvent.Action.SHOW_TEXT, ChatComponentText("Disable"))

@@ -154,9 +154,9 @@ object ThePlayer : IModule {
             }
         }
         EventBus.register<KillEvent> {
-            if (it.deathPlayer == Minecraft.getMinecraft().thePlayer.displayNameString && it.time > 0) {
+            if (it.deathPlayer == Minecraft.getMinecraft().thePlayer.displayNameString) {
                 minuteStats[it.time][1]++
-            } else if (it.player == Minecraft.getMinecraft().thePlayer.displayNameString && it.time > 0) {
+            } else if (it.player == Minecraft.getMinecraft().thePlayer.displayNameString) {
                 minuteStats[it.time][0]++
             }
         }

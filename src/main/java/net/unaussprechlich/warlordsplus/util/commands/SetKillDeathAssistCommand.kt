@@ -10,13 +10,13 @@ import net.minecraft.util.IChatComponent
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementSessionStats
 import java.util.*
 
-class SetKillDeathCommand : ICommand {
+class SetKillDeathAssistCommand : ICommand {
     override fun getCommandName(): String {
-        return "setkilldeath"
+        return "setkda"
     }
 
     override fun getCommandUsage(sender: ICommandSender): String {
-        return "sets kill death"
+        return "sets kill death assist"
     }
 
     override fun getCommandAliases(): List<String> {
@@ -29,8 +29,9 @@ class SetKillDeathCommand : ICommand {
         if (Minecraft.getMinecraft().thePlayer.displayNameString == "sumSmash" || Minecraft.getMinecraft().thePlayer.displayNameString == "unaussprechlich") {
             HudElementSessionStats.totalPlayerKills = parameters[0].toInt()
             HudElementSessionStats.totalPlayerDeaths = parameters[1].toInt()
+            HudElementSessionStats.totalPlayerAssists = parameters[2].toInt()
         } else {
-            val message: IChatComponent = ChatComponentText("No permission - stop cheating loser")
+            val message: IChatComponent = ChatComponentText("Loser")
             Minecraft.getMinecraft().thePlayer.addChatMessage(message)
         }
 

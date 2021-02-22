@@ -33,8 +33,7 @@ object StatsInLobby : IModule, RenderApi.World() {
             scaleForWorldRendering()
             scale(.95)
             renderRectXCentered(130.0, 300.0, Colors.DEF, 255, -0.5)
-            translateX(-58.0)
-            translateY(-4.0)
+            translateY(-10.0)
 
             translateX(-25.0) {
                 drawSr(data.warlordsSr.sR)
@@ -164,7 +163,7 @@ object StatsInLobby : IModule, RenderApi.World() {
                         translate(4.0, 6.0, 0.0)
                         "Blue Wins: ${EnumChatFormatting.BLUE}${data.warlordsHypixel.winsCapturetheflagBlu}".draw()
                         translateY(-8.0)
-                        "Red Wins: ${EnumChatFormatting.RED}${data.warlordsHypixel.winsCapturetheflagBlu}".draw()
+                        "Red Wins: ${EnumChatFormatting.RED}${data.warlordsHypixel.winsCapturetheflagRed}".draw()
                         translateY(-8.0)
                         "Team Caps: ${data.warlordsHypixel.flagConquerTeam}".draw()
                         translateY(-8.0)

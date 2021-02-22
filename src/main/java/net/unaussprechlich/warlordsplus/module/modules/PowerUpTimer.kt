@@ -13,6 +13,7 @@ import java.util.*
 object PowerUpTimer : IModule, RenderApi.World() {
 
     var powerUps: MutableMap<UUID, PowerUp> = mutableMapOf()
+    var currentPowerUps = mutableListOf<EntityArmorStand>()
 
     init {
         EventBus.register<ResetEvent> {
@@ -20,6 +21,20 @@ object PowerUpTimer : IModule, RenderApi.World() {
         }
 
         EventBus.register(::onClientTick)
+        EventBus.register<SecondEvent> {
+            powerUps.filter {
+                !currentPowerUps.map { powerUp -> powerUp.uniqueID }.contains(it.key)
+            }.map {
+                it.value
+            }.forEach {
+                if (it.respawnTimer == -1)
+                    it.respawnTimer = 45
+                else if (it.respawnTimer == 0)
+                    powerUps.remove(it.id)
+
+                it.respawnTimer--
+            }
+        }
     }
 
     data class PowerUp(
@@ -33,14 +48,14 @@ object PowerUpTimer : IModule, RenderApi.World() {
     private fun onClientTick(event: TickEvent.ClientTickEvent) {
         if (GameStateManager.notIngame) return
 
-        val currentPowerUps = Minecraft.getMinecraft().theWorld.getLoadedEntityList().filter {
+        currentPowerUps = Minecraft.getMinecraft().theWorld.getLoadedEntityList().filter {
             it.customNameTag != null &&
                     it is EntityArmorStand && it.customNameTag.contains("§lHEALING") || it.customNameTag.contains("§lDAMAGE") || it.customNameTag.contains(
                 "§lSPEED"
-            )
+            ) || it.customNameTag.contains("§lENERGY")
         }.map {
             it as EntityArmorStand
-        }
+        }.toMutableList()
 
         currentPowerUps.filter {
             !powerUps.containsKey(it.uniqueID)
@@ -50,19 +65,6 @@ object PowerUpTimer : IModule, RenderApi.World() {
                 .filter { entry -> (entry.id !== it.uniqueID && entry.x == it.posX && entry.y == it.posY && entry.z == it.posZ) }
                 .forEach { entry -> powerUps.remove(entry.id) }
             powerUps[it.uniqueID] = PowerUp(it.uniqueID, it.posX, it.posY, it.posZ)
-        }
-
-        powerUps.filter {
-            !currentPowerUps.map { powerUp -> powerUp.uniqueID }.contains(it.key)
-        }.map {
-            it.value
-        }.forEach {
-            if (it.respawnTimer == -1)
-                it.respawnTimer = 45 * 20
-            else if (it.respawnTimer == 0)
-                powerUps.remove(it.id)
-
-            it.respawnTimer--
         }
     }
 
@@ -74,7 +76,7 @@ object PowerUpTimer : IModule, RenderApi.World() {
                 autoRotate()
                 scaleForWorldRendering()
                 scale(10.0)
-                "${it.respawnTimer / 20}".drawCentered(seeThruBlocks = true)
+                "${it.respawnTimer}".drawCentered(seeThruBlocks = true)
             }
         }
     }
