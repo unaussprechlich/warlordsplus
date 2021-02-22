@@ -1,6 +1,7 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
 import com.jagrosh.discordipc.entities.RichPresence
+import com.jagrosh.discordipc.entities.pipe.PipeStatus
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -144,6 +145,9 @@ object GameStateManager : IModule {
                 .contains("Map:") || scoreboardNames[9].removeFormatting().contains("Map:"))
 
             if (isWarlords) {
+                if (DiscordRPC.client.status != PipeStatus.CONNECTED && DiscordRPC.enabled) {
+                    DiscordRPC.start()
+                }
                 val builder = RichPresence.Builder()
                 builder.setDetails(getLobby())
                 if (inLobby) {
@@ -158,7 +162,13 @@ object GameStateManager : IModule {
                     builder.setStartTimestamp(OffsetDateTime.now())
                     builder.setEndTimestamp(OffsetDateTime.now().plusSeconds(getTimeLeftGame()))
                 }
-                DiscordRPC.INSTANCE.client.sendRichPresence(builder.build())
+                DiscordRPC.client.sendRichPresence(builder.build())
+
+            }
+            if (!isWarlords) {
+                if (DiscordRPC.client.status == PipeStatus.CONNECTED && !DiscordRPC.enabled) {
+                    DiscordRPC.client.close()
+                }
             }
 
         } catch (e: Exception) {
@@ -258,12 +268,31 @@ object GameStateManager : IModule {
             //00:00 - 13:23
             if (isIngame) {
                 if (isTDM) {
-                    val time = scoreboardNames[6].removeFormatting().substring(13)
-                    return time.substring(0, 2).toInt()
-                } else if (isCTF) {
-                    val time = scoreboardNames[9].removeFormatting().substring(13)
-                    //return time.substring(0, 2).toInt()
+                    if (scoreboardNames[6].removeFormatting().contains("Wins")) {
+                        val time = scoreboardNames[6].removeFormatting().substring(13)
+                        if (time.substring(0, 2).toInt() != 15) {
+                            return time.substring(0, 2).toInt()
+                        }
+                    } else {
+                        val time = scoreboardNames[6].removeFormatting().substring(11)
+                        if (time.substring(0, 2).toInt() != 15) {
+                            return time.substring(0, 2).toInt()
+                        }
+                    }
+                } else {
+                    if (scoreboardNames[9].removeFormatting().contains("Wins")) {
+                        val time = scoreboardNames[9].removeFormatting().substring(13)
+                        if (time.substring(0, 2).toInt() != 15) {
+                            return time.substring(0, 2).toInt()
+                        }
+                    } else {
+                        val time = scoreboardNames[9].removeFormatting().substring(11)
+                        if (time.substring(0, 2).toInt() != 15) {
+                            return time.substring(0, 2).toInt()
+                        }
+                    }
                 }
+                return 14
             }
         } catch (e: Exception) {
             e.printStackTrace()

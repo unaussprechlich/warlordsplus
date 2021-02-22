@@ -1,6 +1,7 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
+import net.minecraft.util.EnumParticleTypes
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.event.RenderWorldLastEvent
@@ -25,14 +26,24 @@ object SoulbindingCounter : IModule {
 
     private fun onClientTick(e: TickEvent.ClientTickEvent) {
         binded.removeIf { it.validUntil < System.currentTimeMillis() }
-//        binded.forEach { binded ->
-//            val players = Minecraft.getMinecraft().theWorld.playerEntities
-//            players.filter {
-//                it.name == binded.name
-//            }.forEach {
-//                Minecraft.getMinecraft().theWorld.spawnParticle(EnumParticleTypes.WATER_WAKE, it.posX + Math.random() * 2 - 1, it.posY + 1.5 + Math.random() * 2 - 1, it.posZ + Math.random() * 2 - 1, 0.0, 0.0, 0.0)
-//            }
-//        }
+        binded.forEach { binded ->
+            val players = Minecraft.getMinecraft().theWorld.playerEntities
+            players.filter {
+                it.name == binded.name
+            }.forEach { player ->
+                repeat(25) {
+                    Minecraft.getMinecraft().theWorld.spawnParticle(
+                        EnumParticleTypes.SLIME,
+                        player.posX + Math.random() * 2 - 1,
+                        player.posY + 1.5 + Math.random() * 2 - 1,
+                        player.posZ + Math.random() * 2 - 1,
+                        0.0,
+                        0.0,
+                        0.0
+                    )
+                }
+            }
+        }
     }
 
     private fun onChat(e: ClientChatReceivedEvent) {

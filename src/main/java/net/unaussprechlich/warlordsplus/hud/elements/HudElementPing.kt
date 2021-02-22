@@ -7,10 +7,11 @@ import net.minecraft.client.network.OldServerPinger
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
+import net.unaussprechlich.warlordsplus.module.modules.Excuses
 
 
-class HudElementPing : AbstractHudElement() {
-    private var lastValidPing = 0
+object HudElementPing : AbstractHudElement() {
+    var lastValidPing = 0
 
     //TODO fix crash when you exit multiplayer
     override fun getRenderString(): Array<String> {
@@ -20,7 +21,11 @@ class HudElementPing : AbstractHudElement() {
             if (System.currentTimeMillis() >= nextTimeStamp) updatePing()
             if (Minecraft.getMinecraft().currentServerData.pingToServer > 0) lastValidPing =
                 Minecraft.getMinecraft().currentServerData.pingToServer.toInt()
-            renderStrings.add("Ping: $lastValidPing")
+            if (Excuses.lag == 2) {
+                renderStrings.add("Ping: ${Excuses.ping}")
+            } else {
+                renderStrings.add("Ping: $lastValidPing")
+            }
         } catch (e: Exception) {
             renderStrings.add("Ping: NULL")
         }
@@ -36,35 +41,33 @@ class HudElementPing : AbstractHudElement() {
         return showPing
     }
 
-    companion object {
-        private val serverPinger = OldServerPinger()
-        private const val pingCooldwonMs = 2000
-        private var nextTimeStamp: Long = 0
+    private val serverPinger = OldServerPinger()
+    private const val pingCooldwonMs = 2000
+    private var nextTimeStamp: Long = 0
 
-        private fun updatePing() {
-            nextTimeStamp = System.currentTimeMillis() + pingCooldwonMs
+    private fun updatePing() {
+        nextTimeStamp = System.currentTimeMillis() + pingCooldwonMs
 
-            try {
-                if (Minecraft.getMinecraft().currentServerData == null) return
-                GlobalScope.launch {
-                    try {
-                        serverPinger.ping(Minecraft.getMinecraft().currentServerData)
-                    } catch (e: Exception) {
-                        //ignore
-                    }
+        try {
+            if (Minecraft.getMinecraft().currentServerData == null) return
+            GlobalScope.launch {
+                try {
+                    serverPinger.ping(Minecraft.getMinecraft().currentServerData)
+                } catch (e: Exception) {
+                    //ignore
                 }
-            } catch (e: Exception) {
-                //Ignore
             }
-
+        } catch (e: Exception) {
+            //Ignore
         }
 
-        @ConfigPropertyBoolean(
-            category = CCategory.HUD,
-            id = "showPing",
-            comment = "Enable or disable the Ping counter",
-            def = true
-        )
-        var showPing = false
     }
+
+    @ConfigPropertyBoolean(
+        category = CCategory.HUD,
+        id = "showPing",
+        comment = "Enable or disable the Ping counter",
+        def = true
+    )
+    var showPing = false
 }

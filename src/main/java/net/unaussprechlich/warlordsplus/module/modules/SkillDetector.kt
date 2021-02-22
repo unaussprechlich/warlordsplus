@@ -1,9 +1,12 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
+import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.util.removeFormatting
+import net.unaussprechlich.warlordsplus.util.removeSpaces
 
 
 object SkillDetector : IModule {
@@ -12,6 +15,14 @@ object SkillDetector : IModule {
         EventBus.register<ThePlayerUsedSkillEvent> {
             println(it.skillType)
             println(it.amount)
+        }
+        EventBus.register<ClientChatReceivedEvent> {
+            val message = it.message.unformattedText.removeFormatting()
+            //println(GameStateManager.getMinute())
+            if (message.removeSpaces().startsWith("Kills")) {
+
+            }
+
         }
     }
 

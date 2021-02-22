@@ -37,7 +37,7 @@ object ChatNotifications : RenderApi.Gui<RenderGameOverlayEvent.Chat>(), IModule
     }
 
     override fun onRender(event: RenderGameOverlayEvent.Chat) {
-        if (messages.isEmpty() && !isEnabled) return
+        if (messages.isEmpty() || !isEnabled) return
 
         glMatrix {
             translate(xRight - width - 5.0, yTop + 5.0)

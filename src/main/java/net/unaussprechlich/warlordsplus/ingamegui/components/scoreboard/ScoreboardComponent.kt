@@ -12,6 +12,7 @@ import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.Colors
+import net.unaussprechlich.warlordsplus.util.ImageRegistry
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 
 object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.ElementType.PLAYER_LIST, true) {
@@ -86,9 +87,7 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         val xKilled = 60.0
 
         translate(xStart, yStart)
-
         renderRect(w, 13, Colors.DEF)
-
         glMatrix {
             translateY(-3)
             translateX(xLevel + xName)
@@ -106,6 +105,16 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         }
 
         fun renderLine(p: net.unaussprechlich.warlordsplus.Player) {
+//            translateY(-2) {
+//                renderRect(w, 1, Colors.DEF, 255)
+//                renderRect(1, 10, Colors.DEF, 255)
+//            }
+//            translate(10,-2) {
+//                renderRect(1, 10, Colors.DEF, 255)
+//            }
+//            translateY(9) {
+//                renderRect(w, 1, Colors.DEF, 255)
+//            }
 
             fun hasMostKills(): Boolean {
                 return if (p.team == TeamEnum.BLUE)
@@ -152,6 +161,11 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
                 } ${if (p.name == Minecraft.getMinecraft().thePlayer.displayNameString) ThePlayer.spec.icon else p.spec.icon}".draw()
                 translateX(xName)
                 "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color.toString()}${p.name}".draw()
+                if (p.name == "sumSmash") {
+                    translate(xKills - 50) {
+                        renderImage(9.0, 9.0, ImageRegistry.MEME_WEIRDCHAMP)
+                    }
+                }
                 translateX(xKills)
                 "${if (hasMostKills()) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}".draw()
                 translateX(xDeaths)

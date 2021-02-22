@@ -48,6 +48,7 @@ object StatsDisplayAfterGame : IModule {
                         Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
                         displayScoreboard()
                         Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
+                        //displayMinuteStats()
                         showStats = false
                     }
                     counter = 0
@@ -109,6 +110,15 @@ object StatsDisplayAfterGame : IModule {
             }
         }
         //PAL[90]sumSmash - 32:3 - 3798:7893
+    }
+
+    fun displayMinuteStats() {
+        for (minuteStat in ThePlayer.minuteStats.indices) {
+            //Minute 1 -  Kills:123 - Deaths:123 - Hits:123 - Damage:123 - Healing: 123
+            Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("Minute $minuteStat - Kills:${ThePlayer.minuteStats[minuteStat][0]} - Deaths:${ThePlayer.minuteStats[minuteStat][1]} - Hits:${ThePlayer.minuteStats[minuteStat][2]} - Damage:${ThePlayer.minuteStats[minuteStat][3]} - Healing:${ThePlayer.minuteStats[minuteStat][4]}"))
+
+        }
+
     }
 
     fun addStatsToClipboard(winner: String) {

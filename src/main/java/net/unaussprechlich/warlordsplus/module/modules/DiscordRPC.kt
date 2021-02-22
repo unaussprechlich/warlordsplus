@@ -4,20 +4,22 @@ import com.jagrosh.discordipc.IPCClient
 import com.jagrosh.discordipc.IPCListener
 import com.jagrosh.discordipc.entities.RichPresence
 import com.jagrosh.discordipc.exceptions.NoDiscordClientException
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import java.io.FileNotFoundException
 
 
-class DiscordRPC : IPCListener {
+object DiscordRPC : IPCListener {
     private val builder: RichPresence.Builder = RichPresence.Builder()
     val client: IPCClient = IPCClient(811200780673220649)
 
     fun start() {
         try {
             //if (enabled) {
-                client.setListener(object : IPCListener {
-                    override fun onReady(client: IPCClient) {
-                        client.sendRichPresence(builder.build())
-                    }
+            client.setListener(object : IPCListener {
+                override fun onReady(client: IPCClient) {
+                    client.sendRichPresence(builder.build())
+                }
                 })
                 client.connect()
                 client.sendRichPresence(builder.build())
@@ -63,15 +65,11 @@ class DiscordRPC : IPCListener {
         client.sendRichPresence(builder.build())
     }
 
-    companion object {
-        var INSTANCE = DiscordRPC()
-    }
-
-//    @ConfigPropertyBoolean(
-//        category = CCategory.MODULES,
-//        id = "enableDiscordRPC",
-//        comment = "Enable or disable rich presence on discord",
-//        def = true
-//    )
-//    var enabled = true
+    @ConfigPropertyBoolean(
+        category = CCategory.MODULES,
+        id = "enableDiscordRPC",
+        comment = "Enable or disable rich presence on discord",
+        def = true
+    )
+    var enabled = true
 }

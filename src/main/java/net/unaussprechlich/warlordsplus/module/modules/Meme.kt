@@ -27,11 +27,11 @@ object Meme : IModule {
 
     init {
         EventBus.register<EnergyReceivedEvent> {
-            playSoundForEvent(Sounds.MEME_CHATURBATE_TIP_SOUND_TINY)
+            //playSoundForEvent(Sounds.MEME_CHATURBATE_TIP_SOUND_TINY)
         }
         EventBus.register<ChatDetector.ChatMessageEvent> {
-            if (!it.isThePlayer())
-                playSoundForEvent(Sounds.MEME_GRINDR_NOTIFICATION)
+            //if (!it.isThePlayer())
+            //    playSoundForEvent(Sounds.MEME_GRINDR_NOTIFICATION)
         }
         EventBus.register(::onChat)
     }
@@ -75,10 +75,10 @@ object Meme : IModule {
 
     fun onChat(event: ClientChatReceivedEvent) {
         try {
-            if (event.message.unformattedText.contains("ricky")) {
-                WorldRenderer.runningFor = 213
-                SoundManager.playSound(Sounds.MEME_RICKY)
-            }
+//            if (event.message.unformattedText.contains("ricky")) {
+//                WorldRenderer.runningFor = 213
+//                SoundManager.playSound(Sounds.MEME_RICKY)
+//            }
         } catch (e: Exception) {
 
         }

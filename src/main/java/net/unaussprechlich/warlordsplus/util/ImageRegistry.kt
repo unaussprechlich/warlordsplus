@@ -7,7 +7,8 @@ import net.unaussprechlich.warlordsplus.StaticStuff
 
 enum class ImageRegistry(val path: String) : IResourceLocationProvider {
 
-    MEME_RICK_ROLL("/images/meme/rickroll.png");
+    MEME_RICK_ROLL("/images/meme/rickroll.png"),
+    MEME_WEIRDCHAMP("/images/meme/weirdchamp.png");
 
     private val res = ResourceLocation(StaticStuff.MODID, path)
 

@@ -57,7 +57,7 @@ public class WarlordsPlus {
         ClientCommandHandler.instance.registerCommand(new ChangeTargetCommand());
         ClientCommandHandler.instance.registerCommand(new GetPlayerStatsCommand());
         ClientCommandHandler.instance.registerCommand(new SetWinLossCommand());
-        ClientCommandHandler.instance.registerCommand(new SetKillDeathCommand());
+        ClientCommandHandler.instance.registerCommand(new SetKillDeathAssistCommand());
         ClientCommandHandler.instance.registerCommand(new GetEndGameStatsCommand());
         ClientCommandHandler.instance.registerCommand(SpecWinCommand.INSTANCE);
         ClientCommandHandler.instance.registerCommand(new RemoveSpec());
