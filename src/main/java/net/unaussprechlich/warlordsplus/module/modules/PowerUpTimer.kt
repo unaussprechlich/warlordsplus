@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.util.Colors
 import java.util.*
 
 
@@ -42,7 +43,9 @@ object PowerUpTimer : IModule, RenderApi.World() {
         val x: Double,
         val y: Double,
         val z: Double,
+        val color: Colors,
         var respawnTimer: Int = -1
+
     )
 
     private fun onClientTick(event: TickEvent.ClientTickEvent) {
@@ -50,9 +53,11 @@ object PowerUpTimer : IModule, RenderApi.World() {
 
         currentPowerUps = Minecraft.getMinecraft().theWorld.getLoadedEntityList().filter {
             it.customNameTag != null &&
-                    it is EntityArmorStand && it.customNameTag.contains("§lHEALING") || it.customNameTag.contains("§lDAMAGE") || it.customNameTag.contains(
-                "§lSPEED"
-            ) || it.customNameTag.contains("§lENERGY")
+                    it is EntityArmorStand &&
+                    it.customNameTag.contains("§lHEALING") ||
+                    it.customNameTag.contains("§lDAMAGE") ||
+                    it.customNameTag.contains("§lSPEED") ||
+                    it.customNameTag.contains("§lENERGY")
         }.map {
             it as EntityArmorStand
         }.toMutableList()
@@ -64,7 +69,17 @@ object PowerUpTimer : IModule, RenderApi.World() {
             powerUps.values
                 .filter { entry -> (entry.id !== it.uniqueID && entry.x == it.posX && entry.y == it.posY && entry.z == it.posZ) }
                 .forEach { entry -> powerUps.remove(entry.id) }
-            powerUps[it.uniqueID] = PowerUp(it.uniqueID, it.posX, it.posY, it.posZ)
+            when {
+                it.customNameTag.contains("§lHEALING") -> powerUps[it.uniqueID] =
+                    PowerUp(it.uniqueID, it.posX, it.posY, it.posZ, Colors.GREEN)
+                it.customNameTag.contains("§lDAMAGE") -> powerUps[it.uniqueID] =
+                    PowerUp(it.uniqueID, it.posX, it.posY, it.posZ, Colors.RED)
+                it.customNameTag.contains("§lSPEED") -> powerUps[it.uniqueID] =
+                    PowerUp(it.uniqueID, it.posX, it.posY, it.posZ, Colors.YELLOW)
+                it.customNameTag.contains("§lENERGY") -> powerUps[it.uniqueID] =
+                    PowerUp(it.uniqueID, it.posX, it.posY, it.posZ, Colors.ORANGE)
+
+            }
         }
     }
 
@@ -76,7 +91,7 @@ object PowerUpTimer : IModule, RenderApi.World() {
                 autoRotate()
                 scaleForWorldRendering()
                 scale(10.0)
-                "${it.respawnTimer}".drawCentered(seeThruBlocks = true)
+                "${it.respawnTimer}".drawPowerUp(it.color)
             }
         }
     }

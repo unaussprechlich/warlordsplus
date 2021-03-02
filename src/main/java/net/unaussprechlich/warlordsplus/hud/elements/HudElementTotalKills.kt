@@ -2,7 +2,6 @@ package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.config.CCategory
@@ -31,23 +30,14 @@ object HudElementTotalKills : AbstractHudElement() {
             numberOfCapsBlue = 0
         }
 
-        EventBus.register<TickEvent.ClientTickEvent> {
-            if (GameStateManager.isCTF) {
-                blueKills = (GameStateManager.bluePoints - numberOfCapsBlue * 250) / 5
-                redKills = (GameStateManager.redPoints - numberOfCapsRed * 250) / 5
-            } else if (GameStateManager.isTDM) {
-                blueKills = GameStateManager.bluePoints / 15
-                redKills = GameStateManager.redPoints / 15
-            }
-        }
-
         EventBus.register<KillEvent> {
-            if (GameStateManager.isDOM) {
+            if (GameStateManager.isCTF || GameStateManager.isTDM) {
                 if (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.BLUE)
                     blueKills++
                 else if (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.RED)
                     redKills++
             }
+
         }
 
         EventBus.register<ClientChatReceivedEvent> {
@@ -60,10 +50,7 @@ object HudElementTotalKills : AbstractHudElement() {
                         numberOfCapsRed++
                     }
                 }
-                if (GameStateManager.isCTF) {
-                    blueKills = (GameStateManager.bluePoints - numberOfCapsBlue * 250) / 5
-                    redKills = (GameStateManager.redPoints - numberOfCapsRed * 250) / 5
-                } else if (GameStateManager.isTDM) {
+                if (GameStateManager.isTDM) {
                     blueKills = GameStateManager.bluePoints / 15
                     redKills = GameStateManager.redPoints / 15
                 }

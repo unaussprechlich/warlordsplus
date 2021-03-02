@@ -104,121 +104,125 @@ object StatsInLobby : IModule, RenderApi.World() {
 
         }
 
-        Minecraft.getMinecraft().theWorld.getLoadedEntityList().filter {
-            it is EntityArmorStand && it.customNameTag.contains("Shaman") || it.customNameTag.contains("Mage") || it.customNameTag.contains(
-                "Warrior"
-            ) || it.customNameTag.contains("Paladin") || (it.customNameTag.contains("Capture the Flag") && it.posX != -2540.5) || (it.customNameTag.contains(
-                "Domination"
-            ) && it.posZ > 730) || (it.customNameTag.contains("Team Deathmatch") && it.posZ > 730) || it.customNameTag.contains(
-                "Queue"
-            )
-        }.map {
-            it as EntityArmorStand
-        }.forEach {
-            when {
-                it.customNameTag.contains("Shaman") -> {
-                    it.renderClassStats(
-                        data.warlordsSr.shaman?.SR,
-                        data.warlordsSr.shaman?.WL,
-                        data.warlordsSr.shaman?.DHP,
-                        data.ranking?.shaman?.overall
-                    )
-                }
-                it.customNameTag.contains("Mage") -> {
-                    it.renderClassStats(
-                        data.warlordsSr.mage?.SR,
-                        data.warlordsSr.mage?.WL,
-                        data.warlordsSr.mage?.DHP,
-                        data.ranking?.mage?.overall
-                    )
-                }
-                it.customNameTag.contains("Warrior") -> {
-                    it.renderClassStats(
-                        data.warlordsSr.warrior?.SR,
-                        data.warlordsSr.warrior?.WL,
-                        data.warlordsSr.warrior?.DHP,
-                        data.ranking?.warrior?.overall
-                    )
-                }
-                it.customNameTag.contains("Paladin") -> {
-                    it.renderClassStats(
-                        data.warlordsSr.paladin?.SR,
-                        data.warlordsSr.paladin?.WL,
-                        data.warlordsSr.paladin?.DHP,
-                        data.ranking?.paladin?.overall
-                    )
-                }
-                it.customNameTag.contains("Capture the Flag") -> {
-                    glMatrix {
-                        translateToPos(it.posX, it.posY + 1.2, it.posZ)
-                        autoRotateX()
-                        translate(3.0, 0.0, 0.0)
-                        scaleForWorldRendering()
-                        scale(.95)
-                        renderRect(95.0, 55.0, Colors.DEF, 255, -0.5)
-                        translate(4.0, 4.0, 0.0)
-                        "Wins: ${data.warlordsHypixel.winsCapturetheflag}".draw()
-                        translate(-4.0, 10.0, 0.0)
-                        renderRect(140.0, 2.0, Colors.WHITE, 255, -0.0)
-                        translate(4.0, 6.0, 0.0)
-                        "Blue Wins: ${EnumChatFormatting.BLUE}${data.warlordsHypixel.winsCapturetheflagBlu}".draw()
-                        translateY(-8.0)
-                        "Red Wins: ${EnumChatFormatting.RED}${data.warlordsHypixel.winsCapturetheflagRed}".draw()
-                        translateY(-8.0)
-                        "Team Caps: ${data.warlordsHypixel.flagConquerTeam}".draw()
-                        translateY(-8.0)
-                        "Your Caps: ${data.warlordsHypixel.flagConquerSelf}".draw()
+        try {
+            Minecraft.getMinecraft().theWorld.getLoadedEntityList().filter {
+                it is EntityArmorStand && it.customNameTag.contains("Shaman") || it.customNameTag.contains("Mage") || it.customNameTag.contains(
+                    "Warrior"
+                ) || it.customNameTag.contains("Paladin") || (it.customNameTag.contains("Capture the Flag") && it.posX != -2540.5) || (it.customNameTag.contains(
+                    "Domination"
+                ) && it.posZ > 730) || (it.customNameTag.contains("Team Deathmatch") && it.posZ > 730) || it.customNameTag.contains(
+                    "Queue"
+                )
+            }.map {
+                it as EntityArmorStand
+            }.forEach {
+                when {
+                    it.customNameTag.contains("Shaman") -> {
+                        it.renderClassStats(
+                            data.warlordsSr.shaman?.SR,
+                            data.warlordsSr.shaman?.WL,
+                            data.warlordsSr.shaman?.DHP,
+                            data.ranking?.shaman?.overall
+                        )
                     }
-                }
-                it.customNameTag.contains("Domination") -> {
-                    glMatrix {
-                        translateToPos(it.posX, it.posY + 1.2, it.posZ)
-                        autoRotateX()
-                        translate(2.7, 0.0, 0.0)
-                        scaleForWorldRendering()
-                        scale(.95)
-                        renderRect(82.0, 40.0, Colors.DEF, 255, -0.5)
-                        translate(4.0, 4.0, 0.0)
-                        "Wins: ${data.warlordsHypixel.winsDomination}".draw()
-                        translate(-4.0, 10.0, 0.0)
-                        renderRect(120.0, 2.0, Colors.WHITE, 255, -0.0)
-                        translate(4.0, 6.0, 0.0)
-                        "Blue Wins: ${EnumChatFormatting.BLUE}${data.warlordsHypixel.winsDominationBlu}".draw()
-                        translateY(-8.0)
-                        "Red Wins: ${EnumChatFormatting.RED}${data.warlordsHypixel.winsDominationRed}".draw()
+                    it.customNameTag.contains("Mage") -> {
+                        it.renderClassStats(
+                            data.warlordsSr.mage?.SR,
+                            data.warlordsSr.mage?.WL,
+                            data.warlordsSr.mage?.DHP,
+                            data.ranking?.mage?.overall
+                        )
                     }
-                }
-                it.customNameTag.contains("Team Deathmatch") -> {
-                    glMatrix {
-                        translateToPos(it.posX, it.posY + 1.2, it.posZ)
-                        autoRotateX()
-                        translate(2.7, 0.0, 0.0)
-                        scaleForWorldRendering()
-                        scale(.95)
-                        renderRect(82.5, 40.0, Colors.DEF, 255, -0.5)
-                        translate(4.0, 4.0, 0.0)
-                        "Wins: ${data.warlordsHypixel.winsTeamdeathmatch}".draw()
-                        translate(-4.0, 10.0, 0.0)
-                        renderRect(120.0, 2.0, Colors.WHITE, 255, -0.0)
-                        translate(4.0, 6.0, 0.0)
-                        "Blue Wins: ${EnumChatFormatting.BLUE}${data.warlordsHypixel.winsTeamdeathmatchBlu}".draw()
-                        translateY(-8.0)
-                        "Red Wins: ${EnumChatFormatting.RED}${data.warlordsHypixel.winsTeamdeathmatchRed}".draw()
+                    it.customNameTag.contains("Warrior") -> {
+                        it.renderClassStats(
+                            data.warlordsSr.warrior?.SR,
+                            data.warlordsSr.warrior?.WL,
+                            data.warlordsSr.warrior?.DHP,
+                            data.ranking?.warrior?.overall
+                        )
                     }
-                }
-                it.customNameTag.contains("Queue") -> {
-                    glMatrix {
-                        translateToPos(it.posX, it.posY + 2, it.posZ)
-                        autoRotate()
-                        scaleForWorldRendering()
-                        scale(5.0)
-                        translateY(18.5)
-                        //renderRectXCentered(10.0, 15.0, Colors.DEF, 100, -0.5)
-                        val queue = it.customNameTag.substring(2, it.customNameTag.indexOf("in") - 1)
-                        queue.drawCentered()
+                    it.customNameTag.contains("Paladin") -> {
+                        it.renderClassStats(
+                            data.warlordsSr.paladin?.SR,
+                            data.warlordsSr.paladin?.WL,
+                            data.warlordsSr.paladin?.DHP,
+                            data.ranking?.paladin?.overall
+                        )
+                    }
+                    it.customNameTag.contains("Capture the Flag") -> {
+                        glMatrix {
+                            translateToPos(it.posX, it.posY + 1.2, it.posZ)
+                            autoRotateX()
+                            translate(3.0, 0.0, 0.0)
+                            scaleForWorldRendering()
+                            scale(.95)
+                            renderRect(95.0, 55.0, Colors.DEF, 255, -0.5)
+                            translate(4.0, 4.0, 0.0)
+                            "Wins: ${data.warlordsHypixel.winsCapturetheflag}".draw()
+                            translate(-4.0, 10.0, 0.0)
+                            renderRect(140.0, 2.0, Colors.WHITE, 255, -0.0)
+                            translate(4.0, 6.0, 0.0)
+                            "Blue Wins: ${EnumChatFormatting.BLUE}${data.warlordsHypixel.winsCapturetheflagBlu}".draw()
+                            translateY(-8.0)
+                            "Red Wins: ${EnumChatFormatting.RED}${data.warlordsHypixel.winsCapturetheflagRed}".draw()
+                            translateY(-8.0)
+                            "Team Caps: ${data.warlordsHypixel.flagConquerTeam}".draw()
+                            translateY(-8.0)
+                            "Your Caps: ${data.warlordsHypixel.flagConquerSelf}".draw()
+                        }
+                    }
+                    it.customNameTag.contains("Domination") -> {
+                        glMatrix {
+                            translateToPos(it.posX, it.posY + 1.2, it.posZ)
+                            autoRotateX()
+                            translate(2.7, 0.0, 0.0)
+                            scaleForWorldRendering()
+                            scale(.95)
+                            renderRect(82.0, 40.0, Colors.DEF, 255, -0.5)
+                            translate(4.0, 4.0, 0.0)
+                            "Wins: ${data.warlordsHypixel.winsDomination}".draw()
+                            translate(-4.0, 10.0, 0.0)
+                            renderRect(120.0, 2.0, Colors.WHITE, 255, -0.0)
+                            translate(4.0, 6.0, 0.0)
+                            "Blue Wins: ${EnumChatFormatting.BLUE}${data.warlordsHypixel.winsDominationBlu}".draw()
+                            translateY(-8.0)
+                            "Red Wins: ${EnumChatFormatting.RED}${data.warlordsHypixel.winsDominationRed}".draw()
+                        }
+                    }
+                    it.customNameTag.contains("Team Deathmatch") -> {
+                        glMatrix {
+                            translateToPos(it.posX, it.posY + 1.2, it.posZ)
+                            autoRotateX()
+                            translate(2.7, 0.0, 0.0)
+                            scaleForWorldRendering()
+                            scale(.95)
+                            renderRect(82.5, 40.0, Colors.DEF, 255, -0.5)
+                            translate(4.0, 4.0, 0.0)
+                            "Wins: ${data.warlordsHypixel.winsTeamdeathmatch}".draw()
+                            translate(-4.0, 10.0, 0.0)
+                            renderRect(120.0, 2.0, Colors.WHITE, 255, -0.0)
+                            translate(4.0, 6.0, 0.0)
+                            "Blue Wins: ${EnumChatFormatting.BLUE}${data.warlordsHypixel.winsTeamdeathmatchBlu}".draw()
+                            translateY(-8.0)
+                            "Red Wins: ${EnumChatFormatting.RED}${data.warlordsHypixel.winsTeamdeathmatchRed}".draw()
+                        }
+                    }
+                    it.customNameTag.contains("Queue") -> {
+                        glMatrix {
+                            translateToPos(it.posX, it.posY + 2, it.posZ)
+                            autoRotate()
+                            scaleForWorldRendering()
+                            scale(5.0)
+                            translateY(18.5)
+                            //renderRectXCentered(10.0, 15.0, Colors.DEF, 100, -0.5)
+                            val queue = it.customNameTag.substring(2, it.customNameTag.indexOf("in") - 1)
+                            queue.drawCentered()
+                        }
                     }
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

@@ -8,7 +8,7 @@ object Troll : IModule {
 //        category = CCategory.GENERAL,
 //        id = "Command 1",
 //        comment = "",
-//        def = "/party COMPSZN"
+//        def = "/party heavyweek"
 //    )
 //    var firstCommand = "/party COMPSZN"
 //
@@ -48,11 +48,11 @@ object Troll : IModule {
 //    var sixthTime = -1L
 //
 //    private fun onClientTick(event: TickEvent.ClientTickEvent) {
-
+//
 //        time = System.currentTimeMillis()
-
+//
 //        if (secondTime == -1L) {
-//            Minecraft.getMinecraft().thePlayer.sendChatMessage("/p Meerkatman11")
+//            Minecraft.getMinecraft().thePlayer.sendChatMessage("/p heavyweek")
 //            secondTime = time + 600
 //            thirdTime = time + 1200;
 //            fourthTime = time + 1800;
@@ -60,7 +60,7 @@ object Troll : IModule {
 //        }
 //        when {
 //            secondTime < time -> {
-//                Minecraft.getMinecraft().thePlayer.sendChatMessage("/p dingus")
+//                Minecraft.getMinecraft().thePlayer.sendChatMessage("/p unaussprechlich")
 //                secondTime = time + 2000
 //            }
 //            thirdTime < time -> {

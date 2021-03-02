@@ -14,32 +14,116 @@ enum class WarlordsEnum(val classname: String, val shortName: String) {
     NONE("NONE", "NONE")
 }
 
-enum class SpecsEnum(val classname: String, val weapon: String, val icon: String) {
-    AVENGER("Avenger", "Avenger", "${EnumChatFormatting.RED}銌"), CRUSADER(
+enum class SpecsEnum(
+    val classname: String,
+    val red: String,
+    val purple: String,
+    val blue: String,
+    val orange: String,
+    val weapon: String,
+    val icon: String
+) {
+    AVENGER(
+        "Avenger",
+        "Consecrate",
+        "Light Infusion",
+        "Holy Radiance",
+        "Avenger's Wrath",
+        "Avenger",
+        "${EnumChatFormatting.RED}銌"
+    ),
+    CRUSADER(
         "Crusader",
+        "Consecrate",
+        "Light Infusion",
+        "Holy Radiance",
+        "Inspiring Presence",
         "Crusader",
         "${EnumChatFormatting.YELLOW}鉰"
     ),
-    PROTECTOR("Protector", "Protector", "${EnumChatFormatting.GREEN}銀"),
-    BERSERKER("Berserker", "35%", "${EnumChatFormatting.RED}銌"), DEFENDER(
+    PROTECTOR(
+        "Protector",
+        "Consecrate",
+        "Light Infusion",
+        "Holy Radiance",
+        "Hammer of Light",
+        "Protector",
+        "${EnumChatFormatting.GREEN}銀"
+    ),
+    BERSERKER("Berserker", "Seismic Wave", "Ground Slam", "Blood Lust", "Berserk", "35%", "${EnumChatFormatting.RED}銌"),
+    DEFENDER(
         "Defender",
+        "Seismic Wave",
+        "Ground Slam",
+        "Intervene",
+        "Last Stand",
         "25%",
         "${EnumChatFormatting.YELLOW}鉰"
     ),
-    REVENANT("Revenant", "crippling", "${EnumChatFormatting.GREEN}銀"),
-    PYROMANCER("Pyromancer", "Fireball", "${EnumChatFormatting.RED}銌"), CRYOMANCER(
+    REVENANT(
+        "Revenant",
+        "Reckless Charge",
+        "Ground Slam",
+        "Orbs of Light",
+        "Undying Army",
+        "crippling",
+        "${EnumChatFormatting.GREEN}銀"
+    ),
+    PYROMANCER(
+        "Pyromancer",
+        "Flame Burst",
+        "Time Warp",
+        "Arcane Shield",
+        "Inferno",
+        "Fireball",
+        "${EnumChatFormatting.RED}銌"
+    ),
+    CRYOMANCER(
         "Cryomancer",
+        "Freezing Breath",
+        "Time Warp",
+        "Arcane Shield",
+        "Ice Barrier",
         "Frostbolt",
         "${EnumChatFormatting.YELLOW}鉰"
     ),
-    AQUAMANCER("Aquamancer", "Water", "${EnumChatFormatting.GREEN}銀"),
-    THUNDERLORD("Thunderlord", "Lightning", "${EnumChatFormatting.RED}銌"), SPIRITGUARD(
+    AQUAMANCER(
+        "Aquamancer",
+        "Water Breath",
+        "Time Warp",
+        "Arcane Shield",
+        "Healing Rain",
+        "Water",
+        "${EnumChatFormatting.GREEN}銀"
+    ),
+    THUNDERLORD(
+        "Thunderlord",
+        "Chain Lightning",
+        "Windfury Weapon",
+        "Lightning Rod",
+        "Capacitor Totem",
+        "Lightning",
+        "${EnumChatFormatting.RED}銌"
+    ),
+    SPIRITGUARD(
         "Spiritguard",
+        "Spirit Link",
+        "Soulbinding Weapon",
+        "Repentance",
+        "Death's Debt",
         "Fallen",
         "${EnumChatFormatting.YELLOW}鉰"
     ),
-    EARTHWARDEN("Earthwarden", "Earthen", "${EnumChatFormatting.GREEN}銀"),
-    NONE("NONE", "NONE", "")
+    EARTHWARDEN(
+        "Earthwarden",
+        "Boulder",
+        "Earthliving Weapon",
+        "Chain Heal",
+        "Healing Totem",
+        "Earthen",
+        "${EnumChatFormatting.GREEN}銀"
+    ),
+    NONE("NONE", "", "", "", "", "NONE", "")
 }
 
 enum class SpecsEnumSuper(val specName: String) {

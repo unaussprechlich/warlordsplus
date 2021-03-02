@@ -1,6 +1,7 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
+import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.EnumParticleTypes
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
@@ -68,14 +69,13 @@ object SoulbindingCounter : IModule {
                 translateX(xCenter + 1)
                 translateY(-yCenter + 13)
                 if (binded.size > 0) {
-                    //scale(15.0)
-                    binded.size.toString().drawCentered()
+                    "${EnumChatFormatting.LIGHT_PURPLE}${binded.size}".drawCentered()
                 }
             }
         }
 
         override fun shouldRender(e: RenderGameOverlayEvent.Text): Boolean {
-            return GameStateManager.isIngame || !show
+            return GameStateManager.isIngame && show
         }
     }
 

@@ -12,7 +12,6 @@ import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.Colors
-import net.unaussprechlich.warlordsplus.util.ImageRegistry
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 
 object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.ElementType.PLAYER_LIST, true) {
@@ -41,6 +40,54 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
     )
     var setScaleCTFTDM = 100
 
+    @ConfigPropertyInt(
+        category = CCategory.SCOREBOARD,
+        id = "moveScoreboard Left(-) or Right(+)",
+        comment = "Moves the scoreboard left or right depending on the value",
+        def = 0
+    )
+    var moveScoreboard = 0
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "showTopHeader",
+        comment = "Shows (Kills/Deaths/Received/Given/ etc...)",
+        def = true
+    )
+    var showTopHeader = true
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "showBoxOutlines",
+        comment = "Shows box outline around players",
+        def = true
+    )
+    var showOutline = true
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "showDiedToYouStoleKill",
+        comment = "Shows the amount of time ppl died to you or stole your kill",
+        def = false
+    )
+    var showDiedToYouStoleKill = false
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "showDoneAndReceived",
+        comment = "Shows the amount dmg/heal someone has done or received to you or by you",
+        def = true
+    )
+    var showDoneAndReceived = true
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "splitScoreBoard",
+        comment = "Splits the scoreboard horizontally instead of vertically",
+        def = false
+    )
+    var splitScoreBoard = false
+
     override fun onRender(event: RenderGameOverlayEvent.Pre) {
         try {
             if (showNewScoreboard)
@@ -65,10 +112,25 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         val mostKillsRed = if (teamRed.isEmpty()) 0 else teamRed.map { it.kills }.sorted().reversed()[0]
         val mostKillsBlue = if (teamBlue.isEmpty()) 0 else teamBlue.map { it.kills }.sorted().reversed()[0]
 
-        val w = 443
+        var w = 443
+
+        if (!showDoneAndReceived) {
+            showDiedToYouStoleKill = false
+        }
+
+        if (!showDiedToYouStoleKill) {
+            w -= 138
+        } else if (!showTopHeader) {
+            w -= 100
+        }
+        if (!showDoneAndReceived) {
+            w -= 105
+        }
 
         val yStart = 25
         var xStart = xCenter - (w / 2)
+
+
 
         if (GameStateManager.isCTF || GameStateManager.isTDM) {
             GlStateManager.scale(setScaleCTFTDM.toDouble() / 100, setScaleCTFTDM.toDouble() / 100, 1.0)
@@ -78,43 +140,107 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
             xStart = (xCenter + 50 - setScaleDOM / 2 - ((w * setScaleDOM.toDouble() / 100 / 2)).toInt())
         }
 
-        val xLevel = 2.0
-        val xName = 53.0
-        val xKills = 100.0
-        val xDeaths = 30.0
-        val xDone = 40.0
-        val xReceived = 60.0
-        val xKilled = 60.0
+        xStart += moveScoreboard
+        if (splitScoreBoard) {
+            xStart -= 60
+            if (showDoneAndReceived) {
+                xStart -= 65
+            }
+        }
 
-        translate(xStart, yStart)
-        renderRect(w, 13, Colors.DEF)
-        glMatrix {
-            translateY(-3)
-            translateX(xLevel + xName)
-            "Name".draw()
-            translateX(xKills)
-            "Kills".draw()
-            translateX(xDeaths)
-            "Deaths".draw()
-            translateX(xDone)
-            "Given".draw()
-            translateX(xReceived)
-            "Received".draw()
-            translateX(xKilled)
-            "DiedToYou/StoleKill".draw()
+        var xLevel = 2.0
+        var xName = 53.0
+        var xKills = 100.0
+        var xDeaths = 30.0
+        var xDone = 40.0
+        var xReceived = 50.0
+        var xKilled = 60.0
+
+        if (!showTopHeader) {
+            xDeaths = 25.0
+            xDone = 30.0
+        }
+
+        if (showTopHeader) {
+            translate(xStart, yStart)
+            renderRect(w, 13, Colors.DEF)
+            glMatrix {
+                translateY(-3)
+                translateX(xLevel + xName)
+                "Name".draw()
+                if (!showDoneAndReceived && !showDiedToYouStoleKill) {
+                    translateX(xKills)
+                    "K".draw()
+                    translateX(xDeaths)
+                    "D".draw()
+                } else {
+                    translateX(xKills)
+                    "Kills".draw()
+                    translateX(xDeaths)
+                    "Deaths".draw()
+                }
+                if (showDoneAndReceived) {
+                    translateX(xDone)
+                    "Given".draw()
+                    if (showTopHeader) {
+                        translateX(xReceived - 17.5)
+                        "Received".draw()
+                    }
+                }
+                if (showDiedToYouStoleKill) {
+                    translateX(xKilled)
+                    "DiedToYou/StoleKill".draw()
+                }
+            }
+            if (splitScoreBoard) {
+                glMatrix {
+                    translateX(w + 5)
+                    renderRect(w, 13, Colors.DEF)
+                    translateY(-3)
+                    translateX(xLevel + xName)
+                    "Name".draw()
+                    if (!showDoneAndReceived && !showDiedToYouStoleKill) {
+                        translateX(xKills)
+                        "K".draw()
+                        translateX(xDeaths)
+                        "D".draw()
+                    } else {
+                        translateX(xKills)
+                        "Kills".draw()
+                        translateX(xDeaths)
+                        "Deaths".draw()
+                    }
+                    if (showDoneAndReceived) {
+                        translateX(xDone)
+                        "Given".draw()
+                        if (showTopHeader) {
+                            translateX(xReceived - 17.5)
+                            "Received".draw()
+                        }
+                    }
+                    if (showDiedToYouStoleKill) {
+                        translateX(xKilled)
+                        "DiedToYou/StoleKill".draw()
+                    }
+                }
+            }
+        } else {
+            translate(xStart, yStart - 15)
         }
 
         fun renderLine(p: net.unaussprechlich.warlordsplus.Player) {
-//            translateY(-2) {
-//                renderRect(w, 1, Colors.DEF, 255)
-//                renderRect(1, 10, Colors.DEF, 255)
-//            }
-//            translate(10,-2) {
-//                renderRect(1, 10, Colors.DEF, 255)
-//            }
-//            translateY(9) {
-//                renderRect(w, 1, Colors.DEF, 255)
-//            }
+            if (showOutline) {
+                translateY(-2) {
+                    renderRect(w.toDouble(), 1.25, Colors.DEF)
+                    renderRect(1.25, 11.0, Colors.DEF)
+                }
+                translate(w - 1.25, -2.0) {
+                    renderRect(1.25, 11.0, Colors.DEF)
+                }
+                translateY(8.75) {
+                    renderRect(w.toDouble(), 1.25, Colors.DEF)
+                }
+            }
 
             fun hasMostKills(): Boolean {
                 return if (p.team == TeamEnum.BLUE)
@@ -153,51 +279,75 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
             }
 
             glMatrix {
-                translateX(xLevel)
+                translate(xLevel, .5)
                 "${if (p.left) "LEFT" else ""}${EnumChatFormatting.GOLD}${p.warlord.shortName}${EnumChatFormatting.RESET} ${isPrestige()}${
                     level(
                         p.level
                     )
                 } ${if (p.name == Minecraft.getMinecraft().thePlayer.displayNameString) ThePlayer.spec.icon else p.spec.icon}".draw()
                 translateX(xName)
-                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color.toString()}${p.name}".draw()
-                if (p.name == "sumSmash") {
-                    translate(xKills - 50) {
-                        renderImage(9.0, 9.0, ImageRegistry.MEME_WEIRDCHAMP)
-                    }
-                }
+                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color.toString()}${if (p.name == Minecraft.getMinecraft().thePlayer.displayNameString) EnumChatFormatting.GREEN else ""}${p.name}".draw()
+//                if (p.name == "sumSmash") {
+//                    translate(xKills - 50) {
+//                        renderImage(9.0, 9.0, ImageRegistry.MEME_WEIRDCHAMP)
+//                    }
+//                }
                 translateX(xKills)
                 "${if (hasMostKills()) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}".draw()
                 translateX(xDeaths)
                 "${if (hasMostDeaths()) EnumChatFormatting.DARK_RED else EnumChatFormatting.RESET}${p.deaths}".draw()
                 if (ThePlayer.team == p.team) {
-                    translateX(xDone)
-                    "${EnumChatFormatting.GREEN}${p.healingReceived}".draw()
-                    translateX(xReceived)
-                    "${EnumChatFormatting.DARK_GREEN}${p.healingDone}".draw()
-                    translateX(xKilled)
-                    "${EnumChatFormatting.RESET}${p.stoleKill}".draw()
+                    if (showDoneAndReceived) {
+
+                        translateX(xDone)
+                        "${EnumChatFormatting.GREEN}${p.healingReceived}".draw()
+                        translateX(xReceived)
+                        "${EnumChatFormatting.DARK_GREEN}${p.healingDone}".draw()
+                    }
+                    if (showDiedToYouStoleKill) {
+                        translateX(xKilled)
+                        "${EnumChatFormatting.RESET}${p.stoleKill}".draw()
+                    }
                 } else {
-                    translateX(xDone)
-                    "${EnumChatFormatting.RED}${p.damageReceived}".draw()
-                    translateX(xReceived)
-                    "${EnumChatFormatting.DARK_RED}${p.damageDone}".draw()
-                    translateX(xKilled)
-                    "${EnumChatFormatting.RESET}${p.died}".draw()
+                    if (showDoneAndReceived) {
+                        translateX(xDone)
+                        "${EnumChatFormatting.RED}${p.damageReceived}".draw()
+                        translateX(xReceived)
+                        "${EnumChatFormatting.DARK_RED}${p.damageDone}".draw()
+                    }
+                    if (showDiedToYouStoleKill) {
+                        translateX(xKilled)
+                        "${EnumChatFormatting.RESET}${p.died}".draw()
+                    }
                 }
             }
 
-            translateY(-10)
+            translateY(-10.75)
         }
 
-        translateY(-14)
-        renderRect(w, 10 * teamBlue.size + 1, Colors.DEF, 100)
-        translateY(-2)
-        teamBlue.forEach(::renderLine)
+        if (splitScoreBoard) {
+            translateY(-14)
+            glMatrix {
+                renderRect(w.toDouble(), 10.75 * teamBlue.size + 1, Colors.DEF, 100)
+                translateY(-2)
+                teamBlue.forEach(::renderLine)
+            }
+            translateX(w + 5)
+            glMatrix {
+                renderRect(w.toDouble(), 10.75 * teamRed.size + 1, Colors.DEF, 100)
+                translateY(-2)
+                teamRed.forEach(::renderLine)
+            }
+        } else {
+            translateY(-14)
+            renderRect(w.toDouble(), 10.75 * teamBlue.size + 1, Colors.DEF, 100)
+            translateY(-2)
+            teamBlue.forEach(::renderLine)
 
-        translateY(-1)
-        renderRect(w, 10 * teamRed.size + 1, Colors.DEF, 100)
-        translateY(-2)
-        teamRed.forEach(::renderLine)
+            translateY(-1)
+            renderRect(w.toDouble(), 10.75 * teamRed.size + 1, Colors.DEF, 100)
+            translateY(-2)
+            teamRed.forEach(::renderLine)
+        }
     }
 }

@@ -154,25 +154,27 @@ object ThePlayer : IModule {
             }
         }
         EventBus.register<KillEvent> {
-            if (it.deathPlayer == Minecraft.getMinecraft().thePlayer.displayNameString) {
-                minuteStats[it.time][1]++
-            } else if (it.player == Minecraft.getMinecraft().thePlayer.displayNameString) {
-                minuteStats[it.time][0]++
+            if (GameStateManager.isCTF) {
+                if (it.deathPlayer == Minecraft.getMinecraft().thePlayer.displayNameString) {
+                    minuteStats[it.time][1]++
+                } else if (it.player == Minecraft.getMinecraft().thePlayer.displayNameString) {
+                    minuteStats[it.time][0]++
+                }
             }
         }
         EventBus.register<HitEvent> {
-            if (it.time > 0)
+            if (it.time > 0 && GameStateManager.isCTF)
                 minuteStats[it.time][2]++
         }
 
         EventBus.register<HealingGivenEvent> {
             healingGivenCounter += it.amount
-            if (it.minute > 0)
+            if (it.minute > 0 && GameStateManager.isCTF)
                 minuteStats[it.minute][4] += it.amount
         }
         EventBus.register<DamageDoneEvent> {
             damageDoneCounter += it.amount
-            if (it.minute > 0)
+            if (it.minute > 0 && GameStateManager.isCTF)
                 minuteStats[it.minute][3] += it.amount
         }
         EventBus.register<EnergyReceivedEvent> {

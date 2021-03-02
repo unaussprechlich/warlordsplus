@@ -221,6 +221,20 @@ object EasyConfigHandler : IModule {
     private fun fancy(text: String, length: Int): String {
         return ("$text                                                                       ").substring(0, length - 1)
     }
+
+    fun getInCategory(category: String) {
+//        var list = mutableListOf<String>()
+//        fieldMapStr.forEach {
+//            list.add(it)
+//        }
+//
+//        fieldMapInt.forEach {
+//
+//        }
+//        fieldMapBoolean.forEach {
+//
+//        }
+    }
 }
 
 /**

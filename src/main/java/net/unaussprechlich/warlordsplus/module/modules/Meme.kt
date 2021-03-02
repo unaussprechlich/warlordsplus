@@ -90,27 +90,28 @@ object Meme : IModule {
 
             if (message.contains("killed cyt0_")) {
                 SoundManager.playSound(Sounds.MEME_CYT0)
+                return
             }
 
-            if (message.startsWith("The gates will fall")) {
-                when {
-                    event.message.unformattedText.contains("5") -> {
-                        SoundManager.playSound(Sounds.MEME_5)
-                    }
-                    event.message.unformattedText.contains("4") -> {
-                        SoundManager.playSound(Sounds.MEME_4)
-                    }
-                    event.message.unformattedText.contains("3") -> {
-                        SoundManager.playSound(Sounds.MEME_3)
-                    }
-                    event.message.unformattedText.contains("2") -> {
-                        SoundManager.playSound(Sounds.MEME_2)
-                    }
-                    event.message.unformattedText.contains("1") -> {
-                        SoundManager.playSound(Sounds.MEME_1)
-                    }
-                }
-            }
+//            if (message.startsWith("The gates will fall")) {
+//                when {
+//                    event.message.unformattedText.contains("5") -> {
+//                        SoundManager.playSound(Sounds.MEME_5)
+//                    }
+//                    event.message.unformattedText.contains("4") -> {
+//                        SoundManager.playSound(Sounds.MEME_4)
+//                    }
+//                    event.message.unformattedText.contains("3") -> {
+//                        SoundManager.playSound(Sounds.MEME_3)
+//                    }
+//                    event.message.unformattedText.contains("2") -> {
+//                        SoundManager.playSound(Sounds.MEME_2)
+//                    }
+//                    event.message.unformattedText.contains("1") -> {
+//                        SoundManager.playSound(Sounds.MEME_1)
+//                    }
+//                }
+//            }
 
             if (
                 message.startsWith("[BLU] ")

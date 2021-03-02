@@ -2,9 +2,9 @@ package net.unaussprechlich.warlordsplus.config
 
 
 object GeneralConfigSettings {
-    @ConfigPropertyBoolean(CCategory.GENERAL, "hudDisabled", "HUD Disabled", false)
+    @ConfigPropertyBoolean(CCategory.GENERAL, "showWarlordsPlus", "Shows WarlordsPlus V1...", true)
     @JvmStatic
-    var hudDisabled: Boolean = false
+    var showWarlordsPlus: Boolean = true
 
     @ConfigPropertyBoolean(CCategory.GENERAL, "hudDisplayVersion", "HUD DisplayVersion", true)
     @JvmStatic
