@@ -185,5 +185,10 @@ abstract class MinecraftOpenGlStuff {
         fun scale(amount: Double) =
             GlStateManager.scale(amount, amount, -amount)
 
+        inline fun scale(amount: Double, fn: () -> Unit) {
+            scale(amount)
+            fn()
+            scale(1 / amount)
+        }
     }
 }

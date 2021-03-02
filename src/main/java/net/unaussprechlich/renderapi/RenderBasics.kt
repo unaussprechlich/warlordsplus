@@ -11,6 +11,7 @@ import net.unaussprechlich.renderapi.util.MinecraftOpenGlStuff
 import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import org.lwjgl.opengl.GL11
+import org.lwjgl.util.Color
 
 abstract class RenderBasics : MinecraftOpenGlStuff() {
 
@@ -170,12 +171,12 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
             GlStateManager.disableTexture2D()
         }
 
-        fun String.drawCentered(seeThruBlocks: Boolean = false, shadow: Boolean = false) {
+        fun String.drawCentered(seeThruBlocks: Boolean = false, shadow: Boolean = false, color: Colors = Colors.WHITE) {
             GlStateManager.enableTexture2D()
             if (seeThruBlocks) {
                 GlStateManager.depthMask(false)
                 GlStateManager.disableDepth()
-                fontRenderer.drawString(this, -this.width() / 2, 0, 553648127)
+                fontRenderer.drawString(this, -this.width() / 2, 0, -1)
                 GlStateManager.enableDepth()
                 GlStateManager.depthMask(true)
             }
@@ -184,7 +185,12 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
             if (shadow) {
                 fontRenderer.drawStringWithShadow(this, -this.width() / 2f, 0f, -1)
             } else {
-                fontRenderer.drawString(this, -this.width() / 2, 0, -1)
+                fontRenderer.drawString(
+                    this,
+                    -this.width() / 2,
+                    0,
+                    Color(color.red.toByte(), color.green.toByte(), color.blue.toByte(), 255.toByte()).convertToArgb()
+                )
             }
 
             translateZ(-1.0)
@@ -198,13 +204,21 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
             translate(-padding.toDouble(), -padding.toDouble(), 0.0)
         }
 
-        fun String.drawCenteredWithBackground(backgroundColor: Colors) {
-            val width = this.width() + 2.0
-            translateX(-width / 2)
-            renderRect(width, 9.0, backgroundColor)
-            translate(1.0 + width / 2, 1.0, 0.0)
-            draw()
-            translate(-1.0, -1.0, 0.0)
+        fun String.drawPowerUp(color: Colors) {
+            GlStateManager.enableTexture2D()
+            GlStateManager.depthMask(false)
+            GlStateManager.disableDepth()
+            drawCentered(seeThruBlocks = false, shadow = false, color = color)
+            GlStateManager.enableDepth()
+            GlStateManager.depthMask(true)
+            GlStateManager.disableTexture2D()
+        }
+
+        private fun Color.convertToArgb(): Int {
+            return (this.alpha shl 24) or
+                    (this.red shl 16) or
+                    (this.green shl 8) or
+                    (this.blue)
         }
     }
 }

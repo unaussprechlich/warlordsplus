@@ -34,7 +34,8 @@ enum class Colors(val red: Int, val green: Int, val blue: Int, val enumColor: En
     RED(255, 85, 85, EnumChatFormatting.RED),
     LIGHT_PURPLE(255, 85, 255, EnumChatFormatting.LIGHT_PURPLE),
     YELLOW(255, 255, 85, EnumChatFormatting.YELLOW),
-    WHITE(255, 255, 255, EnumChatFormatting.WHITE);
+    WHITE(255, 255, 255, EnumChatFormatting.WHITE),
+    ORANGE(255, 140, 0, EnumChatFormatting.YELLOW);
 
     val FULL: Int = Color(red.toByte(), green.toByte(), blue.toByte(), 255.toByte()).convertToArgb()
     val ALPHA_100: Int = Color(red.toByte(), green.toByte(), blue.toByte(), 100.toByte()).convertToArgb()

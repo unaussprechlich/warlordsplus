@@ -4,6 +4,7 @@ import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
+import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
@@ -32,7 +33,7 @@ object HudElementHitCounter : AbstractHudElement() {
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
 
-        renderStrings.add(EnumChatFormatting.WHITE.toString() + "Hit Counter: " + totalHits)
+        renderStrings.add("${EnumChatFormatting.WHITE}Hit Counter: $totalHits${if (GameStateManager.isCTF) ":${ThePlayer.minuteStats[GameStateManager.getMinute()][2]}" else ""}")
 
         return renderStrings.toTypedArray()
     }

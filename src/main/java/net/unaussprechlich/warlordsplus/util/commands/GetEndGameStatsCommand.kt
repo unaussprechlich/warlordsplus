@@ -3,11 +3,9 @@ package net.unaussprechlich.warlordsplus.util.commands
 import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
-import net.unaussprechlich.renderapi.util.MinecraftOpenGlStuff.Companion.thePlayer
-import net.unaussprechlich.warlordsplus.OtherPlayers
+import net.unaussprechlich.warlordsplus.module.modules.StatsDisplayAfterGame
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
-import java.awt.datatransfer.StringSelection
 import java.util.*
 
 
@@ -30,8 +28,7 @@ class GetEndGameStatsCommand : ICommand {
     }
 
     override fun processCommand(sender: ICommandSender?, args: Array<out String>?) {
-        val endGameStats = OtherPlayers.getPlayersForNetworkPlayers(thePlayer!!.sendQueue.playerInfoMap).toString()
-        val selection = StringSelection(endGameStats)
+        val selection = StatsDisplayAfterGame.lastGameStats
         val clipboard: Clipboard = Toolkit.getDefaultToolkit().systemClipboard
         clipboard.setContents(selection, selection)
     }

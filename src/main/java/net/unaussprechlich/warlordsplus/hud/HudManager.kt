@@ -14,6 +14,7 @@ import net.unaussprechlich.warlordsplus.WarlordsPlus
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyString
+import net.unaussprechlich.warlordsplus.config.GeneralConfigSettings
 import net.unaussprechlich.warlordsplus.hud.elements.*
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.Colors
@@ -110,10 +111,12 @@ object HudManager : RenderApi.Gui<RenderGameOverlayEvent.Text>(), IModule {
             translateX(xOffset.toDouble())
             translateY(-yOffset.toDouble())
             scale(hudScale)
-            heading.drawWithBackground(Colors.DEF, alpha = 220, padding = 3)
-            translateY(-12.0)
+            if (GeneralConfigSettings.showWarlordsPlus) {
+                heading.drawWithBackground(Colors.DEF, alpha = 220, padding = 3)
+                translateY(-12.0)
+            }
             for (element in hudElements) {
-                if (element.isVisible && element.isEnabled && element.renderString.size > 0) {
+                if (element.isVisible && element.isEnabled && element.renderString.isNotEmpty()) {
                     for (s in element.renderString) {
                         s.drawWithBackground(Colors.DEF, 100, padding = 2)
                         translateY(-11.0)

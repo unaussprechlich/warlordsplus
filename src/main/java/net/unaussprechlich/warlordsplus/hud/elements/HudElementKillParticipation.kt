@@ -55,13 +55,7 @@ object HudElementKillParticipation : AbstractHudElement() {
             }
         }
         EventBus.register<TickEvent.ClientTickEvent> {
-            if (GameStateManager.isCTF) {
-                if (ThePlayer.team == TeamEnum.BLUE) {
-                    numberOfTeamKills = (GameStateManager.bluePoints - numberOfCapsBlue * 250) / 5
-                } else if (ThePlayer.team == TeamEnum.RED) {
-                    numberOfTeamKills = (GameStateManager.redPoints - numberOfCapsRed * 250) / 5
-                }
-            } else if (GameStateManager.isTDM) {
+            if (GameStateManager.isTDM) {
                 if (ThePlayer.team == TeamEnum.BLUE) {
                     numberOfTeamKills = GameStateManager.bluePoints / 15
                 } else if (ThePlayer.team == TeamEnum.RED) {
@@ -71,7 +65,7 @@ object HudElementKillParticipation : AbstractHudElement() {
 
         }
         EventBus.register<KillEvent> {
-            if (GameStateManager.isDOM && ((OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.BLUE && ThePlayer.team == TeamEnum.BLUE) || (OtherPlayers.getPlayerForName(
+            if (!GameStateManager.isTDM && ((OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.BLUE && ThePlayer.team == TeamEnum.BLUE) || (OtherPlayers.getPlayerForName(
                     it.player
                 )!!.team == TeamEnum.RED && ThePlayer.team == TeamEnum.RED))
             )

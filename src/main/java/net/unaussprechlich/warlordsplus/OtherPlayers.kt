@@ -3,6 +3,7 @@ package net.unaussprechlich.warlordsplus
 import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.client.network.NetworkPlayerInfo
+import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -40,6 +41,7 @@ open class Player(val name: String, val uuid: UUID) {
 }
 
 private val numberPattern = Pattern.compile("[0-9]{2}")
+private var brokenTab = -1L
 
 object OtherPlayers : IModule {
 
@@ -112,9 +114,15 @@ object OtherPlayers : IModule {
             playersMap[it.player]!!.left = it.left
         }*/
 
+        EventBus.register<SecondEvent> {
+            Minecraft.getMinecraft().theWorld.playerEntities.filterIsInstance<EntityOtherPlayerMP>().forEach {
+                it.refreshDisplayName()
+            }
+        }
     }
 
     fun getPlayersForNetworkPlayers(networkPlayers: Collection<NetworkPlayerInfo>): Collection<Player> {
+
         //Filter out if we already have the Player stored
         networkPlayers.filter {
 
@@ -123,8 +131,17 @@ object OtherPlayers : IModule {
             //Filter out any strange "Players" appearing in the Scoreboard, by assuming they must have a class
         }.filter { player ->
 
-            WarlordsEnum.values().any {
-                player.playerTeam.colorPrefix contain it.shortName
+            try {
+                WarlordsEnum.values().any {
+                    player.playerTeam.colorPrefix contain it.shortName
+                }
+            } catch (e: Exception) {
+                if (brokenTab < System.currentTimeMillis()) {
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}LOOKS LIKE YOUR TAB IS BUGGED PLEASE REJOIN THE LOBBY - /hub - /rejoin"))
+                    brokenTab = System.currentTimeMillis() + 2000
+                }
+
+                false
             }
 
             //Create the Player
@@ -176,6 +193,25 @@ object OtherPlayers : IModule {
                     player.value.spec = SpecsEnum.values()
                         .firstOrNull { w -> it.inventory.mainInventory[0].chatComponent.formattedText contain w.classname }
                         ?: SpecsEnum.NONE
+                } else if (it.inventory.mainInventory[0].tagCompound.toString().contains("Cooldown")) {
+                    val warlord = player.value.warlord
+                    when (it.inventory.mainInventory[0].metadata) {
+                        1 -> if (warlord != WarlordsEnum.PALADIN && warlord != WarlordsEnum.WARRIOR)
+                            player.value.spec = SpecsEnum.values()
+                                .firstOrNull { w -> it.inventory.mainInventory[0].tagCompound.toString() contain w.red }
+                                ?: SpecsEnum.NONE
+                        0 -> if (warlord != WarlordsEnum.PALADIN && warlord != WarlordsEnum.WARRIOR && warlord != WarlordsEnum.MAGE)
+                            player.value.spec = SpecsEnum.values()
+                                .firstOrNull { w -> it.inventory.mainInventory[0].tagCompound.toString() contain w.purple }
+                                ?: SpecsEnum.NONE
+                        10 -> if (warlord != WarlordsEnum.PALADIN && warlord != WarlordsEnum.MAGE)
+                            player.value.spec = SpecsEnum.values()
+                                .firstOrNull { w -> it.inventory.mainInventory[0].tagCompound.toString() contain w.blue }
+                                ?: SpecsEnum.NONE
+                        14 -> player.value.spec = SpecsEnum.values()
+                            .firstOrNull { w -> it.inventory.mainInventory[0].tagCompound.toString() contain w.orange }
+                            ?: SpecsEnum.NONE
+                    }
                 }
             }
 
@@ -207,7 +243,38 @@ object OtherPlayers : IModule {
                 it.value.name == e.username
             }.forEach {
                 e.displayname =
-                    "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.icon}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}"
+                    "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.icon}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}${EnumChatFormatting.RESET}"
+            }
+        } else if (GameStateManager.inLobby) {
+            try {
+                val playerInv = e.entityPlayer.inventory
+                if (playerInv.mainInventory[0] != null) {
+                    var spec = SpecsEnum.NONE
+                    if (playerInv.mainInventory[0].tagCompound.toString().contains("LEFT-CLICK")) {
+                        spec = SpecsEnum.values()
+                            .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.weapon }
+                            ?: SpecsEnum.NONE
+                    } else if (playerInv.mainInventory[0].tagCompound.toString().contains("Cooldown")) {
+                        when (playerInv.mainInventory[0].metadata) {
+                            1 -> spec = SpecsEnum.values()
+                                .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.red }
+                                ?: SpecsEnum.NONE
+                            0 -> spec = SpecsEnum.values()
+                                .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.purple }
+                                ?: SpecsEnum.NONE
+                            10 -> spec = SpecsEnum.values()
+                                .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.blue }
+                                ?: SpecsEnum.NONE
+                            14 -> spec = SpecsEnum.values()
+                                .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.orange }
+                                ?: SpecsEnum.NONE
+                        }
+                    }
+                    e.displayname =
+                        "${EnumChatFormatting.DARK_GRAY}[${spec.icon}${EnumChatFormatting.DARK_GRAY}]${EnumChatFormatting.RESET}${e.displayname}"
+                }
+            } catch (e: Exception) {
+                println(e.printStackTrace())
             }
         } else {
             e.displayname = e.username

@@ -25,9 +25,9 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
         val renderStrings = ArrayList<String>()
         if (showDamageDone)
-            renderStrings.add(EnumChatFormatting.RED.toString() + "Damage: " + damageDoneCounter + ":${ThePlayer.minuteStats[GameStateManager.getMinute()][3]}")
+            renderStrings.add(EnumChatFormatting.RED.toString() + "Damage: " + damageDoneCounter + if (GameStateManager.isCTF && showDamageHealHitMin) ":${ThePlayer.minuteStats[GameStateManager.getMinute()][3]}" else "")
         if (showHealingDone)
-            renderStrings.add(EnumChatFormatting.GREEN.toString() + "Healing: " + healingGivenCounter + ":${ThePlayer.minuteStats[GameStateManager.getMinute()][4]}")
+            renderStrings.add(EnumChatFormatting.GREEN.toString() + "Healing: " + healingGivenCounter + if (GameStateManager.isCTF && showDamageHealHitMin) ":${ThePlayer.minuteStats[GameStateManager.getMinute()][4]}" else "")
         if (showDamageTaken)
             renderStrings.add(EnumChatFormatting.DARK_RED.toString() + "Damage Taken: " + damageTakenCounter)
         if (showHealingReceived)
@@ -38,7 +38,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
             renderStrings.add(EnumChatFormatting.YELLOW.toString() + "Energy Received: " + energyReceivedCounter)
         if (showEnergyLost && energyLostCounter > 0)
             renderStrings.add(EnumChatFormatting.YELLOW.toString() + "Energy Lost: " + energyLostCounter)
-        if (showEnergyStolen && spec == SpecsEnum.AVENGER) //specialization === Player.Classes.AVENGER &&
+        if (showEnergyStolen && spec == SpecsEnum.AVENGER)
             renderStrings.add(EnumChatFormatting.YELLOW.toString() + "Energy Stolen: " + energyStolenCounter)
 
         return renderStrings.toTypedArray()
@@ -68,6 +68,14 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
             def = true
         )
         var showDamageDone = false
+
+        @ConfigPropertyBoolean(
+            category = CCategory.HUD,
+            id = "showDamageHealHitsPerMin",
+            comment = "Enable or disable dmg/heal per min",
+            def = true
+        )
+        var showDamageHealHitMin = false
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,

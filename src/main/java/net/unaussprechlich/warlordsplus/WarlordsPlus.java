@@ -44,6 +44,8 @@ public class WarlordsPlus {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         CONFIG = new Configuration(event.getSuggestedConfigurationFile());
+        //TODO UNAUSS
+        //CONFIG.setCategoryPropertyOrder(CCategory.GENERAL, )
         CONFIG.load();
         EasyConfigHandler.INSTANCE.init(event.getAsmData());
     }
@@ -63,6 +65,7 @@ public class WarlordsPlus {
         ClientCommandHandler.instance.registerCommand(new RemoveSpec());
         ClientCommandHandler.instance.registerCommand(new Reset());
         ClientCommandHandler.instance.registerCommand(new DisableAutoJoin());
+        ClientCommandHandler.instance.registerCommand(new GetPartyMembers());
 
     }
 

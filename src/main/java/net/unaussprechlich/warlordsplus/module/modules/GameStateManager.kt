@@ -164,8 +164,7 @@ object GameStateManager : IModule {
                 }
                 DiscordRPC.client.sendRichPresence(builder.build())
 
-            }
-            if (!isWarlords) {
+            } else if (!isWarlords) {
                 if (DiscordRPC.client.status == PipeStatus.CONNECTED && !DiscordRPC.enabled) {
                     DiscordRPC.client.close()
                 }
