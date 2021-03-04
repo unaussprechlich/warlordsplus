@@ -21,7 +21,7 @@ enum class SpecsEnum(
     val blue: String,
     val orange: String,
     val weapon: String,
-    val icon: String
+    val type : SpecTypeEnum
 ) {
     AVENGER(
         "Avenger",
@@ -30,7 +30,8 @@ enum class SpecsEnum(
         "Holy Radiance",
         "Avenger's Wrath",
         "Avenger",
-        "${EnumChatFormatting.RED}銌"
+        SpecTypeEnum.DAMAGE
+
     ),
     CRUSADER(
         "Crusader",
@@ -39,7 +40,7 @@ enum class SpecsEnum(
         "Holy Radiance",
         "Inspiring Presence",
         "Crusader",
-        "${EnumChatFormatting.YELLOW}鉰"
+        SpecTypeEnum.TANK
     ),
     PROTECTOR(
         "Protector",
@@ -48,9 +49,17 @@ enum class SpecsEnum(
         "Holy Radiance",
         "Hammer of Light",
         "Protector",
-        "${EnumChatFormatting.GREEN}銀"
+        SpecTypeEnum.HEALER
     ),
-    BERSERKER("Berserker", "Seismic Wave", "Ground Slam", "Blood Lust", "Berserk", "35%", "${EnumChatFormatting.RED}銌"),
+    BERSERKER(
+        "Berserker",
+        "Seismic Wave",
+        "Ground Slam",
+        "Blood Lust",
+        "Berserk",
+        "35%",
+        SpecTypeEnum.DAMAGE
+    ),
     DEFENDER(
         "Defender",
         "Seismic Wave",
@@ -58,7 +67,7 @@ enum class SpecsEnum(
         "Intervene",
         "Last Stand",
         "25%",
-        "${EnumChatFormatting.YELLOW}鉰"
+        SpecTypeEnum.TANK
     ),
     REVENANT(
         "Revenant",
@@ -67,7 +76,7 @@ enum class SpecsEnum(
         "Orbs of Light",
         "Undying Army",
         "crippling",
-        "${EnumChatFormatting.GREEN}銀"
+        SpecTypeEnum.HEALER
     ),
     PYROMANCER(
         "Pyromancer",
@@ -76,7 +85,7 @@ enum class SpecsEnum(
         "Arcane Shield",
         "Inferno",
         "Fireball",
-        "${EnumChatFormatting.RED}銌"
+        SpecTypeEnum.DAMAGE
     ),
     CRYOMANCER(
         "Cryomancer",
@@ -85,7 +94,7 @@ enum class SpecsEnum(
         "Arcane Shield",
         "Ice Barrier",
         "Frostbolt",
-        "${EnumChatFormatting.YELLOW}鉰"
+        SpecTypeEnum.TANK
     ),
     AQUAMANCER(
         "Aquamancer",
@@ -94,7 +103,7 @@ enum class SpecsEnum(
         "Arcane Shield",
         "Healing Rain",
         "Water",
-        "${EnumChatFormatting.GREEN}銀"
+        SpecTypeEnum.HEALER
     ),
     THUNDERLORD(
         "Thunderlord",
@@ -103,7 +112,7 @@ enum class SpecsEnum(
         "Lightning Rod",
         "Capacitor Totem",
         "Lightning",
-        "${EnumChatFormatting.RED}銌"
+        SpecTypeEnum.DAMAGE
     ),
     SPIRITGUARD(
         "Spiritguard",
@@ -112,7 +121,7 @@ enum class SpecsEnum(
         "Repentance",
         "Death's Debt",
         "Fallen",
-        "${EnumChatFormatting.YELLOW}鉰"
+        SpecTypeEnum.TANK
     ),
     EARTHWARDEN(
         "Earthwarden",
@@ -121,13 +130,21 @@ enum class SpecsEnum(
         "Chain Heal",
         "Healing Totem",
         "Earthen",
-        "${EnumChatFormatting.GREEN}銀"
+        SpecTypeEnum.HEALER
     ),
-    NONE("NONE", "", "", "", "", "NONE", "")
+    NONE("NONE", "", "", "", "", "NONE", SpecTypeEnum.NONE);
+
+    val icon
+        get() = type.coloredSymbol
 }
 
-enum class SpecsEnumSuper(val specName: String) {
-    DAMAGE("damage"), TANK("defense"), HEALER("healer"), NONE("NONE")
+enum class SpecTypeEnum(val specName: String, val symbol : String, val color: EnumChatFormatting) {
+    DAMAGE("damage", "銌", EnumChatFormatting.RED),
+    TANK("defense", "鉰", EnumChatFormatting.YELLOW),
+    HEALER("healer", "銀", EnumChatFormatting.GREEN),
+    NONE("NONE", "", EnumChatFormatting.OBFUSCATED);
+
+    val coloredSymbol = "$color$symbol"
 }
 
 enum class HypixelRank(val rankName: String, rankNameFormatted: String, color: ChatFormatting) {

@@ -1,68 +1,116 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
+
 import com.jagrosh.discordipc.IPCClient
 import com.jagrosh.discordipc.IPCListener
 import com.jagrosh.discordipc.entities.RichPresence
-import com.jagrosh.discordipc.exceptions.NoDiscordClientException
+import com.jagrosh.discordipc.entities.pipe.PipeStatus
+import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.eventbus.ForgeEventProcessor
+import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
-import java.io.FileNotFoundException
+import net.unaussprechlich.warlordsplus.util.TeamEnum
+import java.time.OffsetDateTime
 
 
 object DiscordRPC : IPCListener {
     private val builder: RichPresence.Builder = RichPresence.Builder()
     val client: IPCClient = IPCClient(811200780673220649)
 
-    fun start() {
-        try {
-            //if (enabled) {
-            client.setListener(object : IPCListener {
-                override fun onReady(client: IPCClient) {
-                    client.sendRichPresence(builder.build())
+    init {
+        EventBus.register<WarlordsLeaveAndJoinEvent> {
+            if(it.isWarlords){
+                if(client.status != PipeStatus.CONNECTED && enabled){
+                    try {
+
+                        client.setListener(object : IPCListener {
+                            override fun onReady(client: IPCClient) {
+                                client.sendRichPresence(builder.build())
+                            }
+                        })
+                        client.connect()
+                        client.sendRichPresence(builder.build())
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
-                })
-                client.connect()
+            } else {
+                if (client.status == PipeStatus.CONNECTED && !enabled) {
+                    try {
+                        client.close()
+                    } catch (e : Exception){
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+        }
+
+        EventBus.register<ForgeEventProcessor.EverySecond> {
+            try {
+                val builder = RichPresence.Builder()
+                builder.setDetails(lobbyFormatted())
+                if (GameStateManager.inLobby) {
+                    builder.setLargeImage("warlordsicon")
+                    builder.setState(GameStateManager.getPlayersInLobby())
+                    builder.setStartTimestamp(OffsetDateTime.now())
+                    builder.setEndTimestamp(OffsetDateTime.now().plusSeconds(GameStateManager.getTimeLeftLobby()))
+                } else if (GameStateManager.isIngame) {
+                    builder.setSmallImage(ThePlayer.superSpec.specName)
+                    builder.setLargeImage(ThePlayer.warlord.classname.toLowerCase())
+                    builder.setState(pointsFormatted())
+                    builder.setStartTimestamp(OffsetDateTime.now())
+                    builder.setEndTimestamp(OffsetDateTime.now().plusSeconds(GameStateManager.getTimeLeftGame()))
+                }
                 client.sendRichPresence(builder.build())
-            //}
-        } catch (e: Exception) {
-            if (e is RuntimeException || e is FileNotFoundException) return
-            e.printStackTrace()
+            }catch (e : Exception){
+                e.printStackTrace()
+            }
         }
     }
 
-    fun stop() {
-        try {
-            client.close()
-        } catch (e: Exception) {
-            if (e is NoDiscordClientException || e is RuntimeException) return
-            e.printStackTrace()
+    private fun lobbyFormatted(): String {
+        when {
+            GameStateManager.inLobby -> {
+                return if (ScoreboardManager.scoreboard[10].contains("Map:"))
+                    "In ${ScoreboardManager.scoreboard[10].substring(5)} Lobby"
+                else
+                    "In ${ScoreboardManager.scoreboard[9].substring(5)} Lobby"
+            }
+            GameStateManager.isCTF -> {
+                return "Playing Capture the Flag"
+            }
+            GameStateManager.isTDM -> {
+                return "Playing Team Deathmatch"
+            }
+            GameStateManager.isDOM -> {
+                return "Playing Domination"
+            }
         }
+        return "In Lobby"
     }
 
-    fun setPresence(firstLine: String?) {
-        builder.setDetails(firstLine)
-        client.sendRichPresence(builder.build())
-    }
-
-    fun setPresence(firstLine: String?, secondLine: String?) {
-        builder.setDetails(firstLine)
-            .setState(secondLine)
-        client.sendRichPresence(builder.build())
-    }
-
-    fun setPresence(firstLine: String?, secondLine: String?, largeImage: String?) {
-        builder.setDetails(firstLine)
-            .setState(secondLine)
-            .setLargeImage(largeImage)
-        client.sendRichPresence(builder.build())
-    }
-
-    fun setPresence(firstLine: String?, secondLine: String?, largeImage: String?, smallImage: String?) {
-        builder.setDetails(firstLine)
-            .setState(secondLine)
-            .setLargeImage(largeImage)
-            .setSmallImage(smallImage)
-        client.sendRichPresence(builder.build())
+    private fun pointsFormatted(): String {
+        when {
+            GameStateManager.bluePoints == GameStateManager.redPoints -> return "Tied"
+            ThePlayer.team == TeamEnum.BLUE -> {
+                return if (GameStateManager.bluePoints > GameStateManager.redPoints) {
+                    "Winning by ${GameStateManager.bluePoints - GameStateManager.redPoints} points"
+                } else {
+                    "Losing by ${GameStateManager.redPoints - GameStateManager.bluePoints} points"
+                }
+            }
+            ThePlayer.team == TeamEnum.RED -> {
+                return if (GameStateManager.redPoints > GameStateManager.bluePoints) {
+                    "Winning by ${GameStateManager.redPoints - GameStateManager.bluePoints} points"
+                } else {
+                    "Losing by ${GameStateManager.bluePoints - GameStateManager.redPoints} points"
+                }
+            }
+            else -> return ""
+        }
     }
 
     @ConfigPropertyBoolean(

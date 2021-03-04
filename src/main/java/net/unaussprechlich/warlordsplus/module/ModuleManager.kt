@@ -7,6 +7,9 @@ import net.unaussprechlich.warlordsplus.config.EasyConfigHandler
 import net.unaussprechlich.warlordsplus.hud.HudManager
 import net.unaussprechlich.warlordsplus.ingamegui.IngameGuiManager
 import net.unaussprechlich.warlordsplus.module.modules.*
+import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.NotificationManager
+import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.notifications.ChatNotifications
+import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.notifications.KillFeedNotifications
 import net.unaussprechlich.warlordsplus.module.modules.stats.StatsDisplayRenderer
 import net.unaussprechlich.warlordsplus.module.modules.stats.StatsLoader
 
@@ -34,9 +37,9 @@ object ModuleManager {
             add(StatsDisplayAfterGame)
             add(PowerUpTimer)
             add(StatsInLobby)
-            //add(ChatNotifications)
-            add(KillFeed)
-            //add(Troll)
+            add(NotificationManager)
+            add(ChatNotifications)
+            add(KillFeedNotifications)
             //add(Meme)
             add(CancelJumpBarOnHorse)
             add(SoulbindingCounter)

@@ -44,8 +44,6 @@ public class WarlordsPlus {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         CONFIG = new Configuration(event.getSuggestedConfigurationFile());
-        //TODO UNAUSS
-        //CONFIG.setCategoryPropertyOrder(CCategory.GENERAL, )
         CONFIG.load();
         EasyConfigHandler.INSTANCE.init(event.getAsmData());
     }

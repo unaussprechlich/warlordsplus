@@ -8,6 +8,7 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.Colors
+import net.unaussprechlich.warlordsplus.util.drawPowerUp
 import java.util.*
 
 
@@ -91,7 +92,7 @@ object PowerUpTimer : IModule, RenderApi.World() {
                 autoRotate()
                 scaleForWorldRendering()
                 scale(10.0)
-                "${it.respawnTimer}".drawPowerUp(it.color)
+                drawPowerUp(it.respawnTimer.toString(), it.color)
             }
         }
     }

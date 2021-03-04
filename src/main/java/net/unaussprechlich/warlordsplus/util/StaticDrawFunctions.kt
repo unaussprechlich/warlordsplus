@@ -1,5 +1,6 @@
 package net.unaussprechlich.warlordsplus.util
 
+import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.EnumChatFormatting
 import net.unaussprechlich.renderapi.RenderBasics
 import net.unaussprechlich.renderapi.RenderBasics.Companion.draw
@@ -28,4 +29,14 @@ fun <T : RenderBasics> T.drawSr(sr: Int?) {
     translate(31.0, 0.0, -1.0)
     "${EnumChatFormatting.WHITE}${sr ?: "-"}".drawCentered()
     translate(-33.0, -2.0, 0.0)
+}
+
+fun <T : RenderBasics> T.drawPowerUp(value : String, color: Colors) {
+    GlStateManager.enableTexture2D()
+    GlStateManager.depthMask(false)
+    GlStateManager.disableDepth()
+    value.drawCentered(seeThruBlocks = false, shadow = false, color = color)
+    GlStateManager.enableDepth()
+    GlStateManager.depthMask(true)
+    GlStateManager.disableTexture2D()
 }

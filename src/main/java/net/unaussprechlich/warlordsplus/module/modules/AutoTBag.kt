@@ -16,6 +16,7 @@ import net.unaussprechlich.warlordsplus.module.IModule
 object AutoTBag : IModule {
 
     var sneak = false
+    var onGraveSince : Long = -1L
 
     init {
         EventBus.register<TickEvent.ClientTickEvent> {
@@ -25,7 +26,16 @@ object AutoTBag : IModule {
                 val blockStateBelow: IBlockState = Minecraft.getMinecraft().theWorld.getBlockState(posBelow)
                 val below: Block = blockStateBelow.block
 
-                if (below == Blocks.sapling && !Minecraft.getMinecraft().thePlayer.isRidingHorse) {
+                //we use this so it does not start the tbag immediately
+                if(below == Blocks.sapling && !Minecraft.getMinecraft().thePlayer.isRidingHorse){
+                    if(onGraveSince == -1L){
+                        onGraveSince = System.currentTimeMillis()
+                    }
+                } else {
+                    onGraveSince = -1L
+                }
+
+                if (onGraveSince != -1L && System.currentTimeMillis() - onGraveSince > 1000) {
                     if (System.currentTimeMillis() / ((Math.random() * 50) + 100).toInt() % 2 == 0L) {
                         KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode, true)
                     } else {

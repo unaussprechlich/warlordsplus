@@ -102,7 +102,7 @@ object ThePlayer : IModule {
     var earthlivingCounter = 0
 
     var spec: SpecsEnum = SpecsEnum.NONE
-    var superSpec: SpecsEnumSuper = SpecsEnumSuper.NONE
+    var superSpec: SpecTypeEnum = SpecTypeEnum.NONE
     var warlord: WarlordsEnum = WarlordsEnum.NONE
     var team: TeamEnum = TeamEnum.NONE
 
@@ -124,16 +124,16 @@ object ThePlayer : IModule {
             try {
 
                 spec = SpecsEnum.values().firstOrNull { spec ->
-                    ScoreboardManager.scoreboardNames.firstOrNull {
+                    ScoreboardManager.scoreboardFormatted.firstOrNull {
                         it.removeFormatting() contain spec.classname
                     } != null
                 } ?: SpecsEnum.NONE
 
                 superSpec =
-                    if (spec == SpecsEnum.AVENGER || spec == SpecsEnum.BERSERKER || spec == SpecsEnum.PYROMANCER || spec == SpecsEnum.THUNDERLORD) SpecsEnumSuper.DAMAGE
-                    else if (spec == SpecsEnum.CRUSADER || spec == SpecsEnum.DEFENDER || spec == SpecsEnum.CRYOMANCER || spec == SpecsEnum.SPIRITGUARD) SpecsEnumSuper.TANK
-                    else if (spec == SpecsEnum.PROTECTOR || spec == SpecsEnum.REVENANT || spec == SpecsEnum.AQUAMANCER || spec == SpecsEnum.EARTHWARDEN) SpecsEnumSuper.HEALER
-                    else SpecsEnumSuper.NONE
+                    if (spec == SpecsEnum.AVENGER || spec == SpecsEnum.BERSERKER || spec == SpecsEnum.PYROMANCER || spec == SpecsEnum.THUNDERLORD) SpecTypeEnum.DAMAGE
+                    else if (spec == SpecsEnum.CRUSADER || spec == SpecsEnum.DEFENDER || spec == SpecsEnum.CRYOMANCER || spec == SpecsEnum.SPIRITGUARD) SpecTypeEnum.TANK
+                    else if (spec == SpecsEnum.PROTECTOR || spec == SpecsEnum.REVENANT || spec == SpecsEnum.AQUAMANCER || spec == SpecsEnum.EARTHWARDEN) SpecTypeEnum.HEALER
+                    else SpecTypeEnum.NONE
 
                 warlord =
                     if (spec == SpecsEnum.AVENGER || spec == SpecsEnum.CRUSADER || spec == SpecsEnum.PROTECTOR) WarlordsEnum.PALADIN

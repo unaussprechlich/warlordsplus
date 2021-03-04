@@ -27,14 +27,6 @@ object ChatDetector : IModule {
         EventBus.register(::onChat)
     }
 
-    /*
-     * TODO @ebic
-     *  Add all of them chat thingy things
-     *  [ ] [RED]
-     *  [ ] [BLU]
-     *  [ ] [SHOUT] (red and blue separated)
-     */
-
     /**
      * Use to intercept blu team messages
      * §r§9[BLU]§r§8[§r§6PAL§r§8][§r§760§r§8][§r§e鉰§r§8] §r§a[VIP] sumTrash§r§f: test§r
