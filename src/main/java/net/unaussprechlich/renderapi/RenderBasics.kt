@@ -176,7 +176,7 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
             GlStateManager.disableTexture2D()
         }
 
-        fun String.drawCentered(seeThruBlocks: Boolean = false, shadow: Boolean = false, color: Colors = Colors.WHITE) {
+        fun String.drawCentered(seeThruBlocks: Boolean = false, shadow: Boolean = false, color: Colors? = null) {
             GlStateManager.enableTexture2D()
             if (seeThruBlocks) {
                 GlStateManager.depthMask(false)
@@ -185,7 +185,7 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
                     this,
                     -this.width() / 2,
                     0,
-                    Color(color.red.toByte(), color.green.toByte(), color.blue.toByte(), 255.toByte()).convertToArgb()
+                    color?.convertToArgb(80) ?: -1553648127
                 )
                 GlStateManager.enableDepth()
                 GlStateManager.depthMask(true)
@@ -199,37 +199,11 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
                     this,
                     -this.width() / 2,
                     0,
-                    Color(color.red.toByte(), color.green.toByte(), color.blue.toByte(), 255.toByte()).convertToArgb()
+                    color?.convertToArgb() ?: -1
                 )
             }
 
             translateZ(-1.0)
-            GlStateManager.disableTexture2D()
-        }
-
-        fun String.drawCentered2(seeThruBlocks: Boolean = false, shadow: Boolean = false) {
-            GlStateManager.enableTexture2D()
-            if (seeThruBlocks) {
-                GlStateManager.depthMask(false)
-                GlStateManager.disableDepth()
-                fontRenderer.drawString(this, -this.width() / 2, 0, 553648127)
-                GlStateManager.enableDepth()
-                GlStateManager.depthMask(true)
-            }
-            //translateZ(1.0)
-
-            if (shadow) {
-                fontRenderer.drawStringWithShadow(this, -this.width() / 2f, 0f, -1)
-            } else {
-                fontRenderer.drawString(
-                    this,
-                    -this.width() / 2,
-                    0,
-                    553648127
-                )
-            }
-
-            //translateZ(-1.0)
             GlStateManager.disableTexture2D()
         }
 

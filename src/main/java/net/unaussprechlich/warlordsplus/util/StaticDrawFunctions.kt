@@ -30,13 +30,3 @@ fun <T : RenderBasics> T.drawSr(sr: Int?) {
     "${EnumChatFormatting.WHITE}${sr ?: "-"}".drawCentered()
     translate(-33.0, -2.0, 0.0)
 }
-
-fun <T : RenderBasics> T.drawPowerUp(value : String, color: Colors) {
-    GlStateManager.enableTexture2D()
-    GlStateManager.depthMask(false)
-    GlStateManager.disableDepth()
-    value.drawCentered(seeThruBlocks = false, shadow = false, color = color)
-    GlStateManager.enableDepth()
-    GlStateManager.depthMask(true)
-    GlStateManager.disableTexture2D()
-}
