@@ -1,22 +1,25 @@
-package net.unaussprechlich.warlordsplus.util.commands
+package net.unaussprechlich.warlordsplus.commands
 
 import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
-import net.unaussprechlich.warlordsplus.module.modules.AutoMapFinder
+import net.unaussprechlich.warlordsplus.module.modules.StatsDisplayAfterGame
+import java.awt.Toolkit
+import java.awt.datatransfer.Clipboard
 import java.util.*
 
-class DisableAutoJoin : ICommand {
+
+class GetEndGameStatsCommand : ICommand {
     override fun compareTo(other: ICommand?): Int {
         return 0
     }
 
     override fun getCommandName(): String {
-        return "disableautojoin"
+        return "getendgamestats"
     }
 
     override fun getCommandUsage(sender: ICommandSender?): String {
-        return "disables auto join feature for private game"
+        return "copies end games stats in tab"
     }
 
     override fun getCommandAliases(): MutableList<String> {
@@ -25,7 +28,9 @@ class DisableAutoJoin : ICommand {
     }
 
     override fun processCommand(sender: ICommandSender?, args: Array<out String>?) {
-        AutoMapFinder.enabled = false
+        val selection = StatsDisplayAfterGame.lastGameStats
+        val clipboard: Clipboard = Toolkit.getDefaultToolkit().systemClipboard
+        clipboard.setContents(selection, selection)
     }
 
     override fun canCommandSenderUseCommand(sender: ICommandSender?): Boolean {
@@ -33,13 +38,12 @@ class DisableAutoJoin : ICommand {
     }
 
     override fun addTabCompletionOptions(
-        sender: ICommandSender,
-        args: Array<String>,
-        pos: BlockPos
-    ): List<String>? {
-        return null
+        sender: ICommandSender?,
+        args: Array<out String>?,
+        pos: BlockPos?
+    ): MutableList<String> {
+        TODO("Not yet implemented")
     }
-
 
     override fun isUsernameIndex(args: Array<out String>?, index: Int): Boolean {
         return false

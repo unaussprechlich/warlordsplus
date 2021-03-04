@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.unaussprechlich.eventbus.ForgeEventProcessor;
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler;
 import net.unaussprechlich.warlordsplus.module.ModuleManager;
-import net.unaussprechlich.warlordsplus.util.commands.*;
+import net.unaussprechlich.warlordsplus.commands.*;
 
 
 @SideOnly(Side.CLIENT)

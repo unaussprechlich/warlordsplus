@@ -1,20 +1,22 @@
-package net.unaussprechlich.warlordsplus.util.commands
+package net.unaussprechlich.warlordsplus.commands
 
+import net.minecraft.client.Minecraft
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
-import net.unaussprechlich.warlordsplus.hud.elements.HudElementRandomTarget
-import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
+import net.minecraft.util.ChatComponentText
+import net.minecraftforge.client.ClientCommandHandler
+import net.minecraftforge.fml.client.FMLClientHandler
 import java.util.*
 
-class ChangeTargetCommand : ICommand {
+class RemoveSpec : ICommand {
     override fun getCommandName(): String {
-        return "changetarget"
+        return "removespec"
     }
 
     override fun getCommandUsage(sender: ICommandSender): String {
-        return "changes target"
+        return "removes spec from list"
     }
 
     override fun getCommandAliases(): List<String> {
@@ -24,19 +26,19 @@ class ChangeTargetCommand : ICommand {
 
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender, parameters: Array<String>) {
-        if (GameStateManager.isIngame) {
-            if (parameters.isNotEmpty()) {
-                when {
-                    parameters[0] == "hard" ->
-                        HudElementRandomTarget.pickRandomPlayer(3)
-                    parameters[0] == "medium" ->
-                        HudElementRandomTarget.pickRandomPlayer(2)
-                    parameters[0] == "easy" ->
-                        HudElementRandomTarget.pickRandomPlayer(1)
-                }
-            } else {
-                HudElementRandomTarget.pickRandomPlayer(0)
-            }
+        if (parameters.isNotEmpty()) {
+            println(SpecWinCommand.specsString)
+            SpecWinCommand.specsString = SpecWinCommand.specsString.replace("${parameters[0]}, ", "")
+            ClientCommandHandler.instance.executeCommand(FMLClientHandler.instance().clientPlayerEntity, "/specwin")
+            Minecraft.getMinecraft().thePlayer.addChatComponentMessage(
+                ChatComponentText(
+                    "Next Spec - ${
+                        SpecWinCommand.specsString.split(
+                            ", "
+                        ).shuffled().take(1)[0]
+                    }"
+                )
+            )
         }
     }
 

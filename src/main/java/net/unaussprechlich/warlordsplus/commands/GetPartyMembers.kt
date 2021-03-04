@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.util.commands
+package net.unaussprechlich.warlordsplus.commands
 
 import kotlinx.serialization.UnstableDefault
 import net.minecraft.client.Minecraft

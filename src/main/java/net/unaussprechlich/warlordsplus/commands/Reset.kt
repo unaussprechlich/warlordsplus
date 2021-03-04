@@ -1,22 +1,21 @@
-package net.unaussprechlich.warlordsplus.util.commands
+package net.unaussprechlich.warlordsplus.commands
 
-import net.minecraft.client.Minecraft
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
-import net.minecraft.util.ChatComponentText
-import net.minecraftforge.client.ClientCommandHandler
-import net.minecraftforge.fml.client.FMLClientHandler
+import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
+import net.unaussprechlich.warlordsplus.util.SpecsEnum
 import java.util.*
 
-class RemoveSpec : ICommand {
+class Reset : ICommand {
     override fun getCommandName(): String {
-        return "removespec"
+        return "reset"
     }
 
     override fun getCommandUsage(sender: ICommandSender): String {
-        return "removes spec from list"
+        return "reset"
     }
 
     override fun getCommandAliases(): List<String> {
@@ -26,19 +25,12 @@ class RemoveSpec : ICommand {
 
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender, parameters: Array<String>) {
-        if (parameters.isNotEmpty()) {
-            println(SpecWinCommand.specsString)
-            SpecWinCommand.specsString = SpecWinCommand.specsString.replace("${parameters[0]}, ", "")
-            ClientCommandHandler.instance.executeCommand(FMLClientHandler.instance().clientPlayerEntity, "/specwin")
-            Minecraft.getMinecraft().thePlayer.addChatComponentMessage(
-                ChatComponentText(
-                    "Next Spec - ${
-                        SpecWinCommand.specsString.split(
-                            ", "
-                        ).shuffled().take(1)[0]
-                    }"
-                )
-            )
+        if (parameters.isEmpty()) {
+            EventBus.post(ResetEvent())
+        } else {
+            when (parameters[0].toInt()) {
+                0 -> SpecWinCommand.specs = SpecsEnum.values()
+            }
         }
     }
 

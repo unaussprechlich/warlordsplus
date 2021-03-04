@@ -1,22 +1,20 @@
-package net.unaussprechlich.warlordsplus.util.commands
+package net.unaussprechlich.warlordsplus.commands
 
-import net.minecraft.client.Minecraft
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
-import net.minecraft.util.ChatComponentText
-import net.minecraft.util.IChatComponent
-import net.unaussprechlich.warlordsplus.hud.elements.HudElementSessionStats
+import net.unaussprechlich.warlordsplus.hud.elements.HudElementRandomTarget
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import java.util.*
 
-class SetWinLossCommand : ICommand {
+class ChangeTargetCommand : ICommand {
     override fun getCommandName(): String {
-        return "setwinloss"
+        return "changetarget"
     }
 
     override fun getCommandUsage(sender: ICommandSender): String {
-        return "sets win loss"
+        return "changes target"
     }
 
     override fun getCommandAliases(): List<String> {
@@ -26,15 +24,20 @@ class SetWinLossCommand : ICommand {
 
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender, parameters: Array<String>) {
-        if (Minecraft.getMinecraft().thePlayer.displayNameString == "sumSmash" || Minecraft.getMinecraft().thePlayer.displayNameString == "unaussprechlich") {
-            HudElementSessionStats.totalWins = parameters[0].toInt()
-            HudElementSessionStats.totalLosses = parameters[1].toInt()
-            HudElementSessionStats.streak = parameters[2].toInt()
-        } else {
-            val message: IChatComponent = ChatComponentText("No permission - stop cheating loser")
-            Minecraft.getMinecraft().thePlayer.addChatMessage(message)
+        if (GameStateManager.isIngame) {
+            if (parameters.isNotEmpty()) {
+                when {
+                    parameters[0] == "hard" ->
+                        HudElementRandomTarget.pickRandomPlayer(3)
+                    parameters[0] == "medium" ->
+                        HudElementRandomTarget.pickRandomPlayer(2)
+                    parameters[0] == "easy" ->
+                        HudElementRandomTarget.pickRandomPlayer(1)
+                }
+            } else {
+                HudElementRandomTarget.pickRandomPlayer(0)
+            }
         }
-
     }
 
     override fun canCommandSenderUseCommand(sender: ICommandSender): Boolean {

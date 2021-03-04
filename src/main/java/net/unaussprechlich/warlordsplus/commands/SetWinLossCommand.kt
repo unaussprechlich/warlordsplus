@@ -1,21 +1,22 @@
-package net.unaussprechlich.warlordsplus.util.commands
+package net.unaussprechlich.warlordsplus.commands
 
+import net.minecraft.client.Minecraft
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
-import net.unaussprechlich.eventbus.EventBus
-import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
-import net.unaussprechlich.warlordsplus.util.SpecsEnum
+import net.minecraft.util.ChatComponentText
+import net.minecraft.util.IChatComponent
+import net.unaussprechlich.warlordsplus.hud.elements.HudElementSessionStats
 import java.util.*
 
-class Reset : ICommand {
+class SetWinLossCommand : ICommand {
     override fun getCommandName(): String {
-        return "reset"
+        return "setwinloss"
     }
 
     override fun getCommandUsage(sender: ICommandSender): String {
-        return "reset"
+        return "sets win loss"
     }
 
     override fun getCommandAliases(): List<String> {
@@ -25,13 +26,15 @@ class Reset : ICommand {
 
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender, parameters: Array<String>) {
-        if (parameters.isEmpty()) {
-            EventBus.post(ResetEvent())
+        if (Minecraft.getMinecraft().thePlayer.displayNameString == "sumSmash" || Minecraft.getMinecraft().thePlayer.displayNameString == "unaussprechlich") {
+            HudElementSessionStats.totalWins = parameters[0].toInt()
+            HudElementSessionStats.totalLosses = parameters[1].toInt()
+            HudElementSessionStats.streak = parameters[2].toInt()
         } else {
-            when (parameters[0].toInt()) {
-                0 -> SpecWinCommand.specs = SpecsEnum.values()
-            }
+            val message: IChatComponent = ChatComponentText("No permission - stop cheating loser")
+            Minecraft.getMinecraft().thePlayer.addChatMessage(message)
         }
+
     }
 
     override fun canCommandSenderUseCommand(sender: ICommandSender): Boolean {
