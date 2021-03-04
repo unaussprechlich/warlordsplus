@@ -6,6 +6,8 @@ import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.renderapi.RenderApi
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.drawPowerUp
@@ -92,8 +94,42 @@ object PowerUpTimer : IModule, RenderApi.World() {
                 autoRotate()
                 scaleForWorldRendering()
                 scale(10.0)
-                drawPowerUp(it.respawnTimer.toString(), it.color)
+                if (enablePowerUpTimer) {
+                    if (showClearerPowerUpTimers) {
+                        if (GameStateManager.isTDM || GameStateManager.isDOM) {
+                            "${it.respawnTimer}".drawPowerUp(Colors.WHITE)
+                        } else {
+                            "${it.respawnTimer}".drawPowerUp(it.color)
+                        }
+                    } else if (!showClearerPowerUpTimers) {
+                        if (GameStateManager.isTDM || GameStateManager.isDOM) {
+                            "${it.respawnTimer}".drawCentered2(
+                                seeThruBlocks = true
+                            )
+                        } else {
+                            "${it.respawnTimer}".drawCentered2(
+                                seeThruBlocks = true
+                            )
+                        }
+                    }
+                }
             }
         }
     }
+
+    @ConfigPropertyBoolean(
+        category = CCategory.MODULES,
+        id = "showClearerPowerUpTimers",
+        comment = "Shows powerup timer through walls clearer",
+        def = true
+    )
+    var showClearerPowerUpTimers = true
+
+    @ConfigPropertyBoolean(
+        category = CCategory.MODULES,
+        id = "enablePowerUpTimer",
+        comment = "Enables or disbles the powerup timer",
+        def = true
+    )
+    var enablePowerUpTimer = true
 }

@@ -119,7 +119,7 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         }
 
         if (!showDiedToYouStoleKill) {
-            w -= 138
+            w -= 143
         } else if (!showTopHeader) {
             w -= 100
         }
