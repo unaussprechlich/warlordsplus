@@ -29,11 +29,8 @@ object RevenantArmyTimer : IModule {
             }
         }
         EventBus.register<SecondEvent> {
-            armyTime.forEach {
-                if (it < 1) {
-                    armyTime.remove(it)
-                }
-            }
+            armyTime.removeIf { it < 1 }
+
             for ((index, value) in armyTime.withIndex()) {
                 if (show)
                     Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}TIME LEFT UNTIL UNDYING HEAL ${EnumChatFormatting.GREEN}$value"))

@@ -9,8 +9,7 @@ import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.ImageRegistry
-import net.unaussprechlich.warlordsplus.util.SoundManager
-import net.unaussprechlich.warlordsplus.util.Sounds
+import net.unaussprechlich.warlordsplus.util.SoundsRegistry
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import kotlin.math.cos
 import kotlin.math.sin
@@ -29,16 +28,12 @@ object Meme : IModule {
         EventBus.register<EnergyReceivedEvent> {
             //playSoundForEvent(Sounds.MEME_CHATURBATE_TIP_SOUND_TINY)
         }
-        EventBus.register<ChatDetector.ChatMessageEvent> {
-            //if (!it.isThePlayer())
-            //    playSoundForEvent(Sounds.MEME_GRINDR_NOTIFICATION)
-        }
         EventBus.register(::onChat)
     }
 
-    private fun playSoundForEvent(sound: Sounds) {
+    private fun playSoundForEvent(sound: SoundsRegistry) {
         if (disabled || GameStateManager.notIngame) return
-        SoundManager.playSound(sound)
+        sound.play()
     }
 
     object WorldRenderer : RenderApi.World() {
@@ -89,7 +84,7 @@ object Meme : IModule {
             val message = event.message.unformattedText.removeFormatting()
 
             if (message.contains("killed cyt0_")) {
-                SoundManager.playSound(Sounds.MEME_CYT0)
+                SoundsRegistry.MEME_CYT0.play()
                 return
             }
 
@@ -124,18 +119,18 @@ object Meme : IModule {
             when {
                 message.startsWith("You killed ") -> {
                     when (((Math.random() * 5) + 1).toInt()) {
-                        1 -> SoundManager.playSound(Sounds.MEME_SUCTION)
-                        2 -> SoundManager.playSound(Sounds.MEME_T1BBC)
-                        3 -> SoundManager.playSound(Sounds.MEME_T1CHRISTMAS)
-                        4 -> SoundManager.playSound(Sounds.MEME_T1GTFO)
-                        5 -> SoundManager.playSound(Sounds.MEME_T1THANKSFORGOLD)
+                        1 -> SoundsRegistry.MEME_SUCTION.play()
+                        2 -> SoundsRegistry.MEME_T1BBC.play()
+                        3 -> SoundsRegistry.MEME_T1CHRISTMAS.play()
+                        4 -> SoundsRegistry.MEME_T1GTFO.play()
+                        5 -> SoundsRegistry.MEME_T1THANKSFORGOLD.play()
                     }
                 }
                 message.startsWith("You assisted in killing") -> {
-                    SoundManager.playSound(Sounds.MEME_T1KS)
+                    SoundsRegistry.MEME_T1KS.play()
                 }
                 message.startsWith("You were killed") -> {
-                    SoundManager.playSound(Sounds.MEME_T1BESTRONG)
+                    SoundsRegistry.MEME_T1BESTRONG.play()
                 }
                 message.contains("fall damage") -> {
                     // SoundManager.playSound(Sounds.MEME_HAPPYLANDING)

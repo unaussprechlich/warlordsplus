@@ -25,7 +25,6 @@ open class Player(val name: String, val uuid: UUID) {
     var healingReceived: Int = 0
     var warlord = WarlordsEnum.NONE
     var spec = SpecsEnum.NONE
-    var superSpec = SpecsEnumSuper.NONE
     var team = TeamEnum.NONE
     var level = 0
     var prestiged: Boolean = false
@@ -214,21 +213,7 @@ object OtherPlayers : IModule {
                     }
                 }
             }
-
-            playersMap.filter {
-                it.value.spec != SpecsEnum.NONE
-                it.value.superSpec == SpecsEnumSuper.NONE
-            }.forEach {
-                val player = it.value
-                player.superSpec =
-                    if (player.spec == SpecsEnum.AVENGER || player.spec == SpecsEnum.BERSERKER || player.spec == SpecsEnum.PYROMANCER || player.spec == SpecsEnum.THUNDERLORD) SpecsEnumSuper.DAMAGE
-                    else if (player.spec == SpecsEnum.CRUSADER || player.spec == SpecsEnum.DEFENDER || player.spec == SpecsEnum.CRYOMANCER || player.spec == SpecsEnum.SPIRITGUARD) SpecsEnumSuper.TANK
-                    else if (player.spec == SpecsEnum.PROTECTOR || player.spec == SpecsEnum.REVENANT || player.spec == SpecsEnum.AQUAMANCER || player.spec == SpecsEnum.EARTHWARDEN) SpecsEnumSuper.HEALER
-                    else SpecsEnumSuper.NONE
-            }
-
         }
-
 
         //Return the players :)
         return playersMap.values
@@ -243,7 +228,7 @@ object OtherPlayers : IModule {
                 it.value.name == e.username
             }.forEach {
                 e.displayname =
-                    "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.icon}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}${EnumChatFormatting.RESET}"
+                    "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.type.coloredSymbol}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}${EnumChatFormatting.RESET}"
             }
         } else if (GameStateManager.inLobby) {
             try {
@@ -271,7 +256,7 @@ object OtherPlayers : IModule {
                         }
                     }
                     e.displayname =
-                        "${EnumChatFormatting.DARK_GRAY}[${spec.icon}${EnumChatFormatting.DARK_GRAY}]${EnumChatFormatting.RESET}${e.displayname}"
+                        "${EnumChatFormatting.DARK_GRAY}[${spec.type.coloredSymbol}${EnumChatFormatting.DARK_GRAY}]${EnumChatFormatting.RESET}${e.displayname}"
                 }
             } catch (e: Exception) {
                 println(e.printStackTrace())
@@ -283,5 +268,19 @@ object OtherPlayers : IModule {
 
     fun getPlayerForName(name: String): Player? {
         return playersMap[name]
+    }
+
+    fun colorForPlayer(name : String) : Colors{
+        return when (playersMap[name]!!.team) {
+            TeamEnum.BLUE -> {
+                Colors.DARK_BLUE
+            }
+            TeamEnum.RED -> {
+                Colors.DARK_RED
+            }
+            else -> {
+                Colors.BLACK
+            }
+        }
     }
 }

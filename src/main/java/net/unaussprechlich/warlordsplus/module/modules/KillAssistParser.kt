@@ -20,8 +20,8 @@ object KillAssistParser : IModule {
             val textMessage: String = e.message.unformattedText.removeFormatting()
             var respawn = -1
             if (GameStateManager.isCTF) {
-                val colon = ScoreboardManager.scoreboardNames[9].lastIndexOf(":")
-                val after = ScoreboardManager.scoreboardNames[9].substring(colon + 1, colon + 3)
+                val colon = ScoreboardManager.scoreboardFormatted[9].lastIndexOf(":")
+                val after = ScoreboardManager.scoreboardFormatted[9].substring(colon + 1, colon + 3)
                 try {
                     respawn = after.toInt() % 12
                     if (after.toInt() % 12 <= 4) {

@@ -1,11 +1,14 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.renderapi.RenderApi
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.Colors
 import java.util.*
@@ -85,14 +88,39 @@ object PowerUpTimer : IModule, RenderApi.World() {
 
     override fun onRender(event: RenderWorldLastEvent) {
         powerUps.values.filter { it.respawnTimer != -1 }.forEach {
-            glMatrix {
-                //translate(x, y, z)
-                translateToPos(it.x, it.y + 3, it.z)
-                autoRotate()
-                scaleForWorldRendering()
-                scale(10.0)
-                "${it.respawnTimer}".drawPowerUp(it.color)
+            if(thePlayer!!.getDistance(it.x, it.y, it.z) <= 150){
+                glMatrix {
+                    translateToPos(it.x, it.y + 3, it.z)
+                    autoRotate()
+                    scaleForWorldRendering()
+                    scale(10.0)
+
+                    if (enablePowerUpTimer) {
+                        if(showClearerPowerUpTimers) GlStateManager.disableDepth()
+                        "${it.respawnTimer}".drawCentered(
+                            seeThruBlocks = !showClearerPowerUpTimers,
+                            color = if(GameStateManager.isTDM || GameStateManager.isDOM) Colors.WHITE else it.color
+                        )
+                        if(showClearerPowerUpTimers) GlStateManager.enableDepth()
+                    }
+                }
             }
         }
     }
+
+    @ConfigPropertyBoolean(
+        category = CCategory.MODULES,
+        id = "showClearerPowerUpTimers",
+        comment = "Shows powerup timer through walls clearer",
+        def = true
+    )
+    var showClearerPowerUpTimers = true
+
+    @ConfigPropertyBoolean(
+        category = CCategory.MODULES,
+        id = "enablePowerUpTimer",
+        comment = "Enables or disbles the powerup timer",
+        def = true
+    )
+    var enablePowerUpTimer = true
 }

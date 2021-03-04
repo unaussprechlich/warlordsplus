@@ -58,11 +58,11 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
 
     @ConfigPropertyBoolean(
         category = CCategory.SCOREBOARD,
-        id = "showBoxOutlines",
+        id = "showBoxedOutlines",
         comment = "Shows box outline around players",
-        def = true
+        def = false
     )
-    var showOutline = true
+    var showOutline = false
 
     @ConfigPropertyBoolean(
         category = CCategory.SCOREBOARD,
@@ -119,7 +119,7 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         }
 
         if (!showDiedToYouStoleKill) {
-            w -= 138
+            w -= 143
         } else if (!showTopHeader) {
             w -= 100
         }
@@ -228,7 +228,7 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
             translate(xStart, yStart - 15)
         }
 
-        fun renderLine(p: net.unaussprechlich.warlordsplus.Player) {
+        fun renderLine(index : Int, p: net.unaussprechlich.warlordsplus.Player) {
             if (showOutline) {
                 translateY(-2) {
                     renderRect(w.toDouble(), 1.25, Colors.DEF)
@@ -239,6 +239,12 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
                 }
                 translateY(8.75) {
                     renderRect(w.toDouble(), 1.25, Colors.DEF)
+                }
+            } else {
+                if(index % 2 == 1){
+                    translateY(-1.2){
+                        renderRect(w.toDouble(), 10.75, Colors.DEF, alpha = 40)
+                    }
                 }
             }
 
@@ -287,11 +293,7 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
                 } ${if (p.name == Minecraft.getMinecraft().thePlayer.displayNameString) ThePlayer.spec.icon else p.spec.icon}".draw()
                 translateX(xName)
                 "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color.toString()}${if (p.name == Minecraft.getMinecraft().thePlayer.displayNameString) EnumChatFormatting.GREEN else ""}${p.name}".draw()
-//                if (p.name == "sumSmash") {
-//                    translate(xKills - 50) {
-//                        renderImage(9.0, 9.0, ImageRegistry.MEME_WEIRDCHAMP)
-//                    }
-//                }
+
                 translateX(xKills)
                 "${if (hasMostKills()) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}".draw()
                 translateX(xDeaths)
@@ -330,24 +332,24 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
             glMatrix {
                 renderRect(w.toDouble(), 10.75 * teamBlue.size + 1, Colors.DEF, 100)
                 translateY(-2)
-                teamBlue.forEach(::renderLine)
+                teamBlue.forEachIndexed(::renderLine)
             }
             translateX(w + 5)
             glMatrix {
                 renderRect(w.toDouble(), 10.75 * teamRed.size + 1, Colors.DEF, 100)
                 translateY(-2)
-                teamRed.forEach(::renderLine)
+                teamRed.forEachIndexed(::renderLine)
             }
         } else {
             translateY(-14)
             renderRect(w.toDouble(), 10.75 * teamBlue.size + 1, Colors.DEF, 100)
             translateY(-2)
-            teamBlue.forEach(::renderLine)
+            teamBlue.forEachIndexed(::renderLine)
 
             translateY(-1)
             renderRect(w.toDouble(), 10.75 * teamRed.size + 1, Colors.DEF, 100)
             translateY(-2)
-            teamRed.forEach(::renderLine)
+            teamRed.forEachIndexed(::renderLine)
         }
     }
 }

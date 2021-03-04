@@ -3,7 +3,7 @@ package net.unaussprechlich.warlordsplus.util
 import net.minecraft.client.Minecraft
 import net.unaussprechlich.warlordsplus.StaticStuff
 
-enum class Sounds(val soundName: String) {
+enum class SoundsRegistry(val soundName: String) {
     MEME_SUCTION("meme.suction"),
     MEME_T1BBC("meme.t1TBBC"),
     MEME_T1BESTRONG("meme.t1BeStrong"),
@@ -22,13 +22,9 @@ enum class Sounds(val soundName: String) {
     MEME_CYT0("meme.cyt0"),
     MEME_RICKY("meme.ricky"),
     MEME_T1THANKSFORGOLD("meme.t1ThanksForGold");
-}
 
-object SoundManager {
-
-    fun playSound(sound: Sounds) {
-        println("Playing sound: " + StaticStuff.MODID + ":" + sound.soundName)
-        Minecraft.getMinecraft().thePlayer.playSound(StaticStuff.MODID + ":" + sound.soundName, 10f, 1f)
+    fun play() {
+        println("Playing sound: " + StaticStuff.MODID + ":" + this.soundName)
+        Minecraft.getMinecraft().thePlayer.playSound(StaticStuff.MODID + ":" + this.soundName, 10f, 1f)
     }
-
 }

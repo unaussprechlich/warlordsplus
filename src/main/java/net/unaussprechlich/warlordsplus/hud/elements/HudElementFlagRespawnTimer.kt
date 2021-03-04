@@ -44,9 +44,9 @@ object HudElementFlagRespawnTimer : AbstractHudElement() {
         val renderStrings = ArrayList<String>()
 
         if (GameStateManager.isCTF) {
-            if (ThePlayer.team == TeamEnum.BLUE && !ScoreboardManager.scoreboardNames[7].removeFormatting()
+            if (ThePlayer.team == TeamEnum.BLUE && !ScoreboardManager.scoreboardFormatted[7].removeFormatting()
                     .contains("Stolen") ||
-                ThePlayer.team == TeamEnum.RED && !ScoreboardManager.scoreboardNames[6].removeFormatting()
+                ThePlayer.team == TeamEnum.RED && !ScoreboardManager.scoreboardFormatted[6].removeFormatting()
                     .contains("Stolen")
             ) {
                 when {

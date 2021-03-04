@@ -14,7 +14,6 @@ import net.minecraftforge.fml.common.gameevent.InputEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
-import net.unaussprechlich.warlordsplus.module.modules.HotKeyCanceler
 
 object ForgeEventProcessor {
 
@@ -110,8 +109,6 @@ object ForgeEventProcessor {
     @SubscribeEvent
     fun onKeyPress(event: InputEvent.KeyInputEvent?) {
         if (!isDesiredGame) return
-        HotKeyCanceler.onKeyPress(event)
         EventBus.post(event)
-
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.scoreboard.ScorePlayerTeam
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.util.removeFormatting
 import java.util.*
 
 /**
@@ -15,12 +16,18 @@ object ScoreboardManager : IModule{
     var scoreboardTitle = ""
         private set
 
-    val scoreboardNames = ArrayList<String>()
+    val scoreboardFormatted = ArrayList<String>()
+    val scoreboard = ArrayList<String>()
 
     @SubscribeEvent
     fun onClientTick(@Suppress("UNUSED_PARAMETER") event: ClientTickEvent) {
-        if (scoreboardNames.isNotEmpty()) scoreboardNames.clear()
+        if (scoreboardFormatted.isNotEmpty() || scoreboard.isNotEmpty()) {
+            scoreboardFormatted.clear()
+            scoreboard.clear()
+        }
+
         scoreboardTitle = ""
+
         try {
             val scoreboard = Minecraft.getMinecraft().theWorld.scoreboard
             val sidebarObjective = scoreboard.getObjectiveInDisplaySlot(1)
@@ -29,7 +36,9 @@ object ScoreboardManager : IModule{
 
             for (score in scoreboard.getSortedScores(sidebarObjective)) {
                 val team = scoreboard.getPlayersTeam(score.playerName)
-                scoreboardNames.add(ScorePlayerTeam.formatPlayerName(team, score.playerName))
+                val value = ScorePlayerTeam.formatPlayerName(team, score.playerName)
+                this.scoreboardFormatted.add(value)
+                this.scoreboard.add(value.removeFormatting())
             }
 
         } catch (e: Exception) {

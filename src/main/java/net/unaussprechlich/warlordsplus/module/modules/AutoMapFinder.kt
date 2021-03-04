@@ -11,7 +11,7 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardNames
+import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardFormatted
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object AutoMapFinder : IModule {
@@ -22,11 +22,11 @@ object AutoMapFinder : IModule {
         EventBus.register<TickEvent.ClientTickEvent> {
             if (GameStateManager.inLobby && enabled) {
                 try {
-                    if (scoreboardNames[7].removeFormatting().isNotEmpty() && (scoreboardNames[7].removeFormatting()
-                            .substring(12, 17) == "00:27" || scoreboardNames[7].removeFormatting()
+                    if (scoreboardFormatted[7].removeFormatting().isNotEmpty() && (scoreboardFormatted[7].removeFormatting()
+                            .substring(12, 17) == "00:27" || scoreboardFormatted[7].removeFormatting()
                             .substring(12, 17) == "00:12") && future < System.currentTimeMillis()
                     ) {
-                        when (scoreboardNames[10].removeFormatting().substring(5)) {
+                        when (scoreboardFormatted[10].removeFormatting().substring(5)) {
                             "Warsong" -> if (!warsong) rejoin()
                             "Crossfire" -> if (!crossfire) rejoin()
                             "Gorge" -> if (!gorge) rejoin()

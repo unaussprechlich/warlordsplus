@@ -11,7 +11,7 @@ import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
 import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardNames
+import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardFormatted
 import net.unaussprechlich.warlordsplus.module.modules.SecondEvent
 
 /**
@@ -25,8 +25,8 @@ object HudElementRespawnTimer : AbstractHudElement() {
         EventBus.register<SecondEvent> {
             respawnTimer--
             if (GameStateManager.isCTF) {
-                val colon = scoreboardNames[9].lastIndexOf(":")
-                val after = scoreboardNames[9].substring(colon + 1, colon + 3)
+                val colon = scoreboardFormatted[9].lastIndexOf(":")
+                val after = scoreboardFormatted[9].substring(colon + 1, colon + 3)
                 if (respawnTimer < 0) respawnTimer = 0
                 try {
                     if (after.toInt() % 12 == 0) {

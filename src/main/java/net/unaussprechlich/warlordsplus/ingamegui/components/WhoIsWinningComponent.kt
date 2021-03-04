@@ -55,18 +55,18 @@ object WhoIsWinningComponent : AbstractRenderComponent(RenderGameOverlayEvent.El
 
     fun update(e: TickEvent.ClientTickEvent) {
         try {
-            if (ScoreboardManager.scoreboardNames.size != 15) return
+            if (ScoreboardManager.scoreboardFormatted.size != 15) return
 
             val blue = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardNames[12]
+                ScoreboardManager.scoreboardFormatted[12]
                     .replace(" ", "").replace("\uD83D\uDCA3", "")
             )
             val red = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardNames[11]
+                ScoreboardManager.scoreboardFormatted[11]
                     .replace(" ", "").replace("\uD83D\uDC7D", "")
             )
             val time = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardNames[9]
+                ScoreboardManager.scoreboardFormatted[9]
                     .replace(" ", "").replace("\uD83D\uDC0D", ""))
 
             timeToWin = time.substring(time.indexOf(":") + 1)
@@ -74,9 +74,9 @@ object WhoIsWinningComponent : AbstractRenderComponent(RenderGameOverlayEvent.El
             bluePoints = blue.substring(blue.indexOf(":") + 1, blue.indexOf("/")).toInt()
             redPoints = red.substring(red.indexOf(":") + 1,red.indexOf("/")).toInt()
 
-            if(ScoreboardManager.scoreboardNames[6].contains("Flag")){
-                val bFlag = ScoreboardManager.scoreboardNames[6].removeFormatting().removeSpaces()
-                val rFlag = ScoreboardManager.scoreboardNames[7].removeFormatting().removeSpaces()
+            if(ScoreboardManager.scoreboardFormatted[6].contains("Flag")){
+                val bFlag = ScoreboardManager.scoreboardFormatted[6].removeFormatting().removeSpaces()
+                val rFlag = ScoreboardManager.scoreboardFormatted[7].removeFormatting().removeSpaces()
 
                 redFlag = rFlag.substring(rFlag.indexOf(":") + 1)
                 blueFlag = bFlag.substring(bFlag.indexOf(":") + 1)

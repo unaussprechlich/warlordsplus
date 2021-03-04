@@ -1,7 +1,5 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
-import com.jagrosh.discordipc.entities.RichPresence
-import com.jagrosh.discordipc.entities.pipe.PipeStatus
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -11,12 +9,12 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardNames
+import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboard
+import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardFormatted
 import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardTitle
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 import net.unaussprechlich.warlordsplus.util.contain
 import net.unaussprechlich.warlordsplus.util.removeFormatting
-import java.time.OffsetDateTime
 
 object GameStateManager : IModule {
 
@@ -75,14 +73,18 @@ object GameStateManager : IModule {
             && Minecraft.getMinecraft().thePlayer != null
         ) return
         try {
-            isWarlords = scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))
+
+            if(isWarlords != scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))){
+                isWarlords = !isWarlords
+                EventBus.post(WarlordsLeaveAndJoinEvent(isWarlords))
+            }
 
             val ingame = (isWarlords
-                    && (scoreboardNames.size == 15 || scoreboardNames.size == 12)
-                    && (scoreboardNames[9].contains("Wins in:")
-                    || scoreboardNames[9].contains("Time Left:")
-                    || scoreboardNames[6].contains("Wins in:")
-                    || scoreboardNames[6].contains("Time Left:")))
+                    && (scoreboard.size == 15 || scoreboard.size == 12)
+                    && (scoreboard[9].contains("Wins in:")
+                    || scoreboard[9].contains("Time Left:")
+                    || scoreboard[6].contains("Wins in:")
+                    || scoreboard[6].contains("Time Left:")))
 
             if (ingame != isIngame) {
                 isIngame = ingame
@@ -90,154 +92,72 @@ object GameStateManager : IModule {
             }
 
             if (isIngame) {
-                isCTF = scoreboardNames[7].removeFormatting().contains("RED Flag")
-                isTDM = scoreboardNames[9].removeFormatting().contains("BLU:")
-                isDOM = scoreboardNames[11].removeFormatting().contain("/2000")
+                isCTF = scoreboard[7].contains("RED Flag")
+                isTDM = scoreboard[9].contains("BLU:")
+                isDOM = scoreboard[11].contain("/2000")
 
                 if (isCTF) {
-                    val colon = scoreboardNames[9].lastIndexOf(":")
-                    val after = scoreboardNames[9].substring(colon + 1, colon + 3)
+                    val colon = scoreboardFormatted[9].lastIndexOf(":")
+                    val after = scoreboardFormatted[9].substring(colon + 1, colon + 3)
                     try {
                         if (after.toInt() % 12 == 0)
                             EventBus.post(RespawnEvent())
                     } catch (e: Exception) {
                     }
                 }
-                if (isCTF || isDOM) {
-                    bluePoints =
-                        scoreboardNames[12].removeFormatting()
-                            .substring(5, scoreboardNames[12].removeFormatting().indexOf("/"))
-                            .toInt()
-                    redPoints =
-                        scoreboardNames[11].removeFormatting()
-                            .substring(5, scoreboardNames[11].removeFormatting().indexOf("/"))
-                            .toInt()
-                    val currentSecond =
-                        scoreboardNames[9].removeFormatting()
-                            .substring(scoreboardNames[9].removeFormatting().length - 2)
-                            .toInt()
+
+                fun updateSecond(currentSecond: Int){
                     if (currentSecond != previousSec) {
                         EventBus.post(SecondEvent(currentSecond))
                         previousSec = currentSecond
                     }
+                }
+
+                if (isCTF || isDOM) {
+                    bluePoints = scoreboard[12].substring(5, scoreboard[12].indexOf("/")).toInt()
+                    redPoints = scoreboard[11].substring(5, scoreboard[11].indexOf("/")).toInt()
+
+                    updateSecond(scoreboard[9].substring(scoreboard[9].length - 2).toInt())
                 }
                 if (isTDM) {
-                    bluePoints =
-                        scoreboardNames[9].removeFormatting()
-                            .substring(5, scoreboardNames[9].removeFormatting().indexOf("/"))
-                            .toInt()
-                    redPoints =
-                        scoreboardNames[8].removeFormatting()
-                            .substring(5, scoreboardNames[8].removeFormatting().indexOf("/"))
-                            .toInt()
-                    val currentSecond =
-                        scoreboardNames[6].removeFormatting()
-                            .substring(scoreboardNames[6].removeFormatting().length - 2)
-                            .toInt()
-                    if (currentSecond != previousSec) {
-                        EventBus.post(SecondEvent(currentSecond))
-                        previousSec = currentSecond
-                    }
+                    bluePoints = scoreboard[9].substring(5, scoreboard[9].indexOf("/")).toInt()
+                    redPoints = scoreboard[8].substring(5, scoreboard[8].indexOf("/")).toInt()
+
+                    updateSecond(scoreboard[6].substring(scoreboard[6].length - 2).toInt())
+
                 }
             }
-            inLobby = isWarlords && (scoreboardNames[10].removeFormatting()
-                .isNotEmpty() && scoreboardNames[10].removeFormatting()
-                .contains("Map:") || scoreboardNames[9].removeFormatting().contains("Map:"))
-
-            if (isWarlords) {
-                if (DiscordRPC.client.status != PipeStatus.CONNECTED && DiscordRPC.enabled) {
-                    DiscordRPC.start()
-                }
-                val builder = RichPresence.Builder()
-                builder.setDetails(getLobby())
-                if (inLobby) {
-                    builder.setLargeImage("warlordsicon")
-                    builder.setState(getPlayersInLobby())
-                    builder.setStartTimestamp(OffsetDateTime.now())
-                    builder.setEndTimestamp(OffsetDateTime.now().plusSeconds(getTimeLeftLobby()))
-                } else if (ingame) {
-                    builder.setSmallImage(ThePlayer.superSpec.specName)
-                    builder.setLargeImage(ThePlayer.warlord.classname.toLowerCase())
-                    builder.setState(getPoints())
-                    builder.setStartTimestamp(OffsetDateTime.now())
-                    builder.setEndTimestamp(OffsetDateTime.now().plusSeconds(getTimeLeftGame()))
-                }
-                DiscordRPC.client.sendRichPresence(builder.build())
-
-            } else if (!isWarlords) {
-                if (DiscordRPC.client.status == PipeStatus.CONNECTED && !DiscordRPC.enabled) {
-                    DiscordRPC.client.close()
-                }
-            }
+            inLobby = isWarlords
+                    && (scoreboard[10].isNotEmpty()  || scoreboard[9].isNotEmpty())
+                    && (scoreboard[10].contains("Map:") || scoreboard[9].contains("Map:"))
 
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun getLobby(): String {
-        when {
-            inLobby -> {
-                return if (scoreboardNames[10].removeFormatting().contains("Map:"))
-                    "In ${scoreboardNames[10].removeFormatting().substring(5)} Lobby"
-                else
-                    "In ${scoreboardNames[9].removeFormatting().substring(5)} Lobby"
-            }
-            isCTF -> {
-                return "Playing Capture the Flag"
-            }
-            isTDM -> {
-                return "Playing Team Deathmatch"
-            }
-            isDOM -> {
-                return "Playing Domination"
-            }
-        }
-        return "In Lobby"
-    }
-
 
     fun getPlayersInLobby(): String {
-        return if (scoreboardNames[9].removeFormatting().contains("Players:"))
-            scoreboardNames[9].removeFormatting()
-        else
-            scoreboardNames[8].removeFormatting()
+        return if (scoreboard[9].contains("Players:")) {
+            scoreboard[9]
+        } else {
+            scoreboard[8]
+        }
     }
 
-    fun getPoints(): String {
-        when {
-            bluePoints == redPoints -> return "Tied"
-            ThePlayer.team == TeamEnum.BLUE -> {
-                return if (bluePoints > redPoints) {
-                    "Winning by ${bluePoints - redPoints} points"
-                } else {
-                    "Losing by ${redPoints - bluePoints} points"
-                }
-            }
-            ThePlayer.team == TeamEnum.RED -> {
-                return if (redPoints > bluePoints) {
-                    "Winning by ${redPoints - bluePoints} points"
-                } else {
-                    "Losing by ${bluePoints - redPoints} points"
-                }
-            }
-            else -> return ""
-        };
+    private fun extractTime(line : String) : Long{
+        val min = line.substring(line.indexOf(":") - 2, line.indexOf(":")).toInt()
+        val second = line.substring(line.indexOf(":") + 1, line.indexOf(":") + 3).toLong()
+        return min * 60 + second + 1
     }
 
     fun getTimeLeftLobby(): Long {
         return when {
-            scoreboardNames[6].removeFormatting().contains("Starting in") -> {
-                val line = scoreboardNames[6].removeFormatting()
-                val min = line.substring(line.indexOf(":") - 2, line.indexOf(":")).toInt()
-                val second = line.substring(line.indexOf(":") + 1, line.indexOf(":") + 3).toLong()
-                min * 60 + second + 1
+            scoreboard[6].contains("Starting in") -> {
+                extractTime(scoreboard[6])
             }
-            scoreboardNames[7].removeFormatting().contains("Starting in") -> {
-                val line = scoreboardNames[7].removeFormatting()
-                val min = line.substring(line.indexOf(":") - 2, line.indexOf(":")).toInt()
-                val second = line.substring(line.indexOf(":") + 1, line.indexOf(":") + 3).toLong()
-                min * 60 + second + 1
+            scoreboard[7].contains("Starting in") -> {
+                extractTime(scoreboard[7])
             }
             else -> {
                 0
@@ -247,51 +167,40 @@ object GameStateManager : IModule {
 
     fun getTimeLeftGame(): Long {
         return if (isCTF || isDOM) {
-            val line =
-                scoreboardNames[9].removeFormatting().substring(scoreboardNames[9].removeFormatting().indexOf(":") + 1)
-            val min = line.substring(line.indexOf(":") - 2, line.indexOf(":")).toInt()
-            val second = line.substring(line.indexOf(":") + 1, line.indexOf(":") + 3).toLong()
-            min * 60 + second + 1
+            extractTime(scoreboard[9].substring(scoreboard[9].indexOf(":") + 1))
         } else if (isTDM) {
-            val line =
-                scoreboardNames[6].removeFormatting().substring(scoreboardNames[6].removeFormatting().indexOf(":") + 1)
-            val min = line.substring(line.indexOf(":") - 2, line.indexOf(":")).toInt()
-            val second = line.substring(line.indexOf(":") + 1, line.indexOf(":") + 3).toLong()
-            min * 60 + second + 1
-        } else
+            extractTime(scoreboard[6].substring(scoreboard[6].indexOf(":") + 1))
+        } else{
             0
+        }
     }
 
     fun getMinute(): Int {
         try {
+
+            fun getTime(timeString : String) : Int{
+                return if (timeString.substring(0, 2).toInt() != 15) {
+                    timeString.substring(0, 2).toInt()
+                } else {
+                    14
+                }
+            }
+
             //00:00 - 13:23
             if (isIngame) {
-                if (isTDM) {
-                    if (scoreboardNames[6].removeFormatting().contains("Wins")) {
-                        val time = scoreboardNames[6].removeFormatting().substring(13)
-                        if (time.substring(0, 2).toInt() != 15) {
-                            return time.substring(0, 2).toInt()
-                        }
+                return if (isTDM) {
+                    if (scoreboard[6].contains("Wins")) {
+                        getTime(scoreboard[6].substring(13))
                     } else {
-                        val time = scoreboardNames[6].removeFormatting().substring(11)
-                        if (time.substring(0, 2).toInt() != 15) {
-                            return time.substring(0, 2).toInt()
-                        }
+                        getTime(scoreboard[6].substring(11))
                     }
                 } else {
-                    if (scoreboardNames[9].removeFormatting().contains("Wins")) {
-                        val time = scoreboardNames[9].removeFormatting().substring(13)
-                        if (time.substring(0, 2).toInt() != 15) {
-                            return time.substring(0, 2).toInt()
-                        }
+                    if (scoreboard[9].contains("Wins")) {
+                        getTime(scoreboard[9].substring(13))
                     } else {
-                        val time = scoreboardNames[9].removeFormatting().substring(11)
-                        if (time.substring(0, 2).toInt() != 15) {
-                            return time.substring(0, 2).toInt()
-                        }
+                        getTime(scoreboard[9].substring(11))
                     }
                 }
-                return 14
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -300,6 +209,7 @@ object GameStateManager : IModule {
     }
 }
 
+data class WarlordsLeaveAndJoinEvent(val isWarlords : Boolean) : IEvent
 data class ResetEvent(val time: Long = System.currentTimeMillis()) : IEvent
 data class IngameChangedEvent(val ingame: Boolean) : IEvent
 data class RespawnEvent(val time: Long = System.currentTimeMillis()) : IEvent

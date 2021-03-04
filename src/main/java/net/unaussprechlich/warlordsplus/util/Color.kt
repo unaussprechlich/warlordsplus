@@ -40,5 +40,12 @@ enum class Colors(val red: Int, val green: Int, val blue: Int, val enumColor: En
     val FULL: Int = Color(red.toByte(), green.toByte(), blue.toByte(), 255.toByte()).convertToArgb()
     val ALPHA_100: Int = Color(red.toByte(), green.toByte(), blue.toByte(), 100.toByte()).convertToArgb()
     val ALPHA_200: Int = Color(red.toByte(), green.toByte(), blue.toByte(), 200.toByte()).convertToArgb()
+
+    fun convertToArgb(alpha : Int = 255): Int {
+        return (alpha shl 24) or
+                (this.red shl 16) or
+                (this.green shl 8) or
+                (this.blue)
+    }
 }
 
