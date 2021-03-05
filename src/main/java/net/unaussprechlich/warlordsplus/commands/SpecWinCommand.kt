@@ -1,12 +1,10 @@
-package net.unaussprechlich.warlordsplus.util.commands
+package net.unaussprechlich.warlordsplus.commands
 
 import net.minecraft.client.Minecraft
 import net.minecraft.command.CommandException
-import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.event.ClickEvent
 import net.minecraft.event.HoverEvent
-import net.minecraft.util.BlockPos
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.ClientCommandHandler
@@ -15,10 +13,9 @@ import net.minecraftforge.fml.client.FMLClientHandler
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.util.SpecsEnum
 import net.unaussprechlich.warlordsplus.util.removeSpaces
-import java.util.*
 
 
-object SpecWinCommand : ICommand {
+object SpecWinCommand : AbstractCommand() {
 
     var specs = SpecsEnum.values()
     var specsString = specs.joinToString { it.classname }
@@ -45,11 +42,6 @@ object SpecWinCommand : ICommand {
 
     override fun getCommandUsage(sender: ICommandSender): String {
         return "shows how many wins you need with each spec is left"
-    }
-
-    override fun getCommandAliases(): List<String> {
-        val commandAliases: MutableList<String> = ArrayList()
-        return commandAliases
     }
 
     @Throws(CommandException::class)
@@ -80,23 +72,4 @@ object SpecWinCommand : ICommand {
         Minecraft.getMinecraft().thePlayer.addChatComponentMessage(chatComponent)
     }
 
-    override fun canCommandSenderUseCommand(sender: ICommandSender): Boolean {
-        return true
-    }
-
-    override fun addTabCompletionOptions(
-        sender: ICommandSender,
-        args: Array<String>,
-        pos: BlockPos
-    ): List<String>? {
-        return null
-    }
-
-    override fun isUsernameIndex(args: Array<String>, index: Int): Boolean {
-        return false
-    }
-
-    override fun compareTo(o: ICommand): Int {
-        return 0
-    }
 }

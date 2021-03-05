@@ -19,46 +19,6 @@ import net.unaussprechlich.warlordsplus.util.Colors
 @UnstableDefault
 object StatsDisplayRenderer : IModule, RenderApi.Player() {
 
-    @ConfigPropertyBoolean(
-        category = CCategory.STATS,
-        id = "showStats",
-        comment = "Enable or disable the StatsDisplay",
-        def = true
-    )
-    var showStats = false
-
-    @ConfigPropertyBoolean(
-        category = CCategory.STATS,
-        id = "showBasicStats",
-        comment = "Enable or disable the Basic Stats Above Heads",
-        def = true
-    )
-    var showBasicStats = false
-
-    @ConfigPropertyBoolean(
-        category = CCategory.STATS,
-        id = "showClassStats",
-        comment = "Enable or disable Showing Stats of Each Class",
-        def = true
-    )
-    var showClassStats = false
-
-    @ConfigPropertyBoolean(
-        category = CCategory.STATS,
-        id = "autoShowStats",
-        comment = "Switch between automatically showing the stats and sneaking to show.",
-        def = false
-    )
-    var autoShowStats = false
-
-    @ConfigPropertyInt(
-        category = CCategory.STATS,
-        id = "displayTime",
-        comment = "The duration in ms displaying the StatsDisplay.",
-        def = 20000
-    )
-    var displayTime = 20000
-
     val renderObjects: MutableMap<String, StatsRenderObject> = mutableMapOf()
 
     init {
@@ -276,6 +236,46 @@ object StatsDisplayRenderer : IModule, RenderApi.Player() {
             }
         }
     }
+
+    @ConfigPropertyBoolean(
+        category = CCategory.STATS,
+        id = "Stats | Show",
+        comment = "Enable or disable the StatsDisplay",
+        def = true
+    )
+    var showStats = false
+
+    @ConfigPropertyBoolean(
+        category = CCategory.STATS,
+        id = "Stats | Show General",
+        comment = "Enable or disable the Basic Stats Above Heads",
+        def = true
+    )
+    var showBasicStats = false
+
+    @ConfigPropertyBoolean(
+        category = CCategory.STATS,
+        id = "Stats | Show Class",
+        comment = "Enable or disable Showing Stats of Each Class",
+        def = true
+    )
+    var showClassStats = false
+
+    @ConfigPropertyBoolean(
+        category = CCategory.STATS,
+        id = "Auto Show Stats",
+        comment = "Switch between automatically showing the stats and sneaking to show.",
+        def = false
+    )
+    var autoShowStats = false
+
+    @ConfigPropertyInt(
+        category = CCategory.STATS,
+        id = "Stats | Display Time",
+        comment = "The duration in ms displaying the StatsDisplay.",
+        def = 20000
+    )
+    var displayTime = 20000
 }
 
 

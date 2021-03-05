@@ -9,6 +9,7 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 import net.unaussprechlich.warlordsplus.WarlordsPlus;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +57,12 @@ public class ModConfigGui extends GuiConfig {
                 .map(cCategory -> new DummyConfigElement.DummyCategoryElement(
                         cCategory.getEnumChatFormatting() + cCategory.getName(),
                         "",
-                        configCategoryMap.get(cCategory)))
+                        configCategoryMap.get(cCategory).stream()
+                                .sorted(Comparator.comparing(IConfigElement::getName))
+                                .collect(Collectors.toList())
+                        )
+
+                )
                 .collect(Collectors.toList());
     }
 

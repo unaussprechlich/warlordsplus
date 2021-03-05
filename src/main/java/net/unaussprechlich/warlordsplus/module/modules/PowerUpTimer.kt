@@ -110,7 +110,7 @@ object PowerUpTimer : IModule, RenderApi.World() {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "showClearerPowerUpTimers",
+        id = "PowerUp | Show Clearer Timer",
         comment = "Shows powerup timer through walls clearer",
         def = true
     )
@@ -118,7 +118,7 @@ object PowerUpTimer : IModule, RenderApi.World() {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "enablePowerUpTimer",
+        id = "PowerUp | Enable",
         comment = "Enables or disbles the powerup timer",
         def = true
     )

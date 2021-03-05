@@ -16,13 +16,6 @@ import kotlin.math.abs
 import kotlin.math.exp
 
 object RenderNumbers : IModule {
-    @ConfigPropertyBoolean(
-        category = CCategory.RENDERER,
-        id = "showDamageHealingNumbersAroundPlayers",
-        comment = "Enable or disable the Damage/Healing numbers when hitting/healing player",
-        def = true
-    )
-    var showRender: Boolean = true
 
     val players: MutableMap<String, ArrayList<RenderObject>> = mutableMapOf()
 
@@ -126,6 +119,14 @@ object RenderNumbers : IModule {
             popMatrix()
         }
     }
+
+    @ConfigPropertyBoolean(
+        category = CCategory.RENDERER,
+        id = "Damage/Healing Around Players | Show",
+        comment = "Enable or disable the Damage/Healing numbers when hitting/healing player",
+        def = true
+    )
+    var showRender: Boolean = true
 }
 
 

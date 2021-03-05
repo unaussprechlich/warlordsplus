@@ -97,7 +97,7 @@ object HudElementKillParticipation : AbstractHudElement() {
 
     @ConfigPropertyBoolean(
         category = CCategory.HUD,
-        id = "showKP",
+        id = "||| Kill participation | Show",
         comment = "Enable or disable the Kill Participation counter",
         def = true
     )

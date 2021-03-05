@@ -1,22 +1,20 @@
-package net.unaussprechlich.warlordsplus.util.commands
+package net.unaussprechlich.warlordsplus.commands
 
 import kotlinx.serialization.UnstableDefault
 import net.minecraft.client.Minecraft
 import net.minecraft.command.CommandBase
 import net.minecraft.command.CommandException
-import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.IChatComponent
 import net.unaussprechlich.warlordsplus.module.modules.stats.StatsLoader
-import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
+class GetPlayerStatsCommand : AbstractCommand() {
 
     var counter = 0
 
@@ -26,10 +24,6 @@ class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
 
     override fun getCommandUsage(sender: ICommandSender): String {
         return "get stats of player"
-    }
-
-    override fun getCommandAliases(): List<String> {
-        return ArrayList()
     }
 
     @UnstableDefault
@@ -192,14 +186,6 @@ class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
         }
     }
 
-    override fun update() {
-        TODO("Not yet implemented")
-    }
-
-    override fun canCommandSenderUseCommand(sender: ICommandSender): Boolean {
-        return true
-    }
-
     override fun addTabCompletionOptions(
         sender: ICommandSender,
         args: Array<String>,
@@ -211,13 +197,4 @@ class GetPlayerStatsCommand : ICommand, IUpdateConsumer {
         }
         return CommandBase.getListOfStringsMatchingLastWord(args, players)
     }
-
-    override fun isUsernameIndex(args: Array<String>, index: Int): Boolean {
-        return false
-    }
-
-    override fun compareTo(o: ICommand): Int {
-        return 0
-    }
-
 }

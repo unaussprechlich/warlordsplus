@@ -52,7 +52,7 @@ object AutoTBag : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "enableAutoTBAG",
+        id = "Auto TBag | Enable",
         comment = "Enable or disable the auto tbag module",
         def = true
     )

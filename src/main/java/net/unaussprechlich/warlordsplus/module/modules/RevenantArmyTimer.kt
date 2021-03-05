@@ -70,7 +70,7 @@ object RevenantArmyTimer : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "showRevenantArmyHealTimer",
+        id = "Timer | Revenant Army Enable",
         comment = "Enable or disable the revenant heal timer",
         def = true
     )

@@ -48,7 +48,7 @@ object HudElementHitCounter : AbstractHudElement() {
 
     @ConfigPropertyBoolean(
         category = CCategory.HUD,
-        id = "showHitCounter",
+        id = "||| Hit counter | Show",
         comment = "Enable or disable the Hit Counter",
         def = true
     )

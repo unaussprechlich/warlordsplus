@@ -9,9 +9,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.unaussprechlich.eventbus.ForgeEventProcessor;
+import net.unaussprechlich.warlordsplus.commands.*;
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler;
 import net.unaussprechlich.warlordsplus.module.ModuleManager;
-import net.unaussprechlich.warlordsplus.util.commands.*;
 
 
 @SideOnly(Side.CLIENT)
@@ -64,6 +64,7 @@ public class WarlordsPlus {
         ClientCommandHandler.instance.registerCommand(new Reset());
         ClientCommandHandler.instance.registerCommand(new DisableAutoJoin());
         ClientCommandHandler.instance.registerCommand(new GetPartyMembers());
+        ClientCommandHandler.instance.registerCommand(new OpenConfigCommand());
 
     }
 

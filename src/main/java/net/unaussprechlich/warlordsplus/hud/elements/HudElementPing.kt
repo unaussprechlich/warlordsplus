@@ -65,7 +65,7 @@ object HudElementPing : AbstractHudElement() {
 
     @ConfigPropertyBoolean(
         category = CCategory.HUD,
-        id = "showPing",
+        id = "|| Ping | Show",
         comment = "Enable or disable the Ping counter",
         def = true
     )
