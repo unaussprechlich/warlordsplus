@@ -6,6 +6,7 @@ import net.minecraft.command.ICommandSender
 import net.unaussprechlich.warlordsplus.config.ModConfigGui
 
 class OpenConfigCommand : AbstractCommand() {
+
     override fun getCommandName(): String {
         return "warlordsplus"
     }
@@ -16,6 +17,7 @@ class OpenConfigCommand : AbstractCommand() {
 
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender, parameters: Array<String>) {
-        Minecraft.getMinecraft().displayGuiScreen(ModConfigGui(null))
+        val gui = ModConfigGui(null)
+        Minecraft.getMinecraft().displayGuiScreen(gui)
     }
 }
