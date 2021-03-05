@@ -1,8 +1,6 @@
 package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.unaussprechlich.warlordsplus.ThePlayer
-import net.unaussprechlich.warlordsplus.config.CCategory
-import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 
@@ -25,14 +23,14 @@ object HudElementSpec : AbstractHudElement() {
     }
 
     override fun isEnabled(): Boolean {
-        return showSpec
+        return false//showSpec
     }
 
-    @ConfigPropertyBoolean(
-        category = CCategory.HUD,
-        id = "showSpec",
-        comment = "Display the Spec",
-        def = false
-    )
-    var showSpec = false
+//    @ConfigPropertyBoolean(
+//        category = CCategory.HUD,
+//        id = "showSpec",
+//        comment = "Display the Spec",
+//        def = false
+//    )
+//    var showSpec = false
 }

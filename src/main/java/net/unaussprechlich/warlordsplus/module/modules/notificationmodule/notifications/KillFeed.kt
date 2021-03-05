@@ -68,8 +68,8 @@ object KillFeedNotifications : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "showKillFeedTopRight",
-        comment = "Enable or disable the kill feed",
+        id = "Kill Feed | Enable",
+        comment = "Enable or disable the kill feed top right",
         def = true
     )
     var show = true

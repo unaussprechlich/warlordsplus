@@ -28,11 +28,11 @@ object StatsLoader : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.STATS,
-        id = "disableAutoLoadStats",
-        comment = "Disable the stats from loading automatically.",
-        def = false
+        id = "Auto Load Stats",
+        comment = "Stats from loading automatically, if false you need to shift on players to load thier stats",
+        def = true
     )
-    var disableAutoStats = false
+    var autoLoadStats = true
 
     val client = HttpClient {
         install(JsonFeature) {
@@ -83,7 +83,7 @@ object StatsLoader : IModule {
         if (Minecraft.getMinecraft().thePlayer != null) {
             loadPlayer(Minecraft.getMinecraft().thePlayer.displayNameString)
         }
-        if (disableAutoStats) return
+        if (!autoLoadStats) return
         if (event.entity is EntityPlayer) {
             loadPlayer((event.entity as EntityPlayer).displayNameString)
         }

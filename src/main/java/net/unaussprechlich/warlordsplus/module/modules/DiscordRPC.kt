@@ -115,7 +115,7 @@ object DiscordRPC : IPCListener {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "enableDiscordRPC",
+        id = "Discord RPC | Enable",
         comment = "Enable or disable rich presence on discord",
         def = true
     )

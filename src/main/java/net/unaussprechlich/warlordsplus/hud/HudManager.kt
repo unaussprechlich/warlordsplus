@@ -12,9 +12,9 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.WarlordsPlus
 import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyString
-import net.unaussprechlich.warlordsplus.config.GeneralConfigSettings
 import net.unaussprechlich.warlordsplus.hud.elements.*
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.Colors
@@ -29,29 +29,7 @@ import java.util.*
  */
 object HudManager : RenderApi.Gui<RenderGameOverlayEvent.Text>(), IModule {
 
-    @ConfigPropertyInt(
-        category = CCategory.HUD,
-        id = "xOffset",
-        comment = "The offset in x direction for the WarlordsPlus Hud",
-        def = 4
-    )
-    var xOffset = 4
 
-    @ConfigPropertyInt(
-        category = CCategory.HUD,
-        id = "yOffset",
-        comment = "The offset in y direction for the WarlordsPlus Hud",
-        def = 4
-    )
-    var yOffset = 4
-
-    @ConfigPropertyString(
-        category = CCategory.HUD,
-        id = "hudscale",
-        comment = "Scale the Hud on left side of screen, default 1.0",
-        def = "0.5"
-    )
-    var scale = "0.5"
 
     val MOD_VERSION = "@VERSION@"
 
@@ -111,14 +89,14 @@ object HudManager : RenderApi.Gui<RenderGameOverlayEvent.Text>(), IModule {
             translateX(xOffset.toDouble())
             translateY(-yOffset.toDouble())
             scale(hudScale)
-            if (GeneralConfigSettings.showWarlordsPlus) {
-                heading.drawWithBackground(Colors.DEF, alpha = 220, padding = 3)
+            if (showWarlordsPlus) {
+                heading.drawWithBackground(Colors.DEF, alpha = backgroundAlphaWarlordsPlus, padding = 3)
                 translateY(-12.0)
             }
             for (element in hudElements) {
                 if (element.isVisible && element.isEnabled && element.renderString.isNotEmpty()) {
                     for (s in element.renderString) {
-                        s.drawWithBackground(Colors.DEF, 100, padding = 2)
+                        s.drawWithBackground(Colors.DEF, alpha = backgroundAlphaElements, padding = 2)
                         translateY(-11.0)
                     }
                 }
@@ -126,5 +104,51 @@ object HudManager : RenderApi.Gui<RenderGameOverlayEvent.Text>(), IModule {
         }
     }
 
+    @ConfigPropertyBoolean(
+        CCategory.HUD,
+        "| WarlordsPlus | Show Watermark",
+        "Shows WarlordsPlus V1...",
+        true
+    )
+    var showWarlordsPlus: Boolean = true
 
+    @ConfigPropertyInt(
+        CCategory.HUD,
+        "| WarlordsPlus | Box Transparency Amount",
+        "Amount of transparency of WarlordsPlus watermark",
+        220
+    )
+    var backgroundAlphaWarlordsPlus = 220
+
+    @ConfigPropertyInt(
+        category = CCategory.HUD,
+        id = "| Offset | X",
+        comment = "The offset in x direction for the WarlordsPlus Hud",
+        def = 4
+    )
+    var xOffset = 4
+
+    @ConfigPropertyInt(
+        category = CCategory.HUD,
+        id = "| Offset | Y",
+        comment = "The offset in y direction for the WarlordsPlus Hud",
+        def = 4
+    )
+    var yOffset = 4
+
+    @ConfigPropertyString(
+        category = CCategory.HUD,
+        id = "| Hud | Scale",
+        comment = "Scale the Hud on left side of screen, default 1.0",
+        def = "0.9"
+    )
+    var scale = "0.9"
+
+    @ConfigPropertyInt(
+        CCategory.HUD,
+        "| Hud | Box Transparency Amount",
+        "Amount of transparency of all Hud Elements",
+        100
+    )
+    var backgroundAlphaElements = 100
 }

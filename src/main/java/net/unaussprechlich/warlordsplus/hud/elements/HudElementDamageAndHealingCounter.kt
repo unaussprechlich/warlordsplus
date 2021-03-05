@@ -55,7 +55,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
     companion object {
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showHealingDone",
+            id = "||| Healing done | Show",
             comment = "Enable or disable the Healing Done counter",
             def = true
         )
@@ -63,7 +63,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showDamageDone",
+            id = "||| Damage done | Show",
             comment = "Enable or disable the Damage Done counter",
             def = true
         )
@@ -71,7 +71,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showDamageHealHitsPerMin",
+            id = "||| Minute Stats | Show",
             comment = "Enable or disable dmg/heal per min",
             def = true
         )
@@ -79,7 +79,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showEnergyReceived",
+            id = "||| Energy Received | Show",
             comment = "Enable or disable the Energy Received counter",
             def = true
         )
@@ -87,7 +87,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showHealingReceived",
+            id = "||| Healing Received | Show",
             comment = "Enable or disable the Healing Received counter",
             def = true
         )
@@ -95,7 +95,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showDamageTaken",
+            id = "||| Damage Taken | Show",
             comment = "Enable or disable the Damage Taken counter",
             def = true
         )
@@ -103,7 +103,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showEnergyGiven",
+            id = "||| Energy Given | Show",
             comment = "Enable or disable the Energy Given counter",
             def = true
         )
@@ -111,7 +111,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showEnergyStolen",
+            id = "||| Energy Stolen | Show",
             comment = "Enable or disable the Energy Stolen counter",
             def = true
         )
@@ -119,7 +119,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showEnergyLost",
+            id = "||| Energy Lost | Show",
             comment = "Enable or disable the Energy Lost counter",
             def = true
         )

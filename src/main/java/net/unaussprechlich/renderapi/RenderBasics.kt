@@ -11,7 +11,6 @@ import net.unaussprechlich.renderapi.util.MinecraftOpenGlStuff
 import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import org.lwjgl.opengl.GL11
-import org.lwjgl.util.Color
 
 /**
  * A class to enable us to use fancy kotlin magic to draw all them things.
@@ -221,13 +220,6 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
             translate(1.0 + width / 2, 1.0, 0.0)
             draw()
             translate(-1.0, -1.0, 0.0)
-        }
-
-        fun Color.convertToArgb(): Int {
-            return (this.alpha shl 24) or
-                    (this.red shl 16) or
-                    (this.green shl 8) or
-                    (this.blue)
         }
     }
 }

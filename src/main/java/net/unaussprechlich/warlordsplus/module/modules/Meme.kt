@@ -16,14 +16,6 @@ import kotlin.math.sin
 
 object Meme : IModule {
 
-    @ConfigPropertyBoolean(
-        category = CCategory.MODULES,
-        id = "disableMemeModule",
-        comment = "Disable the MemeModule.",
-        def = true
-    )
-    var disabled = true
-
     init {
         EventBus.register<EnergyReceivedEvent> {
             //playSoundForEvent(Sounds.MEME_CHATURBATE_TIP_SOUND_TINY)
@@ -166,6 +158,14 @@ object Meme : IModule {
             throwable.printStackTrace()
         }
     }
+
+    @ConfigPropertyBoolean(
+        category = CCategory.MODULES,
+        id = "Meme Module | Enable",
+        comment = "Disable the MemeModule (Sounds)",
+        def = true
+    )
+    var disabled = true
 
 }
 

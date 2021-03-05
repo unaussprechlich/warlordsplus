@@ -65,7 +65,7 @@ object ChatNotifications : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.CHAT,
-        id = "enabled",
+        id = "Chat | Enabled",
         comment = "Enable the chat notification component",
         def = true
     )
@@ -73,7 +73,7 @@ object ChatNotifications : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.CHAT,
-        id = "notificationsound",
+        id = "Chat | Play Notification Sound",
         comment = "Plays a notification sound if set to true.",
         def = true
     )
@@ -81,7 +81,7 @@ object ChatNotifications : IModule {
 
     @ConfigPropertyInt(
         category = CCategory.CHAT,
-        id = "duration",
+        id = "Chat | Duration",
         comment = "The duartion in ms for showing the chat notification",
         def = 10000
     )
@@ -89,7 +89,7 @@ object ChatNotifications : IModule {
 
     @ConfigPropertyInt(
         category = CCategory.CHAT,
-        id = "width",
+        id = "Chat | Width",
         comment = "The width of the chat notification",
         def = 250
     )

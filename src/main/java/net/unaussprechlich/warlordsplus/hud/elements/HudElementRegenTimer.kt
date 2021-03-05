@@ -59,7 +59,7 @@ class HudElementRegenTimer : AbstractHudElement() {
     companion object {
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showRegenTimer",
+            id = "|| Timer Regen | Show",
             comment = "Enable or disable the Regen Timer",
             def = true
         )

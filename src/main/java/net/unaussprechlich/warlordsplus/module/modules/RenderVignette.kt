@@ -100,9 +100,9 @@ object RenderVignette : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "vignetteIntervene",
+        id = "Vignette | Intervene",
         comment = "Enable or disable intervene vignette",
-        def = true
+        def = false
     )
-    var intervene = true
+    var intervene = false
 }

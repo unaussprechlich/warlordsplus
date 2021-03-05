@@ -112,7 +112,7 @@ object HudElementRespawnTimer : AbstractHudElement() {
 
     @ConfigPropertyBoolean(
         category = CCategory.HUD,
-        id = "showRespawnTimer",
+        id = "|| Timer Respawn | Show",
         comment = "Enable or disable the Respawn Timer",
         def = true
     )

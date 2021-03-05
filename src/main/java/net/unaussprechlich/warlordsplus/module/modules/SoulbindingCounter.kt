@@ -100,7 +100,7 @@ object SoulbindingCounter : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "showSoulBindingCounter",
+        id = "Counter SoulBinding | Enable",
         comment = "Enable or disable the soulbinding counter",
         def = true
     )

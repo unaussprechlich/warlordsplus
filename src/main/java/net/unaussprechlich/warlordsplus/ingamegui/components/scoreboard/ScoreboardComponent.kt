@@ -9,84 +9,13 @@ import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyString
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 
 object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.ElementType.PLAYER_LIST, true) {
-
-    @ConfigPropertyBoolean(
-        category = CCategory.SCOREBOARD,
-        id = "showNewScoreboard",
-        comment = "Enable or disable the new scoreboard",
-        def = true
-    )
-    var showNewScoreboard = false
-
-    @ConfigPropertyInt(
-        category = CCategory.SCOREBOARD,
-        id = "setScaleDOM",
-        comment = "Change the scale of the scoreboard in DOM, so all players will fit on your screen ( 90 = 90% )",
-        def = 100
-    )
-    var setScaleDOM = 100
-
-    @ConfigPropertyInt(
-        category = CCategory.SCOREBOARD,
-        id = "setScaleCTF/TDM",
-        comment = "Change the scale of the scoreboard in CTF/TDM, so all players will fit on your screen ( 90 = 90% )",
-        def = 100
-    )
-    var setScaleCTFTDM = 100
-
-    @ConfigPropertyInt(
-        category = CCategory.SCOREBOARD,
-        id = "moveScoreboard Left(-) or Right(+)",
-        comment = "Moves the scoreboard left or right depending on the value",
-        def = 0
-    )
-    var moveScoreboard = 0
-
-    @ConfigPropertyBoolean(
-        category = CCategory.SCOREBOARD,
-        id = "showTopHeader",
-        comment = "Shows (Kills/Deaths/Received/Given/ etc...)",
-        def = true
-    )
-    var showTopHeader = true
-
-    @ConfigPropertyBoolean(
-        category = CCategory.SCOREBOARD,
-        id = "showBoxedOutlines",
-        comment = "Shows box outline around players",
-        def = false
-    )
-    var showOutline = false
-
-    @ConfigPropertyBoolean(
-        category = CCategory.SCOREBOARD,
-        id = "showDiedToYouStoleKill",
-        comment = "Shows the amount of time ppl died to you or stole your kill",
-        def = false
-    )
-    var showDiedToYouStoleKill = false
-
-    @ConfigPropertyBoolean(
-        category = CCategory.SCOREBOARD,
-        id = "showDoneAndReceived",
-        comment = "Shows the amount dmg/heal someone has done or received to you or by you",
-        def = true
-    )
-    var showDoneAndReceived = true
-
-    @ConfigPropertyBoolean(
-        category = CCategory.SCOREBOARD,
-        id = "splitScoreBoard",
-        comment = "Splits the scoreboard horizontally instead of vertically",
-        def = false
-    )
-    var splitScoreBoard = false
 
     override fun onRender(event: RenderGameOverlayEvent.Pre) {
         try {
@@ -133,11 +62,13 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
 
 
         if (GameStateManager.isCTF || GameStateManager.isTDM) {
-            GlStateManager.scale(setScaleCTFTDM.toDouble() / 100, setScaleCTFTDM.toDouble() / 100, 1.0)
-            xStart = (xCenter + 50 - setScaleCTFTDM / 2 - ((w * setScaleCTFTDM.toDouble() / 100 / 2)).toInt())
+            GlStateManager.scale(setScaleCTFTDM.toDouble(), setScaleCTFTDM.toDouble(), 1.0)
+            xStart =
+                (xCenter + 50 - (setScaleCTFTDM.toDouble() * 100).toInt() / 2 - ((w * setScaleCTFTDM.toDouble() / 100 / 2)).toInt())
         } else if (GameStateManager.isDOM) {
-            GlStateManager.scale(setScaleDOM.toDouble() / 100, setScaleDOM.toDouble() / 100, 1.0)
-            xStart = (xCenter + 50 - setScaleDOM / 2 - ((w * setScaleDOM.toDouble() / 100 / 2)).toInt())
+            GlStateManager.scale(setScaleDOM.toDouble(), setScaleDOM.toDouble(), 1.0)
+            xStart =
+                (xCenter + 50 - (setScaleDOM.toDouble() * 100).toInt() / 2 - ((w * setScaleDOM.toDouble() / 100 / 2)).toInt())
         }
 
         xStart += moveScoreboard
@@ -352,4 +283,76 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
             teamRed.forEachIndexed(::renderLine)
         }
     }
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "Scoreboard | Show",
+        comment = "Enable or disable the new scoreboard",
+        def = true
+    )
+    var showNewScoreboard = false
+
+    @ConfigPropertyString(
+        category = CCategory.SCOREBOARD,
+        id = "Scoreboard | Scale DOM",
+        comment = "Change the scale of the scoreboard in DOM, so all players will fit on your screen ( 0.9 = 90% )",
+        def = "1.0"
+    )
+    var setScaleDOM = ".8"
+
+    @ConfigPropertyString(
+        category = CCategory.SCOREBOARD,
+        id = "Scoreboard | Scale CTF/TDM",
+        comment = "Change the scale of the scoreboard in CTF/TDM, so all players will fit on your screen ( 0.9 = 90% )",
+        def = ".9"
+    )
+    var setScaleCTFTDM = "1.0"
+
+    @ConfigPropertyInt(
+        category = CCategory.SCOREBOARD,
+        id = "Scoreboard | Translate Left(-) or Right(+)",
+        comment = "Moves the scoreboard left or right depending on the value",
+        def = 0
+    )
+    var moveScoreboard = 0
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "Scoreboard Header | Show",
+        comment = "Shows (Kills/Deaths/Received/Given/ etc...)",
+        def = true
+    )
+    var showTopHeader = true
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "Scoreboard | Show Box Outline",
+        comment = "Shows box outline around players",
+        def = false
+    )
+    var showOutline = false
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "Scoreboard Header | Show DiedToYou/StoleKill",
+        comment = "Shows the amount of time ppl died to you or stole your kill",
+        def = false
+    )
+    var showDiedToYouStoleKill = false
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "Scoreboard Header | Show Done/Received",
+        comment = "Shows the amount dmg/heal someone has done or received to you or by you",
+        def = true
+    )
+    var showDoneAndReceived = true
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "Scoreboard | Split",
+        comment = "Splits the scoreboard horizontally instead of vertically",
+        def = false
+    )
+    var splitScoreBoard = false
 }

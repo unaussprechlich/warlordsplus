@@ -81,7 +81,7 @@ object HudElementTotalKills : AbstractHudElement() {
 
     @ConfigPropertyBoolean(
         category = CCategory.HUD,
-        id = "showBlueKills",
+        id = "|| Total Kills Blue | Show",
         comment = "Enable or disable the Blue Kill counter",
         def = true
     )
@@ -89,7 +89,7 @@ object HudElementTotalKills : AbstractHudElement() {
 
     @ConfigPropertyBoolean(
         category = CCategory.HUD,
-        id = "showRedKills",
+        id = "|| Total Kills Red | Show",
         comment = "Enable or disable the Red Kill counter",
         def = true
     )

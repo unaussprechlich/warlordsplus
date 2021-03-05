@@ -24,7 +24,7 @@ object CancelJumpBarOnHorse : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "showEnergyOnHorse",
+        id = "On Horse | Show EnergyBar",
         comment = "Enable or disable replacement of jump bar with energy bar on horse",
         def = true
     )

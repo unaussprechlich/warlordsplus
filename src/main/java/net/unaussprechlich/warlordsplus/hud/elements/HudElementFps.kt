@@ -29,7 +29,7 @@ class HudElementFps : AbstractHudElement() {
     companion object {
         @ConfigPropertyBoolean(
             category = CCategory.HUD,
-            id = "showFPS",
+            id = "|| FPS | Show",
             comment = "Enable or disable the FPS counter",
             def = true
         )

@@ -89,7 +89,7 @@ object HudElementSessionStats : AbstractHudElement() {
 
     @ConfigPropertyBoolean(
         category = CCategory.HUD,
-        id = "showTotalKills/Death/Assits",
+        id = "|| Session Stats | Show K/D/A",
         comment = "Enable or disable the Total Kills/Death/Assists counter",
         def = true
     )
@@ -97,7 +97,7 @@ object HudElementSessionStats : AbstractHudElement() {
 
     @ConfigPropertyBoolean(
         category = CCategory.HUD,
-        id = "showTotalWin/Loss",
+        id = "|| Session Stats | Show W/L",
         comment = "Enable or disable the Total Wins/Loss counter",
         def = true
     )
@@ -105,7 +105,7 @@ object HudElementSessionStats : AbstractHudElement() {
 
     @ConfigPropertyBoolean(
         category = CCategory.HUD,
-        id = "showStreak",
+        id = "|| Session Stats | Show Streak",
         comment = "Enable or disable the Win/Loss streak counter",
         def = true
     )
