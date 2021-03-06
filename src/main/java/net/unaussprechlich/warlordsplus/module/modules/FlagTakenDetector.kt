@@ -2,7 +2,6 @@ package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.module.IModule
@@ -35,7 +34,7 @@ object FlagTakenDetector : IModule {
                             EventBus.post(FlagReturnedEvent(player))
                         }
                         textMessage.contains("Sending you to") -> {
-                            val player = Minecraft.getMinecraft().thePlayer.displayNameString;
+                            val player = Minecraft.getMinecraft().thePlayer.name;
                             EventBus.post(FlagTakenEvent(player, false));
                         }
                     }

@@ -65,9 +65,9 @@ object HudElementKillParticipation : AbstractHudElement() {
 
         }
         EventBus.register<KillEvent> {
-            if (!GameStateManager.isTDM && ((OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.BLUE && ThePlayer.team == TeamEnum.BLUE) || (OtherPlayers.getPlayerForName(
-                    it.player
-                )!!.team == TeamEnum.RED && ThePlayer.team == TeamEnum.RED))
+            if (!GameStateManager.isTDM &&
+                ((OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.BLUE && ThePlayer.team == TeamEnum.BLUE) ||
+                        (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.RED && ThePlayer.team == TeamEnum.RED))
             )
                 numberOfTeamKills++
         }

@@ -57,7 +57,7 @@ enum class SpecsEnum(
         "Ground Slam",
         "Blood Lust",
         "Berserk",
-        "35%",
+        "receives 35 less",
         SpecTypeEnum.DAMAGE
     ),
     DEFENDER(
@@ -66,14 +66,14 @@ enum class SpecsEnum(
         "Ground Slam",
         "Intervene",
         "Last Stand",
-        "25%",
+        "receives 25 less",
         SpecTypeEnum.TANK
     ),
     REVENANT(
         "Revenant",
         "Reckless Charge",
         "Ground Slam",
-        "Orbs of Light",
+        "Orbs of Life",
         "Undying Army",
         "crippling",
         SpecTypeEnum.HEALER

@@ -35,7 +35,7 @@ object DamageAndHealParser : IModule {
                     when {
                         //PLAYER's ability hit you
                         msg.contains("Your") && msg.contains("you") -> {
-                            return Minecraft.getMinecraft().thePlayer.displayNameString
+                            return Minecraft.getMinecraft().thePlayer.name
                         }
                         msg contain "'s" -> {
                             return msg.substring(2, msg.indexOf("'s"))
@@ -112,7 +112,7 @@ object DamageAndHealParser : IModule {
                         )
                     }
                     msg.contains("health") -> {
-                        otherPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
+                        otherPlayer = Minecraft.getMinecraft().thePlayer.name
                         EventBus.post(
                             HealingGivenEvent(
                                 amount,

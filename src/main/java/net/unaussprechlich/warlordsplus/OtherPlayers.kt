@@ -175,13 +175,13 @@ object OtherPlayers : IModule {
                 it.name == player.value.name
             }.filter {
                 it.inventory.firstEmptyStack == 1
-            }.filter {
-                it.inventory.mainInventory[0].tagCompound.toString().contains("Crit")
             }.map {
                 if (it.inventory.mainInventory[0].tagCompound.toString().contains("LEFT-CLICK")) {
                     if (player.value.warlord == WarlordsEnum.WARRIOR) {
                         player.value.spec = SpecsEnum.values()
-                            .firstOrNull { w -> it.inventory.mainInventory[0].tagCompound.toString() contain w.weapon }
+                            .firstOrNull { w ->
+                                it.inventory.mainInventory[0].tagCompound.toString().removeFormatting() contain w.weapon
+                            }
                             ?: SpecsEnum.NONE
                     } else {
                         player.value.spec = SpecsEnum.values()

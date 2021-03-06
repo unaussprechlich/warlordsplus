@@ -46,12 +46,12 @@ object KillAssistParser : IModule {
                 }
                 textMessage.contains("You were killed") -> {
                     val player = textMessage.substring(textMessage.indexOf("by ") + 3)
-                    val deathPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
+                    val deathPlayer = Minecraft.getMinecraft().thePlayer.name
                     EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute(), respawn))
                 }
                 textMessage.contains("You killed") -> {
                     val deathPlayer = textMessage.substring(textMessage.indexOf("killed ") + 7)
-                    val player = Minecraft.getMinecraft().thePlayer.displayNameString
+                    val player = Minecraft.getMinecraft().thePlayer.name
                     EventBus.post(KillEvent(player, deathPlayer, GameStateManager.getMinute(), respawn))
                     EventBus.post(KillRatioEvent(deathPlayer))
                 }

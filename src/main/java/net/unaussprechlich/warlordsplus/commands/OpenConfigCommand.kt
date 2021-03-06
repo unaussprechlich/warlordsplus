@@ -28,6 +28,7 @@ class OpenConfigCommand : AbstractCommand() {
     var openConfigInNextTick = false
 
     init {
+        //todo fix - when you run command in limbo, nothing happens, then when you exit later it runs command - tickevent doesnt work in limbo
         EventBus.register<TickEvent.ClientTickEvent> {
             if (openConfigInNextTick) {
                 Minecraft.getMinecraft().displayGuiScreen(ModConfigGui(null))

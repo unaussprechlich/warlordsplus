@@ -265,9 +265,9 @@ object StatsDisplayRenderer : IModule, RenderApi.Player() {
         category = CCategory.STATS,
         id = "Auto Show Stats",
         comment = "Switch between automatically showing the stats and sneaking to show.",
-        def = false
+        def = true
     )
-    var autoShowStats = false
+    var autoShowStats = true
 
     @ConfigPropertyInt(
         category = CCategory.STATS,
