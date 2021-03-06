@@ -21,7 +21,7 @@ object StatsInLobby : IModule, RenderApi.World() {
         if (!GameStateManager.isWarlords) return
         if (GameStateManager.isIngame) return
 
-        val player = Minecraft.getMinecraft().thePlayer.displayNameString
+        val player = Minecraft.getMinecraft().thePlayer.name
         val data = StatsLoader.getPlayer(player)?.data ?: return
 
         if (data.warlordsSr == null || data.warlordsHypixel == null) return

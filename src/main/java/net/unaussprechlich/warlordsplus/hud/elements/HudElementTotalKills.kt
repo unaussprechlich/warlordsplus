@@ -31,7 +31,7 @@ object HudElementTotalKills : AbstractHudElement() {
         }
 
         EventBus.register<KillEvent> {
-            if (GameStateManager.isCTF || GameStateManager.isTDM) {
+            if (GameStateManager.isCTF || GameStateManager.isDOM) {
                 if (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.BLUE)
                     blueKills++
                 else if (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.RED)

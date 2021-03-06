@@ -81,7 +81,7 @@ object StatsLoader : IModule {
     private fun onPlayerEvent(event: EntityJoinWorldEvent) {
         if (!GameStateManager.isWarlords || GameStateManager.isIngame) return
         if (Minecraft.getMinecraft().thePlayer != null) {
-            loadPlayer(Minecraft.getMinecraft().thePlayer.displayNameString)
+            loadPlayer(Minecraft.getMinecraft().thePlayer.name)
         }
         if (!autoLoadStats) return
         if (event.entity is EntityPlayer) {

@@ -48,7 +48,7 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         }
 
         if (!showDiedToYouStoleKill) {
-            w -= 143
+            w -= 133
         } else if (!showTopHeader) {
             w -= 100
         }
@@ -64,11 +64,11 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         if (GameStateManager.isCTF || GameStateManager.isTDM) {
             GlStateManager.scale(setScaleCTFTDM.toDouble(), setScaleCTFTDM.toDouble(), 1.0)
             xStart =
-                (xCenter + 50 - (setScaleCTFTDM.toDouble() * 100).toInt() / 2 - ((w * setScaleCTFTDM.toDouble() / 100 / 2)).toInt())
+                (xCenter + 50 - (setScaleCTFTDM.toDouble() * 100).toInt() / 2 - ((w * (setScaleCTFTDM.toDouble() * 100).toInt() / 100 / 2)).toInt())
         } else if (GameStateManager.isDOM) {
             GlStateManager.scale(setScaleDOM.toDouble(), setScaleDOM.toDouble(), 1.0)
             xStart =
-                (xCenter + 50 - (setScaleDOM.toDouble() * 100).toInt() / 2 - ((w * setScaleDOM.toDouble() / 100 / 2)).toInt())
+                (xCenter + 50 - (setScaleDOM.toDouble() * 100).toInt() / 2 - ((w * (setScaleDOM.toDouble() * 100).toInt() / 100 / 2)).toInt())
         }
 
         xStart += moveScoreboard
@@ -114,7 +114,10 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
                     translateX(xDone)
                     "Given".draw()
                     if (showTopHeader) {
-                        translateX(xReceived - 17.5)
+                        if (showDiedToYouStoleKill)
+                            translateX(xReceived)
+                        else
+                            translateX(xReceived - 12.5)
                         "Received".draw()
                     }
                 }
@@ -145,7 +148,10 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
                         translateX(xDone)
                         "Given".draw()
                         if (showTopHeader) {
-                            translateX(xReceived - 17.5)
+                            if (showDiedToYouStoleKill)
+                                translateX(xReceived)
+                            else
+                                translateX(xReceived - 12.5)
                             "Received".draw()
                         }
                     }
@@ -221,9 +227,9 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
                     level(
                         p.level
                     )
-                } ${if (p.name == Minecraft.getMinecraft().thePlayer.displayNameString) ThePlayer.spec.icon else p.spec.icon}".draw()
+                } ${if (p.name == Minecraft.getMinecraft().thePlayer.name) ThePlayer.spec.icon else p.spec.icon}".draw()
                 translateX(xName)
-                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color.toString()}${if (p.name == Minecraft.getMinecraft().thePlayer.displayNameString) EnumChatFormatting.GREEN else ""}${p.name}".draw()
+                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color.toString()}${if (p.name == Minecraft.getMinecraft().thePlayer.name) EnumChatFormatting.GREEN else ""}${p.name}".draw()
 
                 translateX(xKills)
                 "${if (hasMostKills()) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}".draw()

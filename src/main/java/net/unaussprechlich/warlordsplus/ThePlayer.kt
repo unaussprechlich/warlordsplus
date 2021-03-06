@@ -153,11 +153,23 @@ object ThePlayer : IModule {
                 e.printStackTrace()
             }
         }
+
+        EventBus.register<SecondEvent> {
+            if (spec == SpecsEnum.NONE && GameStateManager.isDOM) {
+                spec = SpecsEnum.values().firstOrNull { spec ->
+                    ScoreboardManager.scoreboardFormatted.firstOrNull {
+                        it.removeFormatting() contain spec.classname
+                    } != null
+                } ?: SpecsEnum.NONE
+            }
+        }
+
+
         EventBus.register<KillEvent> {
             if (GameStateManager.isCTF) {
-                if (it.deathPlayer == Minecraft.getMinecraft().thePlayer.displayNameString) {
+                if (it.deathPlayer == Minecraft.getMinecraft().thePlayer.name) {
                     minuteStats[it.time][1]++
-                } else if (it.player == Minecraft.getMinecraft().thePlayer.displayNameString) {
+                } else if (it.player == Minecraft.getMinecraft().thePlayer.name) {
                     minuteStats[it.time][0]++
                 }
             }

@@ -13,7 +13,7 @@ object MotivationalMessages : IModule {
 
     init {
         EventBus.register<KillEvent> {
-            if (it.deathPlayer == Minecraft.getMinecraft().thePlayer.displayNameString) {
+            if (it.deathPlayer == Minecraft.getMinecraft().thePlayer.name) {
                 displayUntil = System.currentTimeMillis() + 10000
                 random = (Math.random() * 10).toInt()
             }
