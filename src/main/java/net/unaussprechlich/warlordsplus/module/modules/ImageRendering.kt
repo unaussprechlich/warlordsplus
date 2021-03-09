@@ -5,6 +5,8 @@ import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.ForgeEventProcessor
 import net.unaussprechlich.renderapi.RenderApi
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.ImageRegistry
 
@@ -18,8 +20,8 @@ object ImageRendering : IModule {
 
         init {
             EventBus.register<KillEvent> {
-//                if (!disabled && it.deathPlayer == Minecraft.getMinecraft().thePlayer.name)
-//                    runningFor = 5
+                if (!disabled && it.deathPlayer == Minecraft.getMinecraft().thePlayer.name)
+                    runningFor = 5
             }
             EventBus.register<ForgeEventProcessor.EverySecond> {
                 if (runningFor > 0) {
@@ -118,11 +120,11 @@ object ImageRendering : IModule {
         }
     }
 
-//    @ConfigPropertyBoolean(
-//        category = CCategory.MODULES,
-//        id = "disableWEIRDModule",
-//        comment = "Disable the WEIRDModule.",
-//        def = false
-//    )
-//    var disabled = false
+    @ConfigPropertyBoolean(
+        category = CCategory.MODULES,
+        id = "disableWEIRDModule",
+        comment = "Disable the WEIRDModule.",
+        def = true
+    )
+    var disabled = true
 }

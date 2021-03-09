@@ -50,7 +50,7 @@ object ModuleManager {
             add(AutoTBag)
             add(RevenantArmyTimer)
             //add(Excuses)
-            //add(ImageRendering)
+            add(ImageRendering)
         }
     }
 
