@@ -43,15 +43,15 @@ object Meme : IModule {
         override fun onRender(event: RenderWorldLastEvent) {
             if (runningFor == 0) return
             glMatrix {
-                translateToPos(-2518.1, 59.0, 744.5)
+                translateToPos(-2525.0, 62.0, 744.5)
                 rotateY(90.0f)
                 scaleForWorldRendering()
-                scale(.95)
-                translate(-500, -500, 500) {
+                scale(.90)
+                translate(-500, -500, 0) {
                     val sin = sin((System.currentTimeMillis() % 1000) / 1000.0 * Math.PI * 2)
                     val cos = cos((System.currentTimeMillis() % 1000) / 1000.0 * Math.PI * 2)
-                    rotateY(cos.toFloat() * 8f)
-                    rotateX(cos.toFloat() * 2f)
+                    rotateY(cos.toFloat() * 4f)
+                    rotateX(cos.toFloat() * 1f)
                     translate(sin * 50, cos * 50, 0.0)
                     renderImage(1000.0, 1000.0, ImageRegistry.MEME_RICK_ROLL)
                 }
@@ -62,10 +62,10 @@ object Meme : IModule {
 
     fun onChat(event: ClientChatReceivedEvent) {
         try {
-//            if (event.message.unformattedText.contains("ricky")) {
-//                WorldRenderer.runningFor = 213
-//                SoundManager.playSound(Sounds.MEME_RICKY)
-//            }
+            if (event.message.unformattedText.contains("ricky is my best friend") && GameStateManager.notIngame && !GameStateManager.inLobby) {
+                WorldRenderer.runningFor = 213
+               SoundsRegistry.MEME_RICKY.play()
+            }
         } catch (e: Exception) {
 
         }
