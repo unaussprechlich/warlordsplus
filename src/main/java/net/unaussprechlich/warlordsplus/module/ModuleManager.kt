@@ -44,7 +44,7 @@ object ModuleManager {
             add(CancelJumpBarOnHorse)
             add(SoulbindingCounter)
             add(SkillDetector)
-            //add(RenderVignette)
+            add(RenderVignette)
             add(AutoMapFinder)
             //add(MotivationalMessages)
             add(AutoTBag)

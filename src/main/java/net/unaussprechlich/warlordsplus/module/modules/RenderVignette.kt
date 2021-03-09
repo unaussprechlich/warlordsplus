@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modulesd
+package net.unaussprechlich.warlordsplus.module.modules
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ScaledResolution
@@ -16,12 +16,11 @@ import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.SOMEBODY_DID
 import net.unaussprechlich.warlordsplus.module.modules.YOU_DID
+import net.unaussprechlich.warlordsplus.util.ImageRegistry
 import net.unaussprechlich.warlordsplus.util.contain
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object RenderVignette : IModule {
-
-    private val vignette = ResourceLocation(WarlordsPlus.MODID + "/images/test3.png")
 
     private var veners: MutableMap<String, IntervenedBy> = mutableMapOf()
 
@@ -81,7 +80,7 @@ object RenderVignette : IModule {
         GlStateManager.depthMask(false)
         GlStateManager.tryBlendFuncSeparate(0, 769, 1, 0)
         GlStateManager.color(1f - 25 / 255f, 1f - 25 / 255f, 1f - 200 / 255f, .5f)
-        Minecraft.getMinecraft().textureManager.bindTexture(vignette)
+        Minecraft.getMinecraft().textureManager.bindTexture(ImageRegistry.VIGNETTE.getResourceLocation())
         val tes = Tessellator.getInstance()
         val wr = tes.worldRenderer
         wr.begin(7, DefaultVertexFormats.POSITION_TEX)
