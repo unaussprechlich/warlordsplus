@@ -117,7 +117,6 @@ object GameStateManager : IModule {
                         EventBus.post(SecondEvent(currentSecond))
                         previousSec = currentSecond
                         totalSeconds++
-                        println(totalSeconds)
                         if (totalSeconds % 60 == 0) {
                             EventBus.post(RealMinuteEvent(totalSeconds / 60))
                         }

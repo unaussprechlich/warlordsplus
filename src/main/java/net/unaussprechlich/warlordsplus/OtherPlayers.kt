@@ -7,6 +7,7 @@ import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.*
@@ -118,6 +119,21 @@ object OtherPlayers : IModule {
                 it.refreshDisplayName()
             }
         }
+
+        EventBus.register<TickEvent.ClientTickEvent> {
+            if (GameStateManager.inLobby) {
+                Minecraft.getMinecraft().theWorld.playerEntities.filterIsInstance<EntityOtherPlayerMP>().forEach {
+                    val inventory = it.inventory.mainInventory[0]
+                    //todo fix not refreshing if u cant get the spec from hand
+                    if (inventory != null && (!inventory.tagCompound.toString().removeFormatting()
+                            .contains("Menu") || !inventory.tagCompound.toString().removeFormatting()
+                            .contains("Mount") || !inventory.tagCompound.toString().removeFormatting().contains("Flag"))
+                    ) {
+                        it.refreshDisplayName()
+                    }
+                }
+            }
+        }
     }
 
     fun getPlayersForNetworkPlayers(networkPlayers: Collection<NetworkPlayerInfo>): Collection<Player> {
@@ -192,7 +208,9 @@ object OtherPlayers : IModule {
                     player.value.spec = SpecsEnum.values()
                         .firstOrNull { w -> it.inventory.mainInventory[0].chatComponent.formattedText contain w.classname }
                         ?: SpecsEnum.NONE
-                } else if (it.inventory.mainInventory[0].tagCompound.toString().contains("Cooldown")) {
+                } else if (it.inventory.mainInventory[0].tagCompound.toString()
+                        .contains("Cooldown") && !it.inventory.mainInventory[0].tagCompound.toString().contains("Mount")
+                ) {
                     val warlord = player.value.warlord
                     when (it.inventory.mainInventory[0].metadata) {
                         1 -> if (warlord != WarlordsEnum.PALADIN && warlord != WarlordsEnum.WARRIOR)
@@ -221,48 +239,54 @@ object OtherPlayers : IModule {
 
     @SubscribeEvent
     fun onPlayerName(e: PlayerEvent.NameFormat) {
-        if (GameStateManager.isIngame) {
-            playersMap.filter {
-                it.value.spec != SpecsEnum.NONE
-            }.filter {
-                it.value.name == e.username
-            }.forEach {
-                e.displayname =
-                    "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.type.coloredSymbol}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}${EnumChatFormatting.RESET}"
-            }
-        } else if (GameStateManager.inLobby) {
-            try {
-                val playerInv = e.entityPlayer.inventory
-                if (playerInv.mainInventory[0] != null) {
-                    var spec = SpecsEnum.NONE
-                    if (playerInv.mainInventory[0].tagCompound.toString().contains("LEFT-CLICK")) {
-                        spec = SpecsEnum.values()
-                            .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.weapon }
-                            ?: SpecsEnum.NONE
-                    } else if (playerInv.mainInventory[0].tagCompound.toString().contains("Cooldown")) {
-                        when (playerInv.mainInventory[0].metadata) {
-                            1 -> spec = SpecsEnum.values()
-                                .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.red }
-                                ?: SpecsEnum.NONE
-                            0 -> spec = SpecsEnum.values()
-                                .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.purple }
-                                ?: SpecsEnum.NONE
-                            10 -> spec = SpecsEnum.values()
-                                .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.blue }
-                                ?: SpecsEnum.NONE
-                            14 -> spec = SpecsEnum.values()
-                                .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.orange }
-                                ?: SpecsEnum.NONE
-                        }
-                    }
+        when {
+            GameStateManager.isIngame -> {
+                playersMap.filter {
+                    it.value.spec != SpecsEnum.NONE
+                }.filter {
+                    it.value.name == e.username
+                }.forEach {
                     e.displayname =
-                        "${EnumChatFormatting.DARK_GRAY}[${spec.type.coloredSymbol}${EnumChatFormatting.DARK_GRAY}]${EnumChatFormatting.RESET}${e.displayname}"
+                        "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.type.coloredSymbol}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}${EnumChatFormatting.RESET}"
                 }
-            } catch (e: Exception) {
-                println(e.printStackTrace())
             }
-        } else {
-            e.displayname = e.username
+            GameStateManager.inLobby -> {
+                try {
+                    val playerInv = e.entityPlayer.inventory
+                    if (playerInv.mainInventory[0] != null) {
+                        var spec = SpecsEnum.NONE
+                        if (playerInv.mainInventory[0].tagCompound.toString().contains("LEFT-CLICK")) {
+                            spec = SpecsEnum.values()
+                                .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.weapon }
+                                ?: SpecsEnum.NONE
+                        } else if (playerInv.mainInventory[0].tagCompound.toString().contains("Cooldown")) {
+                            when (playerInv.mainInventory[0].metadata) {
+                                1 -> spec = SpecsEnum.values()
+                                    .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.red }
+                                    ?: SpecsEnum.NONE
+                                0 -> spec = SpecsEnum.values()
+                                    .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.purple }
+                                    ?: SpecsEnum.NONE
+                                10 -> spec = SpecsEnum.values()
+                                    .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.blue }
+                                    ?: SpecsEnum.NONE
+                                14 -> spec = SpecsEnum.values()
+                                    .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.orange }
+                                    ?: SpecsEnum.NONE
+                            }
+                        }
+                        e.displayname =
+                            "${EnumChatFormatting.DARK_GRAY}[${spec.type.coloredSymbol}${EnumChatFormatting.DARK_GRAY}]${EnumChatFormatting.RESET}${e.displayname}"
+                    }
+                } catch (err: Exception) {
+                    println(e)
+                    println(e.entityPlayer)
+                    println(err.printStackTrace())
+                }
+            }
+            else -> {
+                e.displayname = e.username
+            }
         }
     }
 
