@@ -33,7 +33,7 @@ object HudElementHitCounter : AbstractHudElement() {
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
 
-        renderStrings.add("${EnumChatFormatting.WHITE}Hit Counter: $totalHits${if (GameStateManager.isCTF) ":${ThePlayer.minuteStats[GameStateManager.getMinute()][2]}" else ""}")
+        renderStrings.add("${EnumChatFormatting.WHITE}Hit Counter: $totalHits${if (GameStateManager.isIngame) ":${ThePlayer.minuteStat[0][2]}" else ""}")
 
         return renderStrings.toTypedArray()
     }

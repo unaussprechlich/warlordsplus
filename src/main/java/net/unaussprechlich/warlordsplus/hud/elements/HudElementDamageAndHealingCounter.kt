@@ -15,7 +15,6 @@ import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
-import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
 import net.unaussprechlich.warlordsplus.util.SpecsEnum
 import java.util.*
 
@@ -25,13 +24,13 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
 
         val renderStrings = ArrayList<String>()
         if (showDamageDone)
-            renderStrings.add(EnumChatFormatting.RED.toString() + "Damage: " + damageDoneCounter + if (GameStateManager.isCTF && showDamageHealHitMin) ":${ThePlayer.minuteStats[GameStateManager.getMinute()][3]}" else "")
+            renderStrings.add(EnumChatFormatting.RED.toString() + "Damage: " + damageDoneCounter + if (GameStateManager.isIngame && showMinuteStats) ":${ThePlayer.minuteStat[0][3]}" else "")
         if (showHealingDone)
-            renderStrings.add(EnumChatFormatting.GREEN.toString() + "Healing: " + healingGivenCounter + if (GameStateManager.isCTF && showDamageHealHitMin) ":${ThePlayer.minuteStats[GameStateManager.getMinute()][4]}" else "")
+            renderStrings.add(EnumChatFormatting.GREEN.toString() + "Healing: " + healingGivenCounter + if (GameStateManager.isIngame && showMinuteStats) ":${ThePlayer.minuteStat[0][4]}" else "")
         if (showDamageTaken)
-            renderStrings.add(EnumChatFormatting.DARK_RED.toString() + "Damage Taken: " + damageTakenCounter)
+            renderStrings.add(EnumChatFormatting.DARK_RED.toString() + "Damage Taken: " + damageTakenCounter + if (GameStateManager.isIngame && showMinuteStats) ":${ThePlayer.minuteStat[0][5]}" else "")
         if (showHealingReceived)
-            renderStrings.add(EnumChatFormatting.DARK_GREEN.toString() + "Healing Received: " + healingReceivedCounter)
+            renderStrings.add(EnumChatFormatting.DARK_GREEN.toString() + "Healing Received: " + healingReceivedCounter + if (GameStateManager.isIngame && showMinuteStats) ":${ThePlayer.minuteStat[0][6]}" else "")
         if (showEnergyGiven && spec == SpecsEnum.CRUSADER)
             renderStrings.add(EnumChatFormatting.YELLOW.toString() + "Energy Given: " + energyGivenCounter)
         if (showEnergyReceived && energyReceivedCounter > 0)
@@ -45,7 +44,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
     }
 
     override fun isVisible(): Boolean {
-        return isIngame
+        return GameStateManager.isIngame
     }
 
     override fun isEnabled(): Boolean {
@@ -75,7 +74,7 @@ class HudElementDamageAndHealingCounter : AbstractHudElement() {
             comment = "Enable or disable dmg/heal per min",
             def = true
         )
-        var showDamageHealHitMin = false
+        var showMinuteStats = false
 
         @ConfigPropertyBoolean(
             category = CCategory.HUD,

@@ -32,8 +32,8 @@ object ThePlayer : IModule {
         private set
 
     //minute
-    //kill,death,hit,dmg,heal
-    var minuteStats = Array(15) { IntArray(5) }
+    //kill,death,hit,dmg,heal,dmg taken,heal received
+    var minuteStat = Array(1) { IntArray(7) }
         private set
 
     //All classes
@@ -119,7 +119,7 @@ object ThePlayer : IModule {
             energyLostCounter = 0
             killParticipation = 0
 
-            minuteStats = Array(15) { IntArray(5) }
+            minuteStat = Array(1) { IntArray(7) }
 
             try {
 
@@ -154,6 +154,16 @@ object ThePlayer : IModule {
             }
         }
 
+        EventBus.register<RealMinuteEvent> {
+            if (GameStateManager.isDOM)
+                minuteStat = Array(1) { IntArray(7) }
+        }
+
+        EventBus.register<MinuteEvent> {
+            if (!GameStateManager.isDOM)
+                minuteStat = Array(1) { IntArray(7) }
+        }
+
         EventBus.register<SecondEvent> {
             if (spec == SpecsEnum.NONE && GameStateManager.isDOM) {
                 spec = SpecsEnum.values().firstOrNull { spec ->
@@ -168,35 +178,34 @@ object ThePlayer : IModule {
         EventBus.register<KillEvent> {
             if (GameStateManager.isCTF) {
                 if (it.deathPlayer == Minecraft.getMinecraft().thePlayer.name) {
-                    minuteStats[it.time][1]++
+                    minuteStat[0][1]++
                 } else if (it.player == Minecraft.getMinecraft().thePlayer.name) {
-                    minuteStats[it.time][0]++
+                    minuteStat[0][0]++
                 }
             }
         }
         EventBus.register<HitEvent> {
-            if (it.time > 0 && GameStateManager.isCTF)
-                minuteStats[it.time][2]++
+            minuteStat[0][2]++
         }
 
         EventBus.register<HealingGivenEvent> {
             healingGivenCounter += it.amount
-            if (it.minute > 0 && GameStateManager.isCTF)
-                minuteStats[it.minute][4] += it.amount
+            minuteStat[0][4] += it.amount
         }
         EventBus.register<DamageDoneEvent> {
             damageDoneCounter += it.amount
-            if (it.minute > 0 && GameStateManager.isCTF)
-                minuteStats[it.minute][3] += it.amount
+            minuteStat[0][3] += it.amount
         }
         EventBus.register<EnergyReceivedEvent> {
             energyReceivedCounter += it.amount
         }
         EventBus.register<HealingReceivedEvent> {
             healingReceivedCounter += it.amount
+            minuteStat[0][6] += it.amount
         }
         EventBus.register<DamageTakenEvent> {
             damageTakenCounter += it.amount
+            minuteStat[0][5] += it.amount
         }
         EventBus.register<EnergyGivenEvent> {
             energyGivenCounter += it.amount

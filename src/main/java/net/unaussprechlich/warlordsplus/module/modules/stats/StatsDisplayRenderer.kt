@@ -218,7 +218,7 @@ object StatsDisplayRenderer : IModule, RenderApi.Player() {
                     scale(.6)
                     translateY(-1.0)
 
-                    "$name${if (rank != null) " #$rank" else ""}".drawCentered()
+                    "$name${if (rank != null) " Lv$rank" else ""}".drawCentered()
 
                 }
                 translateY(-8.0)

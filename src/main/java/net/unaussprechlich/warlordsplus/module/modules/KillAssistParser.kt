@@ -19,23 +19,27 @@ object KillAssistParser : IModule {
         try {
             val textMessage: String = e.message.unformattedText.removeFormatting()
             var respawn = -1
-            if (GameStateManager.isCTF) {
-                val colon = ScoreboardManager.scoreboardFormatted[9].lastIndexOf(":")
-                val after = ScoreboardManager.scoreboardFormatted[9].substring(colon + 1, colon + 3)
-                try {
-                    respawn = after.toInt() % 12
-                    if (after.toInt() % 12 <= 4) {
-                        respawn = 12 + after.toInt() % 12
+            when {
+                GameStateManager.isCTF -> {
+                    val colon = ScoreboardManager.scoreboardFormatted[9].lastIndexOf(":")
+                    val after = ScoreboardManager.scoreboardFormatted[9].substring(colon + 1, colon + 3)
+                    try {
+                        respawn = after.toInt() % 12
+                        if (after.toInt() % 12 <= 4) {
+                            respawn = 12 + after.toInt() % 12
+                        }
+                    } catch (e: Exception) {
                     }
-                } catch (e: Exception) {
                 }
-            } else if (GameStateManager.isTDM) {
-                respawn = 6
-            } else if (GameStateManager.isDOM) {
-                respawn = if (HudElementRespawnTimer.respawnTimer < 8) {
-                    HudElementRespawnTimer.respawnTimer + 8
-                } else {
-                    HudElementRespawnTimer.respawnTimer
+                GameStateManager.isTDM -> {
+                    respawn = 6
+                }
+                GameStateManager.isDOM -> {
+                    respawn = if (HudElementRespawnTimer.respawnTimer < 8) {
+                        HudElementRespawnTimer.respawnTimer + 8
+                    } else {
+                        HudElementRespawnTimer.respawnTimer
+                    }
                 }
             }
             when {

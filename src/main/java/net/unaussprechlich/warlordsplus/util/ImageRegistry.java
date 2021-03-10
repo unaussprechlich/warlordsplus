@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 public enum ImageRegistry implements IResourceLocationProvider {
 
-    VIGNETTE("images/meme/vignette.png"),
+    VIGNETTE("images/vignette.png"),
     MEME_RICK_ROLL("images/meme/rickroll.png"),
     MEME_WEIRDCHAMP("images/meme/weirdchamp.png");
 
-    ImageRegistry(String path){
+    ImageRegistry(String path) {
         this.res = new ResourceLocation(StaticStuff.MODID, path);
     }
 
