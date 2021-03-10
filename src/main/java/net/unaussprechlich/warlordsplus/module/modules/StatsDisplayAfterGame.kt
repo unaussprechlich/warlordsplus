@@ -116,9 +116,9 @@ object StatsDisplayAfterGame : IModule {
     }
 
     fun displayMinuteStats() {
-        for (minuteStat in ThePlayer.minuteStats.indices) {
+        for (minuteStat in ThePlayer.minuteStat.indices) {
             //Minute 1 -  Kills:123 - Deaths:123 - Hits:123 - Damage:123 - Healing: 123
-            Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("Minute $minuteStat - Kills:${ThePlayer.minuteStats[minuteStat][0]} - Deaths:${ThePlayer.minuteStats[minuteStat][1]} - Hits:${ThePlayer.minuteStats[minuteStat][2]} - Damage:${ThePlayer.minuteStats[minuteStat][3]} - Healing:${ThePlayer.minuteStats[minuteStat][4]}"))
+            Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("Minute $minuteStat - Kills:${ThePlayer.minuteStat[minuteStat][0]} - Deaths:${ThePlayer.minuteStat[minuteStat][1]} - Hits:${ThePlayer.minuteStat[minuteStat][2]} - Damage:${ThePlayer.minuteStat[minuteStat][3]} - Healing:${ThePlayer.minuteStat[minuteStat][4]}"))
 
         }
 

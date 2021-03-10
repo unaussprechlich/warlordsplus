@@ -42,6 +42,12 @@ object GameStateManager : IModule {
     var previousSec: Int = -1
         private set
 
+    var previousMin: Int = -1
+        private set
+
+    var totalSeconds: Int = -1
+        private set
+
     var bluePoints: Int = 0
         private set
 
@@ -55,6 +61,7 @@ object GameStateManager : IModule {
                 val message = it.message.unformattedText.removeFormatting()
                 if (message == "The gates will fall in 5 seconds!" || message == "The gates will fall in 1 second!") {
                     EventBus.post(ResetEvent())
+                    totalSeconds = 8
                     println("RESET EVENT")
                 }
             } catch (throwable: Throwable) {
@@ -73,7 +80,7 @@ object GameStateManager : IModule {
         ) return
         try {
 
-            if(isWarlords != scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))){
+            if (isWarlords != scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))) {
                 isWarlords = !isWarlords
                 EventBus.post(WarlordsLeaveAndJoinEvent(isWarlords))
             }
@@ -105,10 +112,22 @@ object GameStateManager : IModule {
                     }
                 }
 
-                fun updateSecond(currentSecond: Int){
+                fun updateSecond(currentSecond: Int) {
                     if (currentSecond != previousSec) {
                         EventBus.post(SecondEvent(currentSecond))
                         previousSec = currentSecond
+                        totalSeconds++
+                        println(totalSeconds)
+                        if (totalSeconds % 60 == 0) {
+                            EventBus.post(RealMinuteEvent(totalSeconds / 60))
+                        }
+                    }
+                }
+
+                fun updateMinute(currentMin: Int) {
+                    if (currentMin != previousMin) {
+                        EventBus.post(MinuteEvent(currentMin))
+                        previousMin = currentMin
                     }
                 }
 
@@ -117,17 +136,19 @@ object GameStateManager : IModule {
                     redPoints = scoreboard[11].substring(5, scoreboard[11].indexOf("/")).toInt()
 
                     updateSecond(scoreboard[9].substring(scoreboard[9].length - 2).toInt())
+                    updateMinute(scoreboard[9].substring(scoreboard[9].length - 5, scoreboard[9].length - 3).toInt())
                 }
                 if (isTDM) {
                     bluePoints = scoreboard[9].substring(5, scoreboard[9].indexOf("/")).toInt()
                     redPoints = scoreboard[8].substring(5, scoreboard[8].indexOf("/")).toInt()
 
                     updateSecond(scoreboard[6].substring(scoreboard[6].length - 2).toInt())
+                    updateMinute(scoreboard[6].substring(scoreboard[6].length - 5, scoreboard[6].length - 3).toInt())
 
                 }
             }
             inLobby = isWarlords
-                    && (scoreboard[10].isNotEmpty()  || scoreboard[9].isNotEmpty())
+                    && (scoreboard[10].isNotEmpty() || scoreboard[9].isNotEmpty())
                     && (scoreboard[10].contains("Map:") || scoreboard[9].contains("Map:"))
 
         } catch (e: Exception) {
@@ -144,7 +165,7 @@ object GameStateManager : IModule {
         }
     }
 
-    private fun extractTime(line : String) : Long{
+    private fun extractTime(line: String): Long {
         val min = line.substring(line.indexOf(":") - 2, line.indexOf(":")).toInt()
         val second = line.substring(line.indexOf(":") + 1, line.indexOf(":") + 3).toLong()
         return min * 60 + second + 1
@@ -169,7 +190,7 @@ object GameStateManager : IModule {
             extractTime(scoreboard[9].substring(scoreboard[9].indexOf(":") + 1))
         } else if (isTDM) {
             extractTime(scoreboard[6].substring(scoreboard[6].indexOf(":") + 1))
-        } else{
+        } else {
             0
         }
     }
@@ -177,7 +198,7 @@ object GameStateManager : IModule {
     fun getMinute(): Int {
         try {
 
-            fun getTime(timeString : String) : Int{
+            fun getTime(timeString: String): Int {
                 return if (timeString.substring(0, 2).toInt() != 15) {
                     timeString.substring(0, 2).toInt()
                 } else {
@@ -208,8 +229,10 @@ object GameStateManager : IModule {
     }
 }
 
-data class WarlordsLeaveAndJoinEvent(val isWarlords : Boolean) : IEvent
+data class WarlordsLeaveAndJoinEvent(val isWarlords: Boolean) : IEvent
 data class ResetEvent(val time: Long = System.currentTimeMillis()) : IEvent
 data class IngameChangedEvent(val ingame: Boolean) : IEvent
 data class RespawnEvent(val time: Long = System.currentTimeMillis()) : IEvent
-data class SecondEvent(val minute: Int) : IEvent
+data class SecondEvent(val second: Int) : IEvent
+data class MinuteEvent(val minute: Int) : IEvent
+data class RealMinuteEvent(val minute: Int) : IEvent

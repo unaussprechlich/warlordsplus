@@ -50,12 +50,12 @@ object HudElementTotalKills : AbstractHudElement() {
                         numberOfCapsRed++
                     }
                 }
-                if (GameStateManager.isTDM) {
-                    blueKills = GameStateManager.bluePoints / 15
-                    redKills = GameStateManager.redPoints / 15
-                }
-            }
 
+            }
+            if (GameStateManager.isTDM) {
+                blueKills = GameStateManager.bluePoints / 15
+                redKills = GameStateManager.redPoints / 15
+            }
         }
     }
 

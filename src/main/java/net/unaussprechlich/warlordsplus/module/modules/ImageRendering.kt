@@ -20,7 +20,7 @@ object ImageRendering : IModule {
 
         init {
             EventBus.register<KillEvent> {
-                if (!disabled && it.deathPlayer == Minecraft.getMinecraft().thePlayer.name)
+                if (enabled && it.deathPlayer == Minecraft.getMinecraft().thePlayer.name)
                     runningFor = 5
             }
             EventBus.register<ForgeEventProcessor.EverySecond> {
@@ -122,9 +122,9 @@ object ImageRendering : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "disableWEIRDModule",
-        comment = "Disable the WEIRDModule.",
-        def = true
+        id = "Weird Module | Enable",
+        comment = "Enable the WEIRD Module",
+        def = false
     )
-    var disabled = true
+    var enabled = false
 }
