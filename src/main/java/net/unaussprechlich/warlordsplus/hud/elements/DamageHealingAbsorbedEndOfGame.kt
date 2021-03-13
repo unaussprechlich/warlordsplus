@@ -10,6 +10,8 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement() {
     var damage: ArrayList<Int> = arrayListOf()
     var healing: ArrayList<Int> = arrayListOf()
     var absorbed: ArrayList<Int> = arrayListOf()
+    var dhp: ArrayList<Int> = arrayListOf()
+
     var minutes: Int = 0
     var highestDamage: Int = 0
     var highestDamageMin: Int = 0
@@ -23,12 +25,23 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement() {
     var highestAbsorbedMin: Int = 0
     var averageAbsorbedPerMin: Int = 0
 
+    var highestDHP: Int = 0
+    var highestDHPMin: Int = 0
+    var averageDHPPerMin: Int = 0
+
     var lowestDamage: Int = Int.MAX_VALUE
     var lowestDamageMin: Int = 0
     var lowestHealing: Int = Int.MAX_VALUE
     var lowestHealingMin: Int = 0
     var lowestAbsorbed: Int = Int.MAX_VALUE
     var lowestAbsorbedMin: Int = 0
+    var lowestDHP: Int = Int.MAX_VALUE
+    var lowestDHPMin: Int = 0
+
+    var totalDamage = 0
+    var totalHealing = 0
+    var totalAbsorbed = 0
+    var totalDHP = 0
 
     init {
         EventBus.register(::onChat)
@@ -36,6 +49,7 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement() {
             damage = arrayListOf()
             healing = arrayListOf()
             absorbed = arrayListOf()
+            dhp = arrayListOf()
             minutes = 0
             highestDamage = 0
             highestDamageMin = 0
@@ -46,12 +60,21 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement() {
             highestAbsorbed = 0
             highestAbsorbedMin = 0
             averageAbsorbedPerMin = 0
+            highestDHP = 0
+            highestDHPMin = 0
+            averageDHPPerMin = 0
             lowestDamage = Int.MAX_VALUE
             lowestDamageMin = 0
             lowestHealing = Int.MAX_VALUE
             lowestHealingMin = 0
             lowestAbsorbed = Int.MAX_VALUE
             lowestAbsorbedMin = 0
+            lowestDHP = Int.MAX_VALUE
+            lowestDHPMin = 0
+            totalDamage = 0
+            totalHealing = 0
+            totalAbsorbed = 0
+            totalDHP = 0
         }
     }
 
@@ -168,48 +191,59 @@ object DamageHealingAbsorbedEndOfGame : AbstractHudElement() {
                 absorbed.add(absorbedAmount.replace(",", "").toInt())
             }
 
-            var totalDamage = 0
-            var totalHealing = 0
-            var totalAbsorbed = 0
-
             damage.forEachIndexed { index, element ->
+                dhp.add(element)
                 totalDamage += element
                 if (element > highestDamage) {
                     highestDamage = element
                     highestDamageMin = index + 1
-                } else if (element < lowestDamage) {
+                } else if (element < lowestDamage && element != minutes) {
                     lowestDamage = element
                     lowestDamageMin = index + 1
                 }
             }
             healing.forEachIndexed { index, element ->
+                dhp[index] += element
                 totalHealing += element
                 if (element > highestHealing) {
                     highestHealing = element
                     highestHealingMin = index + 1
-                } else if (element < lowestHealing) {
+                } else if (element < lowestHealing && element != minutes) {
                     lowestHealing = element
                     lowestHealingMin = index + 1
                 }
             }
             absorbed.forEachIndexed { index, element ->
+                dhp[index] += element
                 totalAbsorbed += element
                 if (element > highestAbsorbed) {
                     highestAbsorbed = element
                     highestAbsorbedMin = index + 1
-                } else if (element < lowestAbsorbed) {
+                } else if (element < lowestAbsorbed && element != minutes) {
                     lowestAbsorbed = element
                     lowestAbsorbedMin = index + 1
+                }
+            }
+            dhp.forEachIndexed { index, element ->
+                totalDHP += element
+                if (element > highestDHP) {
+                    highestDHP = element
+                    highestDHPMin = index + 1
+                } else if (element < lowestDHP && element != minutes) {
+                    lowestDHP = element
+                    lowestDHPMin = index + 1
                 }
             }
 
             averageDamagePerMin = totalDamage / minutes
             averageHealingPerMin = totalHealing / minutes
             averageAbsorbedPerMin = totalAbsorbed / minutes
+            averageDHPPerMin = totalDHP / minutes
 
             println(highestDamage)
             println(highestHealing)
             println(highestAbsorbed)
+            println(highestDHP)
         }
     }
 

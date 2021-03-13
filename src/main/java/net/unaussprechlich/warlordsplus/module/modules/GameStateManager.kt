@@ -146,7 +146,7 @@ object GameStateManager : IModule {
 
                 }
             }
-            inLobby = isWarlords
+            inLobby = isWarlords && scoreboard.isNotEmpty()
                     && (scoreboard[10].isNotEmpty() || scoreboard[9].isNotEmpty())
                     && (scoreboard[10].contains("Map:") || scoreboard[9].contains("Map:"))
 

@@ -122,15 +122,21 @@ object OtherPlayers : IModule {
 
         EventBus.register<TickEvent.ClientTickEvent> {
             if (GameStateManager.inLobby) {
-                Minecraft.getMinecraft().theWorld.playerEntities.filterIsInstance<EntityOtherPlayerMP>().forEach {
-                    val inventory = it.inventory.mainInventory[0]
-                    //todo fix not refreshing if u cant get the spec from hand
-                    if (inventory != null && (!inventory.tagCompound.toString().removeFormatting()
-                            .contains("Menu") || !inventory.tagCompound.toString().removeFormatting()
-                            .contains("Mount") || !inventory.tagCompound.toString().removeFormatting().contains("Flag"))
-                    ) {
-                        it.refreshDisplayName()
+                try {
+                    Minecraft.getMinecraft().theWorld.playerEntities.filterIsInstance<EntityOtherPlayerMP>().forEach {
+                        val inventory = it.inventory.mainInventory[0]
+                        //todo fix not refreshing if u cant get the spec from hand
+
+                        if (inventory != null && (!inventory.tagCompound.toString().removeFormatting()
+                                .contains("Menu") || !inventory.tagCompound.toString().removeFormatting()
+                                .contains("Mount") || !inventory.tagCompound.toString().removeFormatting()
+                                .contains("Flag"))
+                        ) {
+                            it.refreshDisplayName()
+                        }
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }
@@ -294,7 +300,7 @@ object OtherPlayers : IModule {
         return playersMap[name]
     }
 
-    fun colorForPlayer(name : String) : Colors{
+    fun colorForPlayer(name: String): Colors {
         return when (playersMap[name]!!.team) {
             TeamEnum.BLUE -> {
                 Colors.DARK_BLUE
