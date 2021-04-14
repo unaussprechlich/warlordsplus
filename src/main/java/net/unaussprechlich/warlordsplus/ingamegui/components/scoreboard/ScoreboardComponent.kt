@@ -13,7 +13,6 @@ import net.unaussprechlich.warlordsplus.config.ConfigPropertyString
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.Colors
-import net.unaussprechlich.warlordsplus.util.ImageRegistry
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 
 object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.ElementType.PLAYER_LIST, true) {
@@ -231,11 +230,11 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
                 } ${if (p.name == Minecraft.getMinecraft().thePlayer.name) ThePlayer.spec.icon else p.spec.icon}".draw()
                 translateX(xName)
                 "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color.toString()}${if (p.left) "${EnumChatFormatting.GRAY}${EnumChatFormatting.STRIKETHROUGH}" else ""}${if (p.name == Minecraft.getMinecraft().thePlayer.name) EnumChatFormatting.GREEN else ""}${p.name}".draw()
-                if (p.name == "sumSmash") {
-                    translate(xKills - 50) {
-                        renderImage(9.0, 9.0, ImageRegistry.MEME_WEIRDCHAMP)
-                    }
-                }
+//                if (p.name == "sumSmash") {
+//                    translate(xKills - 50) {
+//                        renderImage(9.0, 9.0, ImageRegistry.MEME_WEIRDCHAMP)
+//                    }
+//                }
                 translateX(xKills)
                 "${if (hasMostKills()) EnumChatFormatting.GOLD else EnumChatFormatting.RESET}${p.kills}".draw()
                 translateX(xDeaths)
