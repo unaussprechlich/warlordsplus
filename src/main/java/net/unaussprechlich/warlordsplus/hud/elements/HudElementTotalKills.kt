@@ -2,6 +2,7 @@ package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.config.CCategory
@@ -21,6 +22,8 @@ object HudElementTotalKills : AbstractHudElement() {
     var redKills: Int = 0
     private var numberOfCapsBlue: Int = 0
     private var numberOfCapsRed: Int = 0
+    var accurateBlueKills = 0
+    var accurateRedKills = 0
 
     init {
         EventBus.register<ResetEvent> {
@@ -57,6 +60,17 @@ object HudElementTotalKills : AbstractHudElement() {
                 redKills = GameStateManager.redPoints / 15
             }
         }
+
+        EventBus.register<TickEvent.ClientTickEvent> {
+            accurateBlueKills = (GameStateManager.bluePoints - numberOfCapsBlue * 250) / 5
+            accurateRedKills = (GameStateManager.redPoints - numberOfCapsRed * 250) / 5
+            if (accurateBlueKills - blueKills <= 5) {
+                blueKills = accurateBlueKills
+            }
+            if (accurateRedKills - redKills <= 5) {
+                redKills = accurateRedKills
+            }
+        }
     }
 
 
@@ -64,9 +78,9 @@ object HudElementTotalKills : AbstractHudElement() {
         val renderStrings = ArrayList<String>()
 
         if (showBlueKills)
-            renderStrings.add(EnumChatFormatting.BLUE.toString() + "Blue Kills: " + blueKills)
+            renderStrings.add(EnumChatFormatting.BLUE.toString() + "Blue Kills: " + accurateBlueKills)
         if (showRedKills)
-            renderStrings.add(EnumChatFormatting.RED.toString() + "Red Kills: " + redKills)
+            renderStrings.add(EnumChatFormatting.RED.toString() + "Red Kills: " + accurateRedKills)
 
         return renderStrings.toTypedArray()
     }

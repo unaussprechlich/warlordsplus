@@ -46,13 +46,30 @@ private var brokenTab = -1L
 object OtherPlayers : IModule {
 
     val playersMap: MutableMap<String, Player> = mutableMapOf()
+    val tempPlayersMap: MutableMap<String, Player> = mutableMapOf()
 
     init {
         EventBus.register<ResetEvent> {
             playersMap.clear()
+            tempPlayersMap.clear()
 
             val players = getPlayersForNetworkPlayers(Minecraft.getMinecraft().thePlayer!!.sendQueue.playerInfoMap)
             println("[WarlordsPlus|OtherPlayers] found ${players.size} players!")
+        }
+
+        EventBus.register<TenSecondEvent> {
+            tempPlayersMap.clear()
+            val players = getPlayersForNetworkPlayers2(Minecraft.getMinecraft().thePlayer!!.sendQueue.playerInfoMap)
+            //compare playermap with temp - whoever is missing left
+            playersMap.forEach {
+                it.value.left = !it.value.isDead && !tempPlayersMap.containsKey(it.key)
+            }
+        }
+
+        EventBus.register<SecondEvent> {
+            Minecraft.getMinecraft().theWorld.playerEntities.filterIsInstance<EntityOtherPlayerMP>().forEach {
+                it.refreshDisplayName()
+            }
         }
 
         EventBus.register<KillEvent> {
@@ -114,11 +131,6 @@ object OtherPlayers : IModule {
             playersMap[it.player]!!.left = it.left
         }*/
 
-        EventBus.register<SecondEvent> {
-            Minecraft.getMinecraft().theWorld.playerEntities.filterIsInstance<EntityOtherPlayerMP>().forEach {
-                it.refreshDisplayName()
-            }
-        }
 
         EventBus.register<TickEvent.ClientTickEvent> {
             if (GameStateManager.inLobby) {
@@ -241,6 +253,36 @@ object OtherPlayers : IModule {
 
         //Return the players :)
         return playersMap.values
+    }
+
+    fun getPlayersForNetworkPlayers2(networkPlayers: Collection<NetworkPlayerInfo>): Collection<Player> {
+
+        //Filter out if we already have the Player stored
+        networkPlayers.filter {
+
+            !tempPlayersMap.containsKey(it.gameProfile.name)
+
+            //Filter out any strange "Players" appearing in the Scoreboard, by assuming they must have a class
+        }.filter { player ->
+
+            try {
+                WarlordsEnum.values().any {
+                    player.playerTeam.colorPrefix contain it.shortName
+                }
+            } catch (e: Exception) {
+                false
+            }
+
+            //Create the Player
+        }.map {
+
+            val player = Player(it.gameProfile.name, it.gameProfile.id)
+
+            return@map player
+
+        }.forEach { tempPlayersMap[it.name] = it }
+
+        return tempPlayersMap.values
     }
 
     @SubscribeEvent

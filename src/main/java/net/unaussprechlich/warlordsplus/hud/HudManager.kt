@@ -48,9 +48,9 @@ object HudManager : RenderApi.Gui<RenderGameOverlayEvent.Text>(), IModule {
         hudElements.add(HudElementTotalKills)
         hudElements.add(HudElementSessionStats)
         hudElements.add(HudElementHitCounter)
+        hudElements.add(HudElementPointDifference)
         //hudElements.add(HudElementRandomTarget.INSTANCE);
         //hudElements.add(HudElementSpec.INSTANCE);
-        hudElements.add(DamageHealingAbsorbedEndOfGame)
         //hudElements.add(HudElementCustomHud)
     }
 

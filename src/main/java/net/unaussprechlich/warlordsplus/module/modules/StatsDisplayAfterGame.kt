@@ -10,7 +10,6 @@ import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
-import net.unaussprechlich.warlordsplus.hud.elements.DamageHealingAbsorbedEndOfGame
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementHitCounter
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementKillParticipation
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementTotalKills

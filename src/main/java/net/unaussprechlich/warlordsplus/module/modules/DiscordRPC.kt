@@ -5,8 +5,10 @@ import com.jagrosh.discordipc.IPCClient
 import com.jagrosh.discordipc.IPCListener
 import com.jagrosh.discordipc.entities.RichPresence
 import com.jagrosh.discordipc.entities.pipe.PipeStatus
+import net.minecraft.client.Minecraft
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.ForgeEventProcessor
+import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
@@ -17,6 +19,7 @@ import java.time.OffsetDateTime
 object DiscordRPC : IPCListener {
     private val builder: RichPresence.Builder = RichPresence.Builder()
     val client: IPCClient = IPCClient(811200780673220649)
+    var counter = 0
 
     init {
         EventBus.register<WarlordsLeaveAndJoinEvent> {
@@ -60,14 +63,18 @@ object DiscordRPC : IPCListener {
                 } else if (GameStateManager.isIngame) {
                     builder.setSmallImage(ThePlayer.superSpec.specName)
                     builder.setLargeImage(ThePlayer.warlord.classname.toLowerCase())
-                    builder.setState(pointsFormatted())
+                    builder.setState(cycleInGameStatus())
                     builder.setStartTimestamp(OffsetDateTime.now())
                     builder.setEndTimestamp(OffsetDateTime.now().plusSeconds(GameStateManager.getTimeLeftGame()))
                 }
                 client.sendRichPresence(builder.build())
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+
+        EventBus.register<ResetEvent> {
+            counter = 0
         }
     }
 
@@ -92,6 +99,18 @@ object DiscordRPC : IPCListener {
         return "In Lobby"
     }
 
+    private fun cycleInGameStatus(): String {
+        counter++
+        when (counter % 10) {
+            0, 1 -> return pointsFormatted()
+            2, 3 -> return kdaStats()
+            4, 5 -> return dhpStats()
+            6, 7 -> return flagStatus()
+            8, 9 -> return getTeamPoints()
+        }
+        return ""
+    }
+
     private fun pointsFormatted(): String {
         when {
             GameStateManager.bluePoints == GameStateManager.redPoints -> return "Tied"
@@ -109,8 +128,61 @@ object DiscordRPC : IPCListener {
                     "Losing by ${GameStateManager.bluePoints - GameStateManager.redPoints} points"
                 }
             }
-            else -> return ""
+            else -> return "Unknown Team"
         }
+    }
+
+    private fun kdaStats(): String {
+        val player = OtherPlayers.getPlayerForName(Minecraft.getMinecraft().thePlayer.name)
+        if (player != null) {
+            return "Kills: ${player.kills} | Deaths: ${player.deaths}"
+        }
+        return ""
+    }
+
+    private fun flagStatus(): String {
+        val player = OtherPlayers.getPlayerForName(Minecraft.getMinecraft().thePlayer.name)
+        if (GameStateManager.isCTF) {
+            if (player != null) {
+                if (player.hasFlag) {
+                    if (player.team == TeamEnum.BLUE)
+                        return "Has the Red Flag"
+                    else if (player.team == TeamEnum.RED)
+                        return "Has the Blue Flag"
+                } else {
+                    if (GameStateManager.blueFlagStolen && GameStateManager.redFlagStolen)
+                        return "Both Flags Stolen!"
+                    else if (GameStateManager.blueFlagStolen)
+                        return "Blue Flag Stolen!"
+                    else if (GameStateManager.redFlagStolen)
+                        return "Red Flag Stolen!"
+                }
+            }
+        }
+        return ""
+    }
+
+    private fun getTeamPoints(): String {
+        val player = OtherPlayers.getPlayerForName(Minecraft.getMinecraft().thePlayer.name)
+        if (player != null) {
+            if (player.team == TeamEnum.BLUE)
+                return "On Blue: ${GameStateManager.bluePoints} | Red: ${GameStateManager.redPoints}"
+            else if (player.team == TeamEnum.RED)
+                return "On Red: ${GameStateManager.redPoints} | Blue: ${GameStateManager.bluePoints}"
+        }
+        return ""
+    }
+
+    private fun getBluePoints(): String {
+        return "Blue: ${GameStateManager.bluePoints}"
+    }
+
+    private fun getRedPoints(): String {
+        return "Red: ${GameStateManager.redPoints}"
+    }
+
+    private fun dhpStats(): String {
+        return "Damage: ${ThePlayer.damageDoneCounter} | Healing: ${ThePlayer.healingGivenCounter}"
     }
 
     @ConfigPropertyBoolean(

@@ -26,7 +26,7 @@ class GetPartyMembers : AbstractCommand() {
                     message = message.replace(Regex("\\[[^\\]]*\\]"), "")
                     when {
                         message.startsWith("Party Leader:") -> {
-                            partyMembers.add(message.substring(14).replace(Regex("[^a-zA-Z0-9]"), ""))
+                            partyMembers.add(message.substring(14))
                         }
                         message.startsWith("Party Moderators:") -> {
                             var players = message.substring(19).split("   ")
