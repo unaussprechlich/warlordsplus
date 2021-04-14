@@ -51,6 +51,7 @@ object ModuleManager {
             add(RevenantArmyTimer)
             //add(Excuses)
             add(ImageRendering)
+            add(DamageHealingAbsorbedEndOfGame)
         }
     }
 

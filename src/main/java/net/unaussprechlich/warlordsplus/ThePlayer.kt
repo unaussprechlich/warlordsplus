@@ -148,6 +148,13 @@ object ThePlayer : IModule {
                     Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A79") -> TeamEnum.BLUE
                     else -> TeamEnum.NONE
                 }
+                println("GAME INFO")
+                println(Minecraft.getMinecraft().thePlayer.name)
+                println(spec)
+                println(superSpec)
+                println(warlord)
+                println(Minecraft.getMinecraft().thePlayer.displayName.formattedText)
+                println(team)
             } catch (e: Exception) {
                 println("We are here")
                 e.printStackTrace()
@@ -171,6 +178,13 @@ object ThePlayer : IModule {
                         it.removeFormatting() contain spec.classname
                     } != null
                 } ?: SpecsEnum.NONE
+            }
+            if (team == TeamEnum.NONE) {
+                team = when {
+                    Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A7c") -> TeamEnum.RED
+                    Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A79") -> TeamEnum.BLUE
+                    else -> TeamEnum.NONE
+                }
             }
         }
 

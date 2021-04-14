@@ -54,6 +54,12 @@ object GameStateManager : IModule {
     var redPoints: Int = 0
         private set
 
+    var blueFlagStolen: Boolean = false
+        private set
+
+    var redFlagStolen: Boolean = false
+        private set
+
     init {
         EventBus.register<ClientChatReceivedEvent> {
             //if (it.isChat()) {
@@ -110,10 +116,14 @@ object GameStateManager : IModule {
                             EventBus.post(RespawnEvent())
                     } catch (e: Exception) {
                     }
+
+                    blueFlagStolen = scoreboardFormatted[6].contains("Stolen")
+                    redFlagStolen = scoreboardFormatted[7].contains("Stolen")
                 }
 
                 fun updateSecond(currentSecond: Int) {
                     if (currentSecond != previousSec) {
+                        if (currentSecond % 10 == 0) EventBus.post(TenSecondEvent(currentSecond))
                         EventBus.post(SecondEvent(currentSecond))
                         previousSec = currentSecond
                         totalSeconds++
@@ -145,6 +155,10 @@ object GameStateManager : IModule {
                     updateMinute(scoreboard[6].substring(scoreboard[6].length - 5, scoreboard[6].length - 3).toInt())
 
                 }
+            } else {
+                isCTF = false
+                isTDM = false
+                isDOM = false
             }
             inLobby = isWarlords && scoreboard.isNotEmpty()
                     && (scoreboard[10].isNotEmpty() || scoreboard[9].isNotEmpty())
@@ -233,5 +247,6 @@ data class ResetEvent(val time: Long = System.currentTimeMillis()) : IEvent
 data class IngameChangedEvent(val ingame: Boolean) : IEvent
 data class RespawnEvent(val time: Long = System.currentTimeMillis()) : IEvent
 data class SecondEvent(val second: Int) : IEvent
+data class TenSecondEvent(val second: Int) : IEvent
 data class MinuteEvent(val minute: Int) : IEvent
 data class RealMinuteEvent(val minute: Int) : IEvent
