@@ -1,6 +1,5 @@
 package net.unaussprechlich.warlordsplus.hud.elements;
 
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement;
 
 /**

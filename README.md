@@ -27,10 +27,20 @@
 
 ![Feature](images/2020-07-13_19.17.41.png)
 
-### Changelog 
+### Changelog
+
 Can be found [HERE](https://github.com/unaussprechlich/warlordsplus/releases)
 
 ### Bugs & Issues
 
 Report them [HERE](https://github.com/unaussprechlich/warlordsplus/issues)
 
+### Setup Development Environment
+
+1. Clone the repository
+2. Run `forgegradle:setupDecompWorkspace`
+3. Sync Gradle
+4. Add a run configuration. For IntelliJ just specify an Application configuration, which does execute `GradleStart`  
+   Set `--username=EMAIL` and `--password=PASSWORD` as CLI arguments  
+   Set `-Dfml.coreMods.load=net.unaussprechlich.mixin.CoreMod` as VM option
+5. Have fun

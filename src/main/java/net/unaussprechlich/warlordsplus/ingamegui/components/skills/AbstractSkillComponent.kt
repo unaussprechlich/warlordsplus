@@ -3,58 +3,71 @@ package net.unaussprechlich.warlordsplus.ingamegui.components.skills
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraftforge.client.event.RenderGameOverlayEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
+import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
-import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
-import net.unaussprechlich.warlordsplus.util.convertToArgb
-import org.lwjgl.util.Color
+import net.unaussprechlich.warlordsplus.util.Colors
 
 
 abstract class AbstractSkillComponent(
-        val id: Int,
-        val meta: Int,
-        val slot: Int,
-        var xStart : Int,
-        var yStart : Int
-) : AbstractRenderComponent(), IUpdateConsumer {
+    val id: Int,
+    val meta: Int,
+    val slot: Int,
+    var xStart: Int,
+    var yStart: Int
+) : AbstractRenderComponent(RenderGameOverlayEvent.ElementType.HOTBAR) {
 
     protected var itemStack: ItemStack = ItemStack(Item.getItemById(id))
     protected var coolDown: String = ""
 
     init {
         if (meta > 0) itemStack.itemDamage = meta
+        EventBus.register<TickEvent.ClientTickEvent> {
+            if (thePlayer?.inventory != null && thePlayer!!.inventory.getStackInSlot(slot) != null) {
+                val itemStack = thePlayer!!.inventory.getStackInSlot(slot)
+                coolDown =
+                    if (slot == 4 && itemStack.itemDamage == 15) ">1m" else if (itemStack.stackSize > 1) "" + itemStack.stackSize else ""
+            }
+        }
     }
 
-    override fun render(e: RenderGameOverlayEvent.Pre) {
+    override fun onRender(event: RenderGameOverlayEvent.Pre) {
 
-        if(thePlayer!!.inventory == null || thePlayer!!.inventory.getStackInSlot(slot) == null) return
+        if (thePlayer!!.inventory == null || thePlayer!!.inventory.getStackInSlot(slot) == null) return
 
         val size = 20
 
         val x = xCenter + xStart
         val y = yBottom + yStart
 
-        if (coolDown != "") {
-            drawRectangle(x - 2, y - 2, size, Color(255, 0, 0, 100).convertToArgb())
-        } else {
-            drawRectangle(x - 2, y - 2, size, Color(0, 255, 0, 100).convertToArgb())
+        translate(x, y)
+
+        translate(-2, -2) {
+            if (thePlayer!!.heldItem != null
+                && thePlayer!!.heldItem == thePlayer!!.inventory.getStackInSlot(slot)
+            ) {
+                renderRect(size, size, Colors.WHITE)
+                translate(-1, -1) {
+                    if (coolDown != "") {
+                        renderRect(size - 1, size - 1, Colors.RED, 100)
+                    } else {
+                        renderRect(size - 1, size - 1, Colors.GREEN, 100)
+                    }
+                }
+            } else {
+                if (coolDown != "") {
+                    renderRect(size, size, Colors.RED, 100)
+                } else {
+                    renderRect(size, size, Colors.GREEN, 100)
+                }
+            }
+
         }
-        drawRectangle(x - 1, y - 1, size - 2, Color(0, 0, 0, 150).convertToArgb())
-        drawItemStackWithText(id, meta, x, y, coolDown);
 
-        if (thePlayer!!.heldItem != null
-                && thePlayer!!.heldItem == thePlayer!!.inventory.getStackInSlot(slot)) {
-            drawRect(x - 2, y - 2, size, 1, Color(255, 255, 255).convertToArgb())
-            drawRect(x - 2, y - 3 + size, size, 1, Color(255, 255, 255).convertToArgb())
-            drawRect(x - 3 + size, y - 2, 1, size, Color(255, 255, 255).convertToArgb())
-            drawRect(x - 2, y - 2, 1, size, Color(255, 255, 255).convertToArgb())
+        translate(-1, -1) {
+            renderRect(size - 1, size - 1, Colors.BLACK, 150)
         }
+
+        drawItemStackWithText(id, meta, coolDown);
     }
-
-    override fun update() {
-        if (thePlayer!!.inventory == null || thePlayer!!.inventory.getStackInSlot(slot) == null) return
-
-        val itemStack = thePlayer!!.inventory.getStackInSlot(slot)
-        coolDown = if (slot == 4 && itemStack.itemDamage == 15) ">1m" else if (itemStack.stackSize > 1) "" + itemStack.stackSize else ""
-    }
-
 }

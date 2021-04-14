@@ -14,8 +14,10 @@ fun String.removeFormatting(): String {
     return EnumChatFormatting.getTextWithoutFormattingCodes(this).replace(REGEX_FILTER, "")
 }
 
+@Deprecated("moved to ForgeEventProcessor", replaceWith = ReplaceWith("ForgeEventProcessor"))
 fun TickEvent.ClientTickEvent.checkPreConditions(): Boolean {
     return this.phase != TickEvent.Phase.END
+            && Minecraft.getMinecraft().theWorld != null
             && !Minecraft.getMinecraft().isGamePaused
             && Minecraft.getMinecraft().thePlayer != null
 }

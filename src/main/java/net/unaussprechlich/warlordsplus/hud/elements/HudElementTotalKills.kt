@@ -2,6 +2,7 @@ package net.unaussprechlich.warlordsplus.hud.elements
 
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.config.CCategory
@@ -11,19 +12,18 @@ import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
 import net.unaussprechlich.warlordsplus.module.modules.KillEvent
 import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
 import net.unaussprechlich.warlordsplus.util.TeamEnum
-import net.unaussprechlich.warlordsplus.util.consumers.IChatConsumer
-import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
+import net.unaussprechlich.warlordsplus.util.removeFormatting
 import java.util.*
-import kotlin.math.abs
 
-object HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsumer {
+object HudElementTotalKills : AbstractHudElement() {
 
     var blueKills: Int = 0
     var redKills: Int = 0
     private var numberOfCapsBlue: Int = 0
     private var numberOfCapsRed: Int = 0
+    var accurateBlueKills = 0
+    var accurateRedKills = 0
 
     init {
         EventBus.register<ResetEvent> {
@@ -32,66 +32,57 @@ object HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsum
             numberOfCapsRed = 0
             numberOfCapsBlue = 0
         }
-        if (GameStateManager.isDOM) {
-            EventBus.register<KillEvent> {
+
+        EventBus.register<KillEvent> {
+            if (GameStateManager.isCTF || GameStateManager.isDOM) {
                 if (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.BLUE)
                     blueKills++
                 else if (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.RED)
-                    redKills++;
+                    redKills++
+            }
+
+        }
+
+        EventBus.register<ClientChatReceivedEvent> {
+            if (GameStateManager.isCTF) {
+                val message = it.message.unformattedText.removeFormatting()
+                if (message.contains("captured the")) {
+                    if (message.contains("RED")) {
+                        numberOfCapsBlue++
+                    } else {
+                        numberOfCapsRed++
+                    }
+                }
+
+            }
+            if (GameStateManager.isTDM) {
+                blueKills = GameStateManager.bluePoints / 15
+                redKills = GameStateManager.redPoints / 15
+            }
+        }
+
+        EventBus.register<TickEvent.ClientTickEvent> {
+            accurateBlueKills = (GameStateManager.bluePoints - numberOfCapsBlue * 250) / 5
+            accurateRedKills = (GameStateManager.redPoints - numberOfCapsRed * 250) / 5
+            if (accurateBlueKills - blueKills <= 5) {
+                blueKills = accurateBlueKills
+            }
+            if (accurateRedKills - redKills <= 5) {
+                redKills = accurateRedKills
             }
         }
     }
+
 
     override fun getRenderString(): Array<String> {
         val renderStrings = ArrayList<String>()
 
         if (showBlueKills)
-            renderStrings.add(EnumChatFormatting.BLUE.toString() + "Blue Kills: " + blueKills)
+            renderStrings.add(EnumChatFormatting.BLUE.toString() + "Blue Kills: " + accurateBlueKills)
         if (showRedKills)
-            renderStrings.add(EnumChatFormatting.RED.toString() + "Red Kills: " + redKills)
+            renderStrings.add(EnumChatFormatting.RED.toString() + "Red Kills: " + accurateRedKills)
 
         return renderStrings.toTypedArray()
-    }
-
-    override fun update() {
-
-        if (GameStateManager.isCTF) {
-            val blue = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardNames[12]
-                    .replace(" ", "").replace("\uD83D\uDCA3", "")
-            )
-            val red = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardNames[11]
-                    .replace(" ", "").replace("\uD83D\uDC7D", "")
-            )
-            blueKills =
-                abs(blue.substring(blue.indexOf(":") + 1, blue.indexOf("/")).toInt() - (numberOfCapsBlue * 250)) / 5
-            redKills = abs(red.substring(red.indexOf(":") + 1, red.indexOf("/")).toInt() - (numberOfCapsRed * 250)) / 5
-        } else if (GameStateManager.isTDM) {
-            val blue = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardNames[9]
-                    .replace(" ", "").replace("\uD83D\uDCA3", "")
-            )
-            val red = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardNames[8]
-                    .replace(" ", "").replace("\uD83D\uDC7D", "")
-            )
-            blueKills = blue.substring(blue.indexOf(":") + 1, blue.indexOf("/")).toInt() / 15
-            redKills = red.substring(red.indexOf(":") + 1, red.indexOf("/")).toInt() / 15
-        }
-
-    }
-
-    override fun onChat(e: ClientChatReceivedEvent) {
-        if (GameStateManager.isCTF) {
-            if (e.message.unformattedText.contains("captured the")) {
-                if (e.message.unformattedText.contains("RED")) {
-                    numberOfCapsBlue++
-                } else {
-                    numberOfCapsRed++
-                }
-            }
-        }
     }
 
     override fun isVisible(): Boolean {
@@ -104,7 +95,7 @@ object HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsum
 
     @ConfigPropertyBoolean(
         category = CCategory.HUD,
-        id = "showBlueKills",
+        id = "|| Total Kills Blue | Show",
         comment = "Enable or disable the Blue Kill counter",
         def = true
     )
@@ -112,7 +103,7 @@ object HudElementTotalKills : AbstractHudElement(), IUpdateConsumer, IChatConsum
 
     @ConfigPropertyBoolean(
         category = CCategory.HUD,
-        id = "showRedKills",
+        id = "|| Total Kills Red | Show",
         comment = "Enable or disable the Red Kill counter",
         def = true
     )

@@ -5,14 +5,13 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
-import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.contain
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import java.util.regex.Pattern
 
-private const val SOMEBODY_DID = "\u00AB"
-private const val YOU_DID = "\u00BB"
+const val SOMEBODY_DID = "\u00AB"
+const val YOU_DID = "\u00BB"
 
 private val numberPattern = Pattern.compile("\\s[0-9]+\\s")
 
@@ -28,7 +27,7 @@ object DamageAndHealParser : IModule {
 
             var otherPlayer = ""
             val amount = getDamageOrHealthValue(msg)
-            val crit = msg contain "!"
+            val isCrit = msg contain "!"
 
             if (e.message.unformattedText contain SOMEBODY_DID) {
 
@@ -36,7 +35,7 @@ object DamageAndHealParser : IModule {
                     when {
                         //PLAYER's ability hit you
                         msg.contains("Your") && msg.contains("you") -> {
-                            return Minecraft.getMinecraft().thePlayer.displayNameString
+                            return Minecraft.getMinecraft().thePlayer.name
                         }
                         msg contain "'s" -> {
                             return msg.substring(2, msg.indexOf("'s"))
@@ -57,18 +56,42 @@ object DamageAndHealParser : IModule {
 
                 when {
                     msg.contains("health") -> {
-                        EventBus.post(HealingReceivedEvent(amount, otherPlayer, crit))
+                        EventBus.post(
+                            HealingReceivedEvent(
+                                amount,
+                                otherPlayer,
+                                isCrit,
+                                false,
+                                GameStateManager.getMinute()
+                            )
+                        )
                     }
                     msg.contains("damage") -> {
-                        EventBus.post(DamageTakenEvent(amount, otherPlayer, crit))
+                        EventBus.post(
+                            DamageTakenEvent(
+                                amount,
+                                otherPlayer,
+                                isCrit,
+                                false,
+                                GameStateManager.getMinute()
+                            )
+                        )
 
                         //Player lost Energy from otherPlayer's Avenger's Strike
                         if (msg.contains("Avenger's Strike"))
-                            EventBus.post(EnergyLostEvent(6, otherPlayer))
+                            EventBus.post(EnergyLostEvent(6, otherPlayer, false, false, GameStateManager.getMinute()))
                     }
                     msg.contains("energy") -> {
                         otherPlayer = msg.substring(0, msg.indexOf("'s"))
-                        EventBus.post(EnergyReceivedEvent(amount, otherPlayer));
+                        EventBus.post(
+                            EnergyReceivedEvent(
+                                amount,
+                                otherPlayer,
+                                false,
+                                false,
+                                GameStateManager.getMinute()
+                            )
+                        );
                     }
                 }
 
@@ -78,69 +101,56 @@ object DamageAndHealParser : IModule {
 
                     msg.contains("health") && !msg.contain("you") -> {
                         otherPlayer = msg.substring(msg.indexOf("healed ") + 7, msg.indexOf("for") - 1)
-                        EventBus.post(HealingGivenEvent(amount, otherPlayer, crit))
+                        EventBus.post(
+                            HealingGivenEvent(
+                                amount,
+                                otherPlayer,
+                                isCrit,
+                                false,
+                                GameStateManager.getMinute()
+                            )
+                        )
                     }
                     msg.contains("health") -> {
-                        otherPlayer = Minecraft.getMinecraft().thePlayer.displayNameString
-                        EventBus.post(HealingGivenEvent(amount, otherPlayer, crit))
+                        otherPlayer = Minecraft.getMinecraft().thePlayer.name
+                        EventBus.post(
+                            HealingGivenEvent(
+                                amount,
+                                otherPlayer,
+                                isCrit,
+                                false,
+                                GameStateManager.getMinute()
+                            )
+                        )
                     }
                     msg.contains("damage") -> {
                         otherPlayer = msg.substring(msg.indexOf("hit ") + 4, msg.indexOf("for") - 1)
-                        EventBus.post(DamageDoneEvent(amount, otherPlayer, crit))
+                        EventBus.post(DamageDoneEvent(amount, otherPlayer, isCrit, false, GameStateManager.getMinute()))
 
                         //Player's Avenger's Strike stole energy from otherPlayer
                         if (msg.contains("Avengers Strike"))
-                            EventBus.post(EnergyStolenEvent(6, otherPlayer))
+                            EventBus.post(EnergyStolenEvent(6, otherPlayer, false, false, GameStateManager.getMinute()))
                     }
                     msg.contains("energy") -> {
                         otherPlayer = msg.substring(msg.indexOf("gave") + 5, msg.indexOf("energy") - 4)
-                        EventBus.post(EnergyGivenEvent(amount, otherPlayer))
+                        EventBus.post(EnergyGivenEvent(amount, otherPlayer, false, false, GameStateManager.getMinute()))
                     }
                     msg.contains("absorbed") -> {
                         otherPlayer = msg.substring(msg.indexOf("by") + 3)
-                        EventBus.post(DamageAbsorbedEvent(amount, otherPlayer, crit, true))
+                        EventBus.post(
+                            DamageAbsorbedEvent(
+                                amount,
+                                otherPlayer,
+                                isCrit,
+                                true,
+                                GameStateManager.getMinute()
+                            )
+                        )
                     }
                 }
+
+                //SkillDetector.handleSkillUsed(msg, amount, isCrit, msg.contains("absorbed"))
             }
-
-            if ("Your" in msg) {
-                when {
-                    "strike" in msg -> ThePlayer.strikeCounter++
-                    "Consecrate" in msg -> ThePlayer.consecrateCounter++
-                    "Infusion" in msg -> ThePlayer.infusionCounter++
-                    "Holy" in msg -> ThePlayer.holyCounter++
-                    "Slam" in msg -> ThePlayer.slamCounter++
-                    "Wave " in msg -> ThePlayer.waveCounter++
-                    "intervene" in msg -> ThePlayer.interveneCounter++
-                    "Charge" in msg -> ThePlayer.chargeCounter++
-                    "Orb" in msg -> ThePlayer.orbCounter++
-                    "Warp" in msg -> ThePlayer.warpCounter++
-                    "Bolt" in msg -> ThePlayer.boltCounter++
-                    "Breath" in msg -> ThePlayer.breathCounter++
-                    "ball" in msg -> ThePlayer.ballCounter++
-                    "Flame" in msg -> ThePlayer.burstCounter++
-                    "Rain" in msg -> ThePlayer.rainCounter++
-                    "Chain" in msg -> ThePlayer.chainCounter++
-                    "Totem" in msg -> ThePlayer.totemCounter++
-                    "Lightning" in msg -> ThePlayer.lightningBoltCounter++
-                    "Windfury" in msg -> ThePlayer.furyCounter++
-                    "Rod" in msg -> ThePlayer.rodCounter++
-                    "Soul" in msg -> ThePlayer.soulsCounter++
-                    "Soulbinding" in msg -> ThePlayer.bindingCounter++
-                    "Spike" in msg -> ThePlayer.spikeCounter++
-                    "Boulder" in msg -> ThePlayer.boulderCounter++
-                    "Earthliving" in msg -> ThePlayer.earthlivingCounter++
-                    "Debt" in msg -> {
-                        if ("healed" in msg) ThePlayer.debtHealedCounter++ else ThePlayer.debtDamagedCounter++
-                    }
-                    "Army" in msg -> {
-                        ThePlayer.undyingCounter += msg.substring(msg.indexOf("allies") - 3)
-                                .toInt(msg.indexOf("allies")) //TODO
-                    }
-                }
-            }
-
-
         } catch (throwable: Throwable) {
 
         }
@@ -165,6 +175,7 @@ object DamageAndHealParser : IModule {
     }
 }
 
+
 /**
  * A data class that can be Posted onto the EventBus
  * Must extend IEvent
@@ -175,69 +186,80 @@ abstract class AbstractDamageHealEvent : IEvent {
     abstract val player: String
     abstract val isCrit: Boolean
     abstract val isAbsorbed: Boolean
+    abstract val minute: Int
 }
 
 data class HealingGivenEvent(
     override val amount: Int,
     override val player: String,
     override val isCrit: Boolean,
-    override val isAbsorbed: Boolean = false
+    override val isAbsorbed: Boolean = false,
+    override val minute: Int
 ) : AbstractDamageHealEvent()
 
 data class DamageDoneEvent(
     override val amount: Int,
     override val player: String,
     override val isCrit: Boolean,
-    override val isAbsorbed: Boolean = false
+    override val isAbsorbed: Boolean = false,
+    override val minute: Int
 ) : AbstractDamageHealEvent()
 
 data class HealingReceivedEvent(
     override val amount: Int,
     override val player: String,
     override val isCrit: Boolean,
-    override val isAbsorbed: Boolean = false
+    override val isAbsorbed: Boolean = false,
+    override val minute: Int
 ) : AbstractDamageHealEvent()
 
 data class DamageTakenEvent(
     override val amount: Int,
     override val player: String,
     override val isCrit: Boolean,
-    override val isAbsorbed: Boolean = false
+    override val isAbsorbed: Boolean = false,
+    override val minute: Int
 ) : AbstractDamageHealEvent()
 
 data class EnergyReceivedEvent(
     override val amount: Int,
     override val player: String,
     override val isCrit: Boolean = false,
-    override val isAbsorbed: Boolean = false
+    override val isAbsorbed: Boolean = false,
+    override val minute: Int
 ) : AbstractDamageHealEvent()
 
 data class EnergyGivenEvent(
     override val amount: Int,
     override val player: String,
     override val isCrit: Boolean = false,
-    override val isAbsorbed: Boolean = false
+    override val isAbsorbed: Boolean = false,
+    override val minute: Int
 ) : AbstractDamageHealEvent()
 
 data class EnergyStolenEvent(
     override val amount: Int,
     override val player: String,
     override val isCrit: Boolean = false,
-    override val isAbsorbed: Boolean = false
+    override val isAbsorbed: Boolean = false,
+    override val minute: Int
 ) : AbstractDamageHealEvent()
 
 data class EnergyLostEvent(
     override val amount: Int,
     override val player: String,
     override val isCrit: Boolean = false,
-    override val isAbsorbed: Boolean = false
+    override val isAbsorbed: Boolean = false,
+    override val minute: Int
 ) : AbstractDamageHealEvent()
 
 data class DamageAbsorbedEvent(
     override val amount: Int,
     override val player: String,
     override val isCrit: Boolean,
-    override val isAbsorbed: Boolean
+    override val isAbsorbed: Boolean,
+    override val minute: Int
 ) : AbstractDamageHealEvent()
+
 
 

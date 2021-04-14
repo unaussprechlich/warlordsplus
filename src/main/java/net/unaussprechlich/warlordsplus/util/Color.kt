@@ -12,6 +12,13 @@ fun Color.convertToArgb(): Int {
 
 enum class Colors(val red: Int, val green: Int, val blue: Int, val enumColor: EnumChatFormatting) {
     DEF(34, 34, 39, EnumChatFormatting.OBFUSCATED),
+    BRONZE(144, 89, 35, EnumChatFormatting.OBFUSCATED),
+    SILVER(148, 152, 161, EnumChatFormatting.OBFUSCATED),
+    PLATINUM(229, 228, 226, EnumChatFormatting.OBFUSCATED),
+    DIAMOND(185, 242, 255, EnumChatFormatting.OBFUSCATED),
+    MASTER(255, 92, 51, EnumChatFormatting.OBFUSCATED),
+    GRANDMASTER(143, 0, 0, EnumChatFormatting.OBFUSCATED),
+
     BLACK(0, 0, 0, EnumChatFormatting.BLACK),
     DARK_BLUE(0, 0, 170, EnumChatFormatting.DARK_BLUE),
     DARK_GREEN(0, 170, 0, EnumChatFormatting.DARK_GREEN),
@@ -27,10 +34,18 @@ enum class Colors(val red: Int, val green: Int, val blue: Int, val enumColor: En
     RED(255, 85, 85, EnumChatFormatting.RED),
     LIGHT_PURPLE(255, 85, 255, EnumChatFormatting.LIGHT_PURPLE),
     YELLOW(255, 255, 85, EnumChatFormatting.YELLOW),
-    WHITE(255, 255, 255, EnumChatFormatting.WHITE);
+    WHITE(255, 255, 255, EnumChatFormatting.WHITE),
+    ORANGE(255, 140, 0, EnumChatFormatting.YELLOW);
 
     val FULL: Int = Color(red.toByte(), green.toByte(), blue.toByte(), 255.toByte()).convertToArgb()
-    val BACKGROUND: Int = Color(red.toByte(), green.toByte(), blue.toByte(), 100.toByte()).convertToArgb()
-    val HEADER: Int = Color(red.toByte(), green.toByte(), blue.toByte(), 200.toByte()).convertToArgb()
+    val ALPHA_100: Int = Color(red.toByte(), green.toByte(), blue.toByte(), 100.toByte()).convertToArgb()
+    val ALPHA_200: Int = Color(red.toByte(), green.toByte(), blue.toByte(), 200.toByte()).convertToArgb()
+
+    fun convertToArgb(alpha : Int = 255): Int {
+        return (alpha shl 24) or
+                (this.red shl 16) or
+                (this.green shl 8) or
+                (this.blue)
+    }
 }
 
