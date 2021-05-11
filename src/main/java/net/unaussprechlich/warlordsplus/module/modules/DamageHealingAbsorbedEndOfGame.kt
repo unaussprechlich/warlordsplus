@@ -3,6 +3,7 @@ package net.unaussprechlich.warlordsplus.module.modules
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object DamageHealingAbsorbedEndOfGame : IModule {
 
@@ -75,7 +76,7 @@ object DamageHealingAbsorbedEndOfGame : IModule {
             totalDHP = 0
         }
         EventBus.register<ClientChatReceivedEvent> { e ->
-            if (e.message.formattedText.contains("Damage:")) {
+            if (e.message.formattedText.removeFormatting().trimStart().startsWith("Damage:")) {
 
                 println(e.message.siblings[1].chatStyle.chatHoverEvent.value.formattedText)
                 println(e.message.siblings[3].chatStyle.chatHoverEvent.value.formattedText)

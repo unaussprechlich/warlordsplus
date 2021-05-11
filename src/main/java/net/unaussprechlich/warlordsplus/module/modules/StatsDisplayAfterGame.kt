@@ -15,6 +15,7 @@ import net.unaussprechlich.warlordsplus.hud.elements.HudElementKillParticipation
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementTotalKills
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.util.TeamEnum
+import net.unaussprechlich.warlordsplus.util.removeFormatting
 import net.unaussprechlich.warlordsplus.util.removeSpaces
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
@@ -40,8 +41,8 @@ object StatsDisplayAfterGame : IModule {
     fun onChat(e: ClientChatReceivedEvent) {
         if (GameStateManager.notIngame) return
 
-        val message = e.message.formattedText
-        if (e.message.unformattedText.removeSpaces().startsWith("Winner")) {
+        val message = e.message.formattedText.removeFormatting()
+        if (message.removeSpaces().startsWith("Winner")) {
             addStatsToClipboard(message)
         }
         if (GameStateManager.isIngame) {
@@ -57,7 +58,7 @@ object StatsDisplayAfterGame : IModule {
                 )
                 sendDHP = false
             }
-            if (message.contains("Absorbed")) {
+            if (message.removeFormatting().trimStart().startsWith("Damage:")) {
                 sendDHP = true
             }
             if (message.contains("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")) {
