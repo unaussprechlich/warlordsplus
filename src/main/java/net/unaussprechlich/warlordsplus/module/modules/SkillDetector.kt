@@ -128,7 +128,7 @@ object SkillDetector : IModule {
                 )
                 ThePlayer.warpCounter++
             }
-            "Bolt" in msg -> {
+            "Bolt" in msg || "bolt" in msg -> {
                 EventBus.post(
                     ThePlayerUsedSkillEvent(
                         SkillType.BOLT,

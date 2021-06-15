@@ -29,14 +29,13 @@ class GetPartyMembers : AbstractCommand() {
                             partyMembers.add(message.substring(14))
                         }
                         message.startsWith("Party Moderators:") -> {
-                            var players = message.substring(19).split("   ")
+                            var players = message.substring(18).split("  ")
                             players.forEach {
                                 partyMembers.add(it)
                             }
-
                         }
                         message.startsWith("Party Members:") -> {
-                            var players = message.substring(16).split("   ")
+                            var players = message.substring(15).split("  ")
                             players.forEach {
                                 partyMembers.add(it)
                             }
@@ -54,13 +53,18 @@ class GetPartyMembers : AbstractCommand() {
                 var players = StringBuilder()
                 var prefix = ""
                 partyMembers.forEach {
-                    players.append(prefix)
-                    prefix = ","
-                    players.append(it.replace(" ", ""))
+                    if (it.isNotEmpty()) {
+                        players.append(prefix)
+                        prefix = ","
+                        players.append(it.replace(" ", ""))
+                    }
                 }
                 players.trim()
                 val clipboard: Clipboard = Toolkit.getDefaultToolkit().systemClipboard
-                clipboard.setContents(StringSelection(players.toString()), StringSelection(players.toString()))
+                clipboard.setContents(
+                    StringSelection(players.toString()),
+                    StringSelection(players.toString())
+                )
                 println(partyMembers)
             }
         }

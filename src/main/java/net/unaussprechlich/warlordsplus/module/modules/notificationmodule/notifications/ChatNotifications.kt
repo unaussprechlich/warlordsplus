@@ -37,7 +37,8 @@ object ChatNotifications : IModule {
             translateX(-width)
             renderRect(width, 11, Colors.DEF, 200)
             translate(5.0, 2.0) {
-                "${chatMessage.type.color.enumColor}${chatMessage.type.chatName} ${EnumChatFormatting.RESET}${chatMessage.playerNameFormatted}".draw()
+                //"${chatMessage.type.color.enumColor}${chatMessage.type.chatName} ${EnumChatFormatting.RESET}${chatMessage.playerNameFormatted}".draw()
+                "${chatMessage.type.color.enumColor}${if (chatMessage.type != ChatDetector.ChatType.PARTY && chatMessage.type != ChatDetector.ChatType.GUILD) chatMessage.type.chatName + " " else ""}${EnumChatFormatting.RESET}${chatMessage.playerNameFormatted}".draw()
             }
 
             val renderStrings = fontRenderer.listFormattedStringToWidth(
