@@ -211,6 +211,7 @@ object OtherPlayers : IModule {
                 it.inventory.firstEmptyStack == 1
             }.map {
                 if (it.inventory.mainInventory[0].tagCompound.toString().contains("LEFT-CLICK")) {
+                    //TODO fix where player has the wrong skill boost/skill boost for a different spec
                     if (player.value.warlord == WarlordsEnum.WARRIOR) {
                         player.value.spec = SpecsEnum.values()
                             .firstOrNull { w ->
@@ -301,7 +302,7 @@ object OtherPlayers : IModule {
             GameStateManager.inLobby -> {
                 try {
                     val playerInv = e.entityPlayer.inventory
-                    if (playerInv.mainInventory[0] != null) {
+                    if (playerInv.mainInventory[0] != null && e.displayname != Minecraft.getMinecraft().thePlayer.name) {
                         var spec = SpecsEnum.NONE
                         if (playerInv.mainInventory[0].tagCompound.toString().contains("LEFT-CLICK")) {
                             spec = SpecsEnum.values()

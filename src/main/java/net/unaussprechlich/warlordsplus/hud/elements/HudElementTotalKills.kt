@@ -62,13 +62,15 @@ object HudElementTotalKills : AbstractHudElement() {
         }
 
         EventBus.register<TickEvent.ClientTickEvent> {
-            accurateBlueKills = (GameStateManager.bluePoints - numberOfCapsBlue * 250) / 5
-            accurateRedKills = (GameStateManager.redPoints - numberOfCapsRed * 250) / 5
-            if (accurateBlueKills - blueKills <= 5) {
-                blueKills = accurateBlueKills
-            }
-            if (accurateRedKills - redKills <= 5) {
-                redKills = accurateRedKills
+            if (GameStateManager.isCTF) {
+                accurateBlueKills = (GameStateManager.bluePoints - numberOfCapsBlue * 250) / 5
+                accurateRedKills = (GameStateManager.redPoints - numberOfCapsRed * 250) / 5
+                if (accurateBlueKills - blueKills <= 5) {
+                    blueKills = accurateBlueKills
+                }
+                if (accurateRedKills - redKills <= 5) {
+                    redKills = accurateRedKills
+                }
             }
         }
     }

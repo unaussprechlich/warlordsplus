@@ -179,13 +179,6 @@ object ThePlayer : IModule {
                     } != null
                 } ?: SpecsEnum.NONE
             }
-            if (team == TeamEnum.NONE) {
-                team = when {
-                    Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A7c") -> TeamEnum.RED
-                    Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A79") -> TeamEnum.BLUE
-                    else -> TeamEnum.NONE
-                }
-            }
         }
 
 

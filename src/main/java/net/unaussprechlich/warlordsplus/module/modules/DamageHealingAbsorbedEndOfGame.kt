@@ -77,7 +77,7 @@ object DamageHealingAbsorbedEndOfGame : IModule {
         }
         EventBus.register<ClientChatReceivedEvent> { e ->
             if (e.message.formattedText.removeFormatting().trimStart().startsWith("Damage:")) {
-
+                println(e.message)
                 println(e.message.siblings[1].chatStyle.chatHoverEvent.value.formattedText)
                 println(e.message.siblings[3].chatStyle.chatHoverEvent.value.formattedText)
                 println(e.message.siblings[5].chatStyle.chatHoverEvent.value.formattedText)

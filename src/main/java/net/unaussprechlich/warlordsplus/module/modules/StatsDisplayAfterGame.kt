@@ -6,17 +6,15 @@ import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.IChatComponent
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
+import net.unaussprechlich.renderapi.util.MinecraftOpenGlStuff
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementHitCounter
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementKillParticipation
-import net.unaussprechlich.warlordsplus.hud.elements.HudElementTotalKills
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.util.TeamEnum
-import net.unaussprechlich.warlordsplus.util.removeFormatting
-import net.unaussprechlich.warlordsplus.util.removeSpaces
+import net.unaussprechlich.warlordsplus.util.*
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.StringSelection
@@ -41,21 +39,13 @@ object StatsDisplayAfterGame : IModule {
     fun onChat(e: ClientChatReceivedEvent) {
         if (GameStateManager.notIngame) return
 
-        val message = e.message.formattedText.removeFormatting()
+        val message = e.message.formattedText
         if (message.removeSpaces().startsWith("Winner")) {
             addStatsToClipboard(message)
         }
         if (GameStateManager.isIngame) {
             if (sendDHP) {
-                Minecraft.getMinecraft().thePlayer.addChatMessage(
-                    ChatComponentText(
-                        "                                DHP: ${EnumChatFormatting.GOLD}${
-                            addCommas(
-                                DamageHealingAbsorbedEndOfGame.totalDHP
-                            )
-                        }"
-                    )
-                )
+                sendCenteredMessage("       DHP: ${EnumChatFormatting.GOLD}${addCommas(DamageHealingAbsorbedEndOfGame.totalDHP)}")
                 sendDHP = false
             }
             if (message.removeFormatting().trimStart().startsWith("Damage:")) {
@@ -85,6 +75,7 @@ object StatsDisplayAfterGame : IModule {
     }
 
     fun addCommas(number: Int): String {
+        if (number == 0) return "0"
         val formatter = DecimalFormat("#,###.00")
         return formatter.format(number.toDouble()).toString().dropLast(3)
     }
@@ -95,10 +86,59 @@ object StatsDisplayAfterGame : IModule {
         return number.toString()
     }
 
+    private fun displayClassStats() {
+        when (ThePlayer.spec) {
+            SpecsEnum.AVENGER -> {
+                Minecraft.getMinecraft().thePlayer.addChatMessage(
+                    ChatComponentText(
+                        "Avenger's Strike - " + ThePlayer.strikeCounter
+                    )
+                )
+            }
+            SpecsEnum.CRUSADER -> {
+
+            }
+            SpecsEnum.PROTECTOR -> {
+
+            }
+            SpecsEnum.BERSERKER -> {
+
+            }
+            SpecsEnum.DEFENDER -> {
+
+            }
+            SpecsEnum.REVENANT -> {
+
+            }
+            SpecsEnum.PYROMANCER -> {
+
+            }
+            SpecsEnum.CRYOMANCER -> {
+
+            }
+            SpecsEnum.AQUAMANCER -> {
+
+            }
+            SpecsEnum.THUNDERLORD -> {
+
+            }
+            SpecsEnum.SPIRITGUARD -> {
+
+            }
+            SpecsEnum.EARTHWARDEN -> {
+
+            }
+        }
+    }
+
     private fun displayStats() {
         val stats: IChatComponent = ChatComponentText(
-            "${EnumChatFormatting.GRAY}Hits: ${EnumChatFormatting.WHITE}${HudElementHitCounter.totalHits}${EnumChatFormatting.GOLD} Energy Given: ${EnumChatFormatting.WHITE}${ThePlayer.energyGivenCounter}${EnumChatFormatting.GOLD} Energy Received: ${EnumChatFormatting.WHITE}${ThePlayer.energyReceivedCounter}${"\n"}" +
-                    "${EnumChatFormatting.GOLD}KP: ${EnumChatFormatting.WHITE}${if (HudElementKillParticipation.numberOfTeamKills > 0) (HudElementKillParticipation.playerKills / HudElementKillParticipation.numberOfTeamKills.toDouble() * 100).roundToInt() else 0}%${EnumChatFormatting.BLUE} Blue Kills: ${EnumChatFormatting.WHITE}${HudElementTotalKills.blueKills}${EnumChatFormatting.RED} Red Kills: ${EnumChatFormatting.WHITE}${HudElementTotalKills.redKills}${"\n"}" +
+            "${EnumChatFormatting.GRAY}Hits: ${EnumChatFormatting.WHITE}${HudElementHitCounter.totalHits}${EnumChatFormatting.GOLD} Energy Given: ${EnumChatFormatting.WHITE}${ThePlayer.energyGivenCounter}${EnumChatFormatting.GOLD} Energy Received: ${EnumChatFormatting.WHITE}${ThePlayer.energyReceivedCounter}${EnumChatFormatting.GOLD} Energy Stolen: ${EnumChatFormatting.WHITE}${ThePlayer.energyStolenCounter}${EnumChatFormatting.GOLD} Energy Lost: ${EnumChatFormatting.WHITE}${ThePlayer.energyLostCounter}${"\n"}" +
+                    "${EnumChatFormatting.GOLD}KP: ${EnumChatFormatting.WHITE}${if (HudElementKillParticipation.numberOfTeamKills > 0) (HudElementKillParticipation.playerKills / HudElementKillParticipation.numberOfTeamKills.toDouble() * 100).roundToInt() else 0}%${EnumChatFormatting.BLUE} Blue Kills: ${EnumChatFormatting.WHITE}${
+                        getTeamKills(
+                            true
+                        )
+                    }${EnumChatFormatting.RED} Red Kills: ${EnumChatFormatting.WHITE}${getTeamKills(false)}${"\n"}" +
                     "${EnumChatFormatting.DARK_GREEN}Healing Received: ${EnumChatFormatting.WHITE}${addCommas(ThePlayer.healingReceivedCounter)}${EnumChatFormatting.DARK_RED} Damage Received: ${EnumChatFormatting.WHITE}${
                         addCommas(
                             ThePlayer.damageTakenCounter
@@ -196,6 +236,17 @@ object StatsDisplayAfterGame : IModule {
 
         )
         Minecraft.getMinecraft().thePlayer.addChatMessage(stats)
+    }
+
+    private fun getTeamKills(blueTeam: Boolean): Int {
+        val players = OtherPlayers.getPlayersForNetworkPlayers(MinecraftOpenGlStuff.thePlayer!!.sendQueue.playerInfoMap)
+        val teamBlue = players.filter { it.team == TeamEnum.BLUE }.sortedByDescending { it.level }
+        val teamRed = players.filter { it.team == TeamEnum.RED }.sortedByDescending { it.level }
+        return if (blueTeam) {
+            teamBlue.sumBy { it.kills }
+        } else {
+            teamRed.sumBy { it.kills }
+        }
     }
 
     private fun displayScoreboard() {
@@ -296,6 +347,40 @@ object StatsDisplayAfterGame : IModule {
         val clipboard: Clipboard = Toolkit.getDefaultToolkit().systemClipboard
         if (addToClipboard)
             clipboard.setContents(selection, selection)
+    }
+
+    private const val CENTER_PX = 154
+
+    fun sendCenteredMessage(message: String?) {
+        var messagePxSize = 0
+        var previousCode = false
+        var isBold = false
+        if (message != null) {
+            for (c in message.toCharArray()) {
+                if (c == '§') {
+                    previousCode = true
+                } else if (previousCode) {
+                    previousCode = false
+                    isBold = if (c == 'l' || c == 'L') {
+                        true
+                    } else false
+                } else {
+                    val dFI: DefaultFontInfo = DefaultFontInfo.getDefaultFontInfo(c)
+                    messagePxSize += if (isBold) dFI.boldLength else dFI.length
+                    messagePxSize++
+                }
+            }
+        }
+        val halvedMessageSize = messagePxSize / 2
+        val toCompensate = CENTER_PX - halvedMessageSize
+        val spaceLength: Int = DefaultFontInfo.SPACE.length + 1
+        var compensated = 0
+        val sb = StringBuilder()
+        while (compensated < toCompensate) {
+            sb.append(" ")
+            compensated += spaceLength
+        }
+        Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText(sb.toString() + message))
     }
 
     @ConfigPropertyBoolean(
