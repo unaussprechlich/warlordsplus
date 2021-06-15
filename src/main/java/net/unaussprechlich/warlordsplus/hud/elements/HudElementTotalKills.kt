@@ -55,10 +55,6 @@ object HudElementTotalKills : AbstractHudElement() {
                 }
 
             }
-            if (GameStateManager.isTDM) {
-                blueKills = GameStateManager.bluePoints / 15
-                redKills = GameStateManager.redPoints / 15
-            }
         }
 
         EventBus.register<TickEvent.ClientTickEvent> {
@@ -71,6 +67,9 @@ object HudElementTotalKills : AbstractHudElement() {
                 if (accurateRedKills - redKills <= 5) {
                     redKills = accurateRedKills
                 }
+            } else if (GameStateManager.isTDM) {
+                blueKills = GameStateManager.bluePoints / 15
+                redKills = GameStateManager.redPoints / 15
             }
         }
     }
@@ -80,9 +79,9 @@ object HudElementTotalKills : AbstractHudElement() {
         val renderStrings = ArrayList<String>()
 
         if (showBlueKills)
-            renderStrings.add(EnumChatFormatting.BLUE.toString() + "Blue Kills: " + accurateBlueKills)
+            renderStrings.add(EnumChatFormatting.BLUE.toString() + "Blue Kills: " + blueKills)
         if (showRedKills)
-            renderStrings.add(EnumChatFormatting.RED.toString() + "Red Kills: " + accurateRedKills)
+            renderStrings.add(EnumChatFormatting.RED.toString() + "Red Kills: " + redKills)
 
         return renderStrings.toTypedArray()
     }
