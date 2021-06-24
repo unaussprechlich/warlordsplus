@@ -27,21 +27,23 @@ object SoulbindingCounter : IModule {
 
     private fun onClientTick(e: TickEvent.ClientTickEvent) {
         binded.removeIf { it.validUntil < System.currentTimeMillis() }
-        binded.forEach { binded ->
-            val players = Minecraft.getMinecraft().theWorld.playerEntities
-            players.filter {
-                it.name == binded.name
-            }.forEach { player ->
-                repeat(25) {
-                    Minecraft.getMinecraft().theWorld.spawnParticle(
-                        EnumParticleTypes.SLIME,
-                        player.posX + Math.random() * 2 - 1,
-                        player.posY + 1.5 + Math.random() * 2 - 1,
-                        player.posZ + Math.random() * 2 - 1,
-                        0.0,
-                        0.0,
-                        0.0
-                    )
+        if (showParticle) {
+            binded.forEach { binded ->
+                val players = Minecraft.getMinecraft().theWorld.playerEntities
+                players.filter {
+                    it.name == binded.name
+                }.forEach { player ->
+                    repeat(25) {
+                        Minecraft.getMinecraft().theWorld.spawnParticle(
+                            EnumParticleTypes.SLIME,
+                            player.posX + Math.random() * 2 - 1,
+                            player.posY + 1.5 + Math.random() * 2 - 1,
+                            player.posZ + Math.random() * 2 - 1,
+                            0.0,
+                            0.0,
+                            0.0
+                        )
+                    }
                 }
             }
         }
@@ -75,7 +77,7 @@ object SoulbindingCounter : IModule {
         }
 
         override fun shouldRender(e: RenderGameOverlayEvent.Text): Boolean {
-            return GameStateManager.isIngame && show
+            return GameStateManager.isIngame && showCounter
         }
     }
 
@@ -100,9 +102,17 @@ object SoulbindingCounter : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "Counter SoulBinding | Enable",
-        comment = "Enable or disable the soulbinding counter",
+        id = "SoulBinding Counter | Enable",
+        comment = "Enable or disable the soulbinding counter above crosshair",
         def = true
     )
-    var show = true
+    var showCounter = true
+
+    @ConfigPropertyBoolean(
+        category = CCategory.MODULES,
+        id = "SoulBinding Particles | Enable",
+        comment = "Enable or disable the soulbinding particles",
+        def = true
+    )
+    var showParticle = true
 }
