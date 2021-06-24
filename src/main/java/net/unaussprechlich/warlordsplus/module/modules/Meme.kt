@@ -161,7 +161,7 @@ object Meme : IModule {
 
     @ConfigPropertyBoolean(
         category = CCategory.MODULES,
-        id = "Meme Module | Enable",
+        id = "Meme Module | Disable",
         comment = "Disable the MemeModule (Sounds)",
         def = true
     )

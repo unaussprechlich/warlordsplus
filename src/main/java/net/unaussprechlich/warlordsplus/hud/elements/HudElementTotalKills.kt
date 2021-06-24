@@ -22,8 +22,6 @@ object HudElementTotalKills : AbstractHudElement() {
     var redKills: Int = 0
     private var numberOfCapsBlue: Int = 0
     private var numberOfCapsRed: Int = 0
-    var accurateBlueKills = 0
-    var accurateRedKills = 0
 
     init {
         EventBus.register<ResetEvent> {
@@ -34,7 +32,7 @@ object HudElementTotalKills : AbstractHudElement() {
         }
 
         EventBus.register<KillEvent> {
-            if (GameStateManager.isCTF || GameStateManager.isDOM) {
+            if (GameStateManager.isDOM) {
                 if (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.BLUE)
                     blueKills++
                 else if (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.RED)
@@ -59,14 +57,8 @@ object HudElementTotalKills : AbstractHudElement() {
 
         EventBus.register<TickEvent.ClientTickEvent> {
             if (GameStateManager.isCTF) {
-                accurateBlueKills = (GameStateManager.bluePoints - numberOfCapsBlue * 250) / 5
-                accurateRedKills = (GameStateManager.redPoints - numberOfCapsRed * 250) / 5
-                if (accurateBlueKills - blueKills <= 5) {
-                    blueKills = accurateBlueKills
-                }
-                if (accurateRedKills - redKills <= 5) {
-                    redKills = accurateRedKills
-                }
+                blueKills = (GameStateManager.bluePoints - numberOfCapsBlue * 250) / 5
+                redKills = (GameStateManager.redPoints - numberOfCapsRed * 250) / 5
             } else if (GameStateManager.isTDM) {
                 blueKills = GameStateManager.bluePoints / 15
                 redKills = GameStateManager.redPoints / 15
