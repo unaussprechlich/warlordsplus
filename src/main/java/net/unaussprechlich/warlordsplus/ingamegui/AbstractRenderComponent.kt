@@ -16,7 +16,6 @@ abstract class AbstractRenderComponent(
     init {
         EventBus.register(::render)
     }
-
     override fun shouldRender(e: RenderGameOverlayEvent.Pre): Boolean {
         if (GameStateManager.notIngame) return false
         if (Minecraft.getMinecraft().currentScreen is GuiChat) return false

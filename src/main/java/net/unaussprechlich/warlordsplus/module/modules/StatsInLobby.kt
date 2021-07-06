@@ -4,7 +4,9 @@ import kotlinx.serialization.UnstableDefault
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.util.EnumChatFormatting
+import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.event.RenderWorldLastEvent
+import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.stats.StatsLoader
@@ -14,7 +16,136 @@ import java.text.NumberFormat
 import java.util.*
 
 
+@UnstableDefault
 object StatsInLobby : IModule, RenderApi.World() {
+
+    var players: MutableList<Player> = mutableListOf()
+    var tempBlueTeam: MutableList<Player> = mutableListOf()
+    var tempRedTeam: MutableList<Player> = mutableListOf()
+
+    init {
+//        EventBus.register<ClientChatReceivedEvent> {
+//            if (GameStateManager.inLobby && it.type != 2.toByte()) {
+//                val message = it.message.unformattedText.removeFormatting()
+//                println(message)
+//                if(message.contains("The game starts in 10")) {
+//                    addPlayers()
+//
+//                    val sortedPlayers = players.sortedByDescending { playerInfo ->
+//                        playerInfo.mageLevel + playerInfo.warriorLevel + playerInfo.paladinLevel + playerInfo.shamanLevel
+//                    }
+//
+//                    sortedPlayers.forEach { player ->
+//                        Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText(
+//                            "${EnumChatFormatting.GOLD}${player.name}${EnumChatFormatting.WHITE} - ${EnumChatFormatting.DARK_GRAY}[${EnumChatFormatting.GRAY}M${player.mageLevel}${EnumChatFormatting.DARK_GRAY}] " +
+//                                    "${EnumChatFormatting.DARK_GRAY}[${EnumChatFormatting.GRAY}W${player.warriorLevel}${EnumChatFormatting.DARK_GRAY}] " +
+//                                    "${EnumChatFormatting.DARK_GRAY}[${EnumChatFormatting.GRAY}P${player.paladinLevel}${EnumChatFormatting.DARK_GRAY}] " +
+//                                    "${EnumChatFormatting.DARK_GRAY}[${EnumChatFormatting.GRAY}S${player.shamanLevel}${EnumChatFormatting.DARK_GRAY}] "                        ))
+//                    }
+//
+//                }
+//
+//            }
+//        }
+//        EventBus.register<ForgeEventProcessor.EverySecond> {
+//            addPlayers()
+//            tempBlueTeam.clear()
+//            tempRedTeam.clear()
+//            val sortedPlayers = players.sortedByDescending { tempPlayer ->
+//                getWeight(tempPlayer)
+//            }
+//            sortedPlayers.forEach { player ->
+//                if(getTotalWeight(tempBlueTeam) <= getTotalWeight(tempRedTeam)) {
+//                    tempBlueTeam.add(player)
+//                } else {
+//                    tempRedTeam.add(player)
+//                }
+//            }
+//        }
+        //Renderer
+    }
+
+    class Player(
+        val name: String,
+        val mageLevel: Int,
+        val warriorLevel: Int,
+        val paladinLevel: Int,
+        val shamanLevel: Int
+    )
+
+    fun getWeight(player: Player): Int {
+        return player.mageLevel.coerceAtLeast(player.warriorLevel)
+            .coerceAtLeast(player.paladinLevel.coerceAtLeast(player.mageLevel))
+
+    }
+
+    fun getTotalWeight(team: MutableList<Player>): Int {
+        return team.sumBy {
+            getWeight(it)
+        }
+    }
+
+    fun addPlayers() {
+        players.clear()
+        thePlayer!!.sendQueue.playerInfoMap.forEach { player ->
+            StatsLoader.loadPlayerWithCallback(player.gameProfile.name) { w ->
+                val data = w.data
+                if (data != null) {
+                    players.add(
+                        Player(
+                            player.gameProfile.name,
+                            w.data.warlordsSr?.mage?.LEVEL!!,
+                            w.data.warlordsSr.warrior?.LEVEL!!,
+                            w.data.warlordsSr.paladin?.LEVEL!!,
+                            w.data.warlordsSr.shaman?.LEVEL!!
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    object Renderer : RenderApi.Gui<RenderGameOverlayEvent.Text>() {
+        init {
+            EventBus.register(::render)
+        }
+
+        override fun onRender(event: RenderGameOverlayEvent.Text) {
+            glMatrix {
+                translateX(xCenter)
+                translateY(-yCenter + 150)
+                //scale(1.0)
+                "Possible Teams".drawCentered()
+                glMatrix {
+                    translate(-50, 10)
+                    "Blue Team".drawCentered()
+                    val sortedTempBlueTeam = tempBlueTeam.sortedByDescending { tempPlayer ->
+                        getWeight(tempPlayer)
+                    }
+                    sortedTempBlueTeam.forEach { player ->
+                        translateY(-10)
+                        (player.name + "(" + getWeight(player) + ")").drawCentered()
+                    }
+                }
+                glMatrix {
+                    translate(50, 10)
+                    "Red Team".drawCentered()
+                    val sortedTempRedTeam = tempRedTeam.sortedByDescending { tempPlayer ->
+                        getWeight(tempPlayer)
+                    }
+                    sortedTempRedTeam.forEach { player ->
+                        translateY(-10)
+                        (player.name + "(" + getWeight(player) + ")").drawCentered()
+                    }
+                }
+
+            }
+        }
+
+        override fun shouldRender(e: RenderGameOverlayEvent.Text): Boolean {
+            return GameStateManager.inLobby
+        }
+    }
 
     @UnstableDefault
     override fun onRender(event: RenderWorldLastEvent) {

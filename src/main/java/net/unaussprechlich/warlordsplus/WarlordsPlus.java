@@ -65,6 +65,7 @@ public class WarlordsPlus {
         ClientCommandHandler.instance.registerCommand(new DisableAutoJoin());
         ClientCommandHandler.instance.registerCommand(new GetPartyMembers());
         ClientCommandHandler.instance.registerCommand(new OpenConfigCommand());
+        //ClientCommandHandler.instance.registerCommand(new TestCommand());
 
     }
 

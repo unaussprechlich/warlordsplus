@@ -75,7 +75,7 @@ object ForgeEventProcessor {
         EventBus.post(event)
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     fun onRender(event: RenderGameOverlayEvent.Pre) {
         if (!isDesiredGame) return
         EventBus.post(event)

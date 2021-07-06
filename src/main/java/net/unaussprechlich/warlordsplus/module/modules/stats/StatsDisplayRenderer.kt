@@ -273,9 +273,9 @@ object StatsDisplayRenderer : IModule, RenderApi.Player() {
         category = CCategory.STATS,
         id = "Stats | Display Time",
         comment = "The duration in ms displaying the StatsDisplay.",
-        def = 20000
+        def = 60000
     )
-    var displayTime = 20000
+    var displayTime = 60000
 }
 
 

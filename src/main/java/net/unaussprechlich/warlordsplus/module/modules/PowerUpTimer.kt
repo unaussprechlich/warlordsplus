@@ -87,21 +87,39 @@ object PowerUpTimer : IModule, RenderApi.World() {
     }
 
     override fun onRender(event: RenderWorldLastEvent) {
-        powerUps.values.filter { it.respawnTimer != -1 }.forEach {
-            if(thePlayer!!.getDistance(it.x, it.y, it.z) <= 150){
+        powerUps.values.forEach {
+            if (it.respawnTimer != -1) {
+                if (thePlayer!!.getDistance(it.x, it.y, it.z) <= 150) {
+                    glMatrix {
+                        translateToPos(it.x, it.y + 3, it.z)
+                        autoRotate()
+                        scaleForWorldRendering()
+                        scale(10.0)
+
+                        if (enablePowerUpTimer) {
+                            if (showClearerPowerUpTimers) GlStateManager.disableDepth()
+                            "${it.respawnTimer}".drawCentered(
+                                seeThruBlocks = !showClearerPowerUpTimers,
+                                color = if (GameStateManager.isTDM || GameStateManager.isDOM) Colors.WHITE else it.color
+                            )
+                            if (showClearerPowerUpTimers) GlStateManager.enableDepth()
+                        }
+                    }
+                }
+            } else {
                 glMatrix {
-                    translateToPos(it.x, it.y + 3, it.z)
+                    translateToPos(it.x, it.y + 4.5, it.z)
                     autoRotate()
                     scaleForWorldRendering()
                     scale(10.0)
-
                     if (enablePowerUpTimer) {
-                        if(showClearerPowerUpTimers) GlStateManager.disableDepth()
-                        "${it.respawnTimer}".drawCentered(
+                        if (showClearerPowerUpTimers) GlStateManager.disableDepth()
+                        "\u2714".drawCentered(
                             seeThruBlocks = !showClearerPowerUpTimers,
-                            color = if(GameStateManager.isTDM || GameStateManager.isDOM) Colors.WHITE else it.color
+                            color = it.color
                         )
-                        if(showClearerPowerUpTimers) GlStateManager.enableDepth()
+                        if (showClearerPowerUpTimers) GlStateManager.enableDepth()
+
                     }
                 }
             }

@@ -14,7 +14,10 @@ import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementHitCounter
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementKillParticipation
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.util.*
+import net.unaussprechlich.warlordsplus.util.DefaultFontInfo
+import net.unaussprechlich.warlordsplus.util.SpecsEnum
+import net.unaussprechlich.warlordsplus.util.TeamEnum
+import net.unaussprechlich.warlordsplus.util.removeFormatting
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.StringSelection
@@ -40,7 +43,7 @@ object StatsDisplayAfterGame : IModule {
         if (GameStateManager.notIngame) return
 
         val message = e.message.formattedText
-        if (message.removeSpaces().startsWith("Winner")) {
+        if (message.removeFormatting().contains("Winner - ")) {
             addStatsToClipboard(message)
         }
         if (GameStateManager.isIngame) {
