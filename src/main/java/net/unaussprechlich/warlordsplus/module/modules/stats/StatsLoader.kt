@@ -29,7 +29,7 @@ object StatsLoader : IModule {
     @ConfigPropertyBoolean(
         category = CCategory.STATS,
         id = "Auto Load Stats",
-        comment = "Stats from loading automatically, if false you need to shift on players to load thier stats",
+        comment = "Stats from loading automatically, if false you need to shift on players to load their stats",
         def = true
     )
     var autoLoadStats = true
@@ -55,7 +55,7 @@ object StatsLoader : IModule {
 
     data class PlayerCacheEntry(
         val data: WarlordsSrApiData?,
-        val validUntil: Long = System.currentTimeMillis() + 900000
+        val validUntil: Long = System.currentTimeMillis() + 1800000
     )
 
     private val playerCache: MutableMap<String, PlayerCacheEntry> = mutableMapOf()

@@ -23,51 +23,49 @@ object DiscordRPC : IPCListener {
 
     init {
         EventBus.register<WarlordsLeaveAndJoinEvent> {
-            if(it.isWarlords){
-                if(client.status != PipeStatus.CONNECTED && enabled){
+            if (it.isWarlords) {
+                if (client.status != PipeStatus.CONNECTED && enabled) {
                     try {
-
                         client.setListener(object : IPCListener {
                             override fun onReady(client: IPCClient) {
                                 client.sendRichPresence(builder.build())
                             }
                         })
                         client.connect()
-                        client.sendRichPresence(builder.build())
-
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
                 }
             } else {
-                if (client.status == PipeStatus.CONNECTED && !enabled) {
+                if (client.status == PipeStatus.CONNECTED && ScoreboardManager.scoreboardTitle.isNotEmpty()) {
                     try {
                         client.close()
-                    } catch (e : Exception){
+                    } catch (e: Exception) {
                         e.printStackTrace()
                     }
-
                 }
             }
         }
 
         EventBus.register<ForgeEventProcessor.EverySecond> {
             try {
-                val builder = RichPresence.Builder()
-                builder.setDetails(lobbyFormatted())
-                if (GameStateManager.inLobby) {
-                    builder.setLargeImage("warlordsicon")
-                    builder.setState(GameStateManager.getPlayersInLobby())
-                    builder.setStartTimestamp(OffsetDateTime.now())
-                    builder.setEndTimestamp(OffsetDateTime.now().plusSeconds(GameStateManager.getTimeLeftLobby()))
-                } else if (GameStateManager.isIngame) {
-                    builder.setSmallImage(ThePlayer.superSpec.specName)
-                    builder.setLargeImage(ThePlayer.warlord.classname.toLowerCase())
-                    builder.setState(cycleInGameStatus())
-                    builder.setStartTimestamp(OffsetDateTime.now())
-                    builder.setEndTimestamp(OffsetDateTime.now().plusSeconds(GameStateManager.getTimeLeftGame()))
+                if (client.status == PipeStatus.CONNECTED && enabled) {
+                    val builder = RichPresence.Builder()
+                    builder.setDetails(lobbyFormatted())
+                    if (GameStateManager.inLobby) {
+                        builder.setLargeImage("warlordsicon")
+                        builder.setState(GameStateManager.getPlayersInLobby())
+                        builder.setStartTimestamp(OffsetDateTime.now())
+                        builder.setEndTimestamp(OffsetDateTime.now().plusSeconds(GameStateManager.getTimeLeftLobby()))
+                    } else if (GameStateManager.isIngame) {
+                        builder.setSmallImage(ThePlayer.superSpec.specName)
+                        builder.setLargeImage(ThePlayer.warlord.classname.toLowerCase())
+                        builder.setState(cycleInGameStatus())
+                        builder.setStartTimestamp(OffsetDateTime.now())
+                        builder.setEndTimestamp(OffsetDateTime.now().plusSeconds(GameStateManager.getTimeLeftGame()))
+                    }
+                    client.sendRichPresence(builder.build())
                 }
-                client.sendRichPresence(builder.build())
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -81,10 +79,12 @@ object DiscordRPC : IPCListener {
     private fun lobbyFormatted(): String {
         when {
             GameStateManager.inLobby -> {
-                return if (ScoreboardManager.scoreboard[10].contains("Map:"))
-                    "In ${ScoreboardManager.scoreboard[10].substring(5)} Lobby"
-                else
-                    "In ${ScoreboardManager.scoreboard[9].substring(5)} Lobby"
+                if (ScoreboardManager.scoreboard.isNotEmpty()) {
+                    return if (ScoreboardManager.scoreboard[10].contains("Map:"))
+                        "In ${ScoreboardManager.scoreboard[10].substring(5)} Lobby"
+                    else
+                        "In ${ScoreboardManager.scoreboard[9].substring(5)} Lobby"
+                }
             }
             GameStateManager.isCTF -> {
                 return "Playing Capture the Flag"
@@ -159,7 +159,7 @@ object DiscordRPC : IPCListener {
                 }
             }
         }
-        return ""
+        return "Both Flags Safe"
     }
 
     private fun getTeamPoints(): String {
@@ -170,7 +170,7 @@ object DiscordRPC : IPCListener {
             else if (player.team == TeamEnum.RED)
                 return "On Red: ${GameStateManager.redPoints} | Blue: ${GameStateManager.bluePoints}"
         }
-        return ""
+        return "Blue: ${GameStateManager.bluePoints} | Red: ${GameStateManager.redPoints}"
     }
 
     private fun getBluePoints(): String {

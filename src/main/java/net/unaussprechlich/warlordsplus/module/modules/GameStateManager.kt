@@ -85,7 +85,6 @@ object GameStateManager : IModule {
             && Minecraft.getMinecraft().thePlayer != null
         ) return
         try {
-
             if (isWarlords != scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))) {
                 isWarlords = !isWarlords
                 EventBus.post(WarlordsLeaveAndJoinEvent(isWarlords))

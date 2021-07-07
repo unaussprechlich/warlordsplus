@@ -33,7 +33,7 @@ object SoulbindingCounter : IModule {
                 players.filter {
                     it.name == binded.name
                 }.forEach { player ->
-                    repeat(25) {
+                    repeat(20) {
                         Minecraft.getMinecraft().theWorld.spawnParticle(
                             EnumParticleTypes.SLIME,
                             player.posX + Math.random() * 2 - 1,
