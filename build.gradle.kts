@@ -11,9 +11,12 @@ val MINECRAFT_VERSION = "1.8.9-11.15.1.2318-1.8.9"
 val MOD_NAME = "warlordsplus"
 val MAIN_CLASS = "WarlordsPlus.java"
 
-val kotlinVersion = "1.3.50"
-val ktorVersion = "1.2.5"
-val coroutinesVersion = "1.3.2"
+//val kotlinVersion = "1.3.50"
+//val ktorVersion = "1.2.5"
+//val coroutinesVersion = "1.3.2"
+val kotlinVersion = "1.5.21"
+val ktorVersion = "1.5.4"
+val coroutinesVersion = "1.5.1"
 
 var modVersion = "DEV_${Math.abs(System.currentTimeMillis().hashCode())}"
 
@@ -27,7 +30,12 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
-        maven { url = uri("https://files.minecraftforge.net/maven") }
+        maven {
+            name = "jitpack"
+            url = uri("https://jitpack.io/")
+        }
+        //maven { url = uri("https://files.minecraftforge.net/maven") }
+        maven { url = uri("https://maven.minecraftforge.net/") }
         maven {
             setUrl("https://repo.spongepowered.org/maven")
         }
@@ -37,22 +45,25 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.spongepowered:mixingradle:0.6-SNAPSHOT")
-        classpath("com.github.jengelman.gradle.plugins:shadow:1.2.3")
-        classpath("net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT") {
-            exclude(group = "net.sf.trove4j", module = "trove4j")
-            exclude(group = "trove", module = "trove")
-        }
+        classpath("org.spongepowered:mixingradle:0.7-SNAPSHOT")
+        classpath("com.github.jengelman.gradle.plugins:shadow:6.1.0")
+//        classpath("net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT") {
+//            exclude(group = "net.sf.trove4j", module = "trove4j")
+//            exclude(group = "trove", module = "trove")
+//        }
+        classpath("com.github.asbyth:ForgeGradle:6f53277")
     }
 }
 
 apply(plugin = "com.github.johnrengelman.shadow")
-apply(plugin = "net.minecraftforge.gradle.forge")
+apply(plugin = "com.github.asbyth:ForgeGradle")
 apply(plugin = "org.spongepowered.mixin")
 
 plugins {
-    kotlin("jvm") version "1.3.50"
-    kotlin("plugin.serialization") version "1.3.50"
+//    kotlin("jvm") version "1.3.50"
+//    kotlin("plugin.serialization") version "1.3.50"
+    kotlin("jvm") version "1.5.21"
+    kotlin("plugin.serialization") version "1.5.30-M1"
     java
     idea
 }
@@ -111,10 +122,13 @@ repositories {
         maven { setUrl("$it/kotlinx") }
     }
     maven {
-        setUrl("https://repo.spongepowered.org/maven")
+        setUrl("https://repo.spongepowered.org/repository/maven-public/")
     }
     maven {
         setUrl("https://plugins.gradle.org/m2/")
+    }
+    maven {
+        setUrl("https://jitpack.io")
     }
 }
 
@@ -190,7 +204,7 @@ tasks {
 
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
-        kotlinOptions.includeRuntime = true
+        //kotlinOptions.includeRuntime = true
     }
 
     withType<ProcessResources> {

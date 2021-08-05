@@ -89,7 +89,6 @@ object GameStateManager : IModule {
                 isWarlords = !isWarlords
                 EventBus.post(WarlordsLeaveAndJoinEvent(isWarlords))
             }
-
             val ingame = (isWarlords
                     && (scoreboard.size == 15 || scoreboard.size == 12)
                     && (scoreboard[9].contains("Wins in:")
