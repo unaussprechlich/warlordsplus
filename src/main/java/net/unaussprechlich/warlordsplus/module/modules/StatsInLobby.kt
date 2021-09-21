@@ -1,6 +1,5 @@
 package net.unaussprechlich.warlordsplus.module.modules
 
-import kotlinx.serialization.UnstableDefault
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.util.EnumChatFormatting
@@ -16,7 +15,6 @@ import java.text.NumberFormat
 import java.util.*
 
 
-@UnstableDefault
 object StatsInLobby : IModule, RenderApi.World() {
 
     var players: MutableList<Player> = mutableListOf()
@@ -147,7 +145,6 @@ object StatsInLobby : IModule, RenderApi.World() {
         }
     }
 
-    @UnstableDefault
     override fun onRender(event: RenderWorldLastEvent) {
         if (!GameStateManager.isWarlords) return
         if (GameStateManager.isIngame) return

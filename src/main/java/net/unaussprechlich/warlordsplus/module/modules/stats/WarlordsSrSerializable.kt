@@ -1,6 +1,5 @@
 package net.unaussprechlich.warlordsplus.module.modules.stats
 
-import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -503,7 +502,6 @@ data class Paladin(
 
 @Serializable
 data class Shaman(
-    @Optional
     @SerialName("earthwarden")
     val earthwarden: Spec? = null,
     @SerialName("spiritguard")

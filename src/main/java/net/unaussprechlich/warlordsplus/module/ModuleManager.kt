@@ -1,6 +1,5 @@
 package net.unaussprechlich.warlordsplus.module
 
-import kotlinx.serialization.UnstableDefault
 import net.minecraftforge.common.MinecraftForge
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler
@@ -13,7 +12,6 @@ import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.notifi
 import net.unaussprechlich.warlordsplus.module.modules.stats.StatsDisplayRenderer
 import net.unaussprechlich.warlordsplus.module.modules.stats.StatsLoader
 
-@UnstableDefault
 object ModuleManager {
 
     private val modules = ArrayList<IModule>()

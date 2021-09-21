@@ -9,9 +9,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.serialization.UnstableDefault
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
@@ -23,7 +20,6 @@ import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 
 
-@UnstableDefault
 object StatsLoader : IModule {
 
     @ConfigPropertyBoolean(
@@ -37,13 +33,11 @@ object StatsLoader : IModule {
     val client = HttpClient {
         install(JsonFeature) {
             serializer = KotlinxSerializer(
-                Json(
-                    JsonConfiguration(
-                        strictMode = false,
-                        useArrayPolymorphism = false,
-                        encodeDefaults = false
-                    )
-                )
+                kotlinx.serialization.json.Json {
+                    ignoreUnknownKeys = true
+                    useArrayPolymorphism = false
+                    encodeDefaults = false
+                }
             )
         }
     }

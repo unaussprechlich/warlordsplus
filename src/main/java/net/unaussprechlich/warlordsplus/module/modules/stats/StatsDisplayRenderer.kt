@@ -1,6 +1,5 @@
 package net.unaussprechlich.warlordsplus.module.modules.stats
 
-import kotlinx.serialization.UnstableDefault
 import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.util.EnumChatFormatting
@@ -16,7 +15,6 @@ import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.util.Colors
 
-@UnstableDefault
 object StatsDisplayRenderer : IModule, RenderApi.Player() {
 
     val renderObjects: MutableMap<String, StatsRenderObject> = mutableMapOf()

@@ -1,15 +1,12 @@
 package net.unaussprechlich.eventbus
 
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.UnstableDefault
 import org.junit.Test
 import kotlin.test.assertEquals
 
 
 class WarlordsSrApiTest {
 
-
-    @UnstableDefault
     @Test
     fun warlordsSrApiTest() {
         runBlocking {

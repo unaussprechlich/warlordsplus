@@ -1,6 +1,5 @@
 package net.unaussprechlich.warlordsplus.commands
 
-import kotlinx.serialization.UnstableDefault
 import net.minecraft.client.Minecraft
 import net.minecraft.command.CommandBase
 import net.minecraft.command.CommandException
@@ -26,7 +25,6 @@ class GetPlayerStatsCommand : AbstractCommand() {
         return "get stats of player"
     }
 
-    @UnstableDefault
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender, parameters: Array<String>) {
         if (parameters.isNotEmpty()) {
