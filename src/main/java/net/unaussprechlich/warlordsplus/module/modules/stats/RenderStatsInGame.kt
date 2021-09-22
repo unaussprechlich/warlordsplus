@@ -1,10 +1,11 @@
-package net.unaussprechlich.warlordsplus.module.modules
+package net.unaussprechlich.warlordsplus.module.modules.stats
 
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderPlayerEvent
 import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.Colors
 
 object RenderStatsInGame : IModule, RenderApi.Player() {

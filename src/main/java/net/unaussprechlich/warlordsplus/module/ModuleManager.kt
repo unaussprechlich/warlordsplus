@@ -1,19 +1,21 @@
 package net.unaussprechlich.warlordsplus.module
 
-import kotlinx.serialization.UnstableDefault
 import net.minecraftforge.common.MinecraftForge
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler
 import net.unaussprechlich.warlordsplus.hud.HudManager
 import net.unaussprechlich.warlordsplus.ingamegui.IngameGuiManager
 import net.unaussprechlich.warlordsplus.module.modules.*
+import net.unaussprechlich.warlordsplus.module.modules.detector.ChatDetector
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector
+import net.unaussprechlich.warlordsplus.module.modules.meme.AutoTBag
+import net.unaussprechlich.warlordsplus.module.modules.meme.WeirdRendering
 import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.NotificationManager
 import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.notifications.ChatNotifications
 import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.notifications.KillFeedNotifications
-import net.unaussprechlich.warlordsplus.module.modules.stats.StatsDisplayRenderer
-import net.unaussprechlich.warlordsplus.module.modules.stats.StatsLoader
+import net.unaussprechlich.warlordsplus.module.modules.qualityoflife.*
+import net.unaussprechlich.warlordsplus.module.modules.stats.*
 
-@UnstableDefault
 object ModuleManager {
 
     private val modules = ArrayList<IModule>()
@@ -21,7 +23,7 @@ object ModuleManager {
     init {
         with(modules) {
             add(EasyConfigHandler)
-            add(ScoreboardManager)
+            add(ScoreboardDetector)
             add(GameStateManager)
             add(DamageAndHealParser)
             add(KillAssistParser)
@@ -50,8 +52,9 @@ object ModuleManager {
             add(AutoTBag)
             add(RevenantArmyTimer)
             //add(Excuses)
-            add(ImageRendering)
+            add(WeirdRendering)
             add(DamageHealingAbsorbedEndOfGame)
+            add(UpdateChecker)
         }
     }
 

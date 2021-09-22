@@ -6,6 +6,7 @@ import net.unaussprechlich.warlordsplus.hud.elements.HitEvent
 import net.unaussprechlich.warlordsplus.hud.elements.KPEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.*
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector
 import net.unaussprechlich.warlordsplus.util.*
 
 
@@ -124,7 +125,7 @@ object ThePlayer : IModule {
             try {
 
                 spec = SpecsEnum.values().firstOrNull { spec ->
-                    ScoreboardManager.scoreboardFormatted.firstOrNull {
+                    ScoreboardDetector.scoreboardFormatted.firstOrNull {
                         it.removeFormatting() contain spec.classname
                     } != null
                 } ?: SpecsEnum.NONE
@@ -174,7 +175,7 @@ object ThePlayer : IModule {
         EventBus.register<SecondEvent> {
             if (spec == SpecsEnum.NONE && GameStateManager.isDOM) {
                 spec = SpecsEnum.values().firstOrNull { spec ->
-                    ScoreboardManager.scoreboardFormatted.firstOrNull {
+                    ScoreboardDetector.scoreboardFormatted.firstOrNull {
                         it.removeFormatting() contain spec.classname
                     } != null
                 } ?: SpecsEnum.NONE

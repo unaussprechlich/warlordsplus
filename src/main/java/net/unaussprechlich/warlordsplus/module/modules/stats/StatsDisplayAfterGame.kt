@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modules
+package net.unaussprechlich.warlordsplus.module.modules.stats
 
 import net.minecraft.client.Minecraft
 import net.minecraft.util.ChatComponentText
@@ -14,6 +14,8 @@ import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementHitCounter
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementKillParticipation
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
+import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.util.DefaultFontInfo
 import net.unaussprechlich.warlordsplus.util.SpecsEnum
 import net.unaussprechlich.warlordsplus.util.TeamEnum
@@ -36,7 +38,7 @@ object StatsDisplayAfterGame : IModule {
             showStats = true
             counter = 0
         }
-        EventBus.register(::onChat)
+        EventBus.register(StatsDisplayAfterGame::onChat)
     }
 
     fun onChat(e: ClientChatReceivedEvent) {

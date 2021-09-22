@@ -32,6 +32,10 @@ abstract class MinecraftOpenGlStuff {
         val fontRenderer: FontRenderer
             get() = mc.fontRendererObj
 
+        fun isMinecraftAndThePlayerNotNull() : Boolean{
+            return Minecraft.getMinecraft() != null && Minecraft.getMinecraft().thePlayer != null
+        }
+
         fun begin() = worldrenderer.begin(
             7,
             DefaultVertexFormats.POSITION_COLOR

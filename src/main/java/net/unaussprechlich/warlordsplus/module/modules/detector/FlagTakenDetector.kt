@@ -29,7 +29,7 @@ object FlagTakenDetector : IModule {
                             EventBus.post(FlagTakenEvent(player, false))
                             EventBus.post(FlagCapturedEvent(player))
                         }
-                        textMessage.contains("returned") -> {
+                        textMessage.contains("has returned") -> {
                             val player = textMessage.substring(0, textMessage.indexOf("has") - 1)
                             EventBus.post(FlagReturnedEvent(player))
                         }

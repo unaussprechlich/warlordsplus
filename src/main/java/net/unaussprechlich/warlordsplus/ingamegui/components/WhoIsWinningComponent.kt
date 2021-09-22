@@ -5,7 +5,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector
 import net.unaussprechlich.warlordsplus.util.fdiv
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import net.unaussprechlich.warlordsplus.util.removeSpaces
@@ -55,18 +55,18 @@ object WhoIsWinningComponent : AbstractRenderComponent(RenderGameOverlayEvent.El
 
     fun update(e: TickEvent.ClientTickEvent) {
         try {
-            if (ScoreboardManager.scoreboardFormatted.size != 15) return
+            if (ScoreboardDetector.scoreboardFormatted.size != 15) return
 
             val blue = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardFormatted[12]
+                ScoreboardDetector.scoreboardFormatted[12]
                     .replace(" ", "").replace("\uD83D\uDCA3", "")
             )
             val red = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardFormatted[11]
+                ScoreboardDetector.scoreboardFormatted[11]
                     .replace(" ", "").replace("\uD83D\uDC7D", "")
             )
             val time = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardFormatted[9]
+                ScoreboardDetector.scoreboardFormatted[9]
                     .replace(" ", "").replace("\uD83D\uDC0D", ""))
 
             timeToWin = time.substring(time.indexOf(":") + 1)
@@ -74,9 +74,9 @@ object WhoIsWinningComponent : AbstractRenderComponent(RenderGameOverlayEvent.El
             bluePoints = blue.substring(blue.indexOf(":") + 1, blue.indexOf("/")).toInt()
             redPoints = red.substring(red.indexOf(":") + 1,red.indexOf("/")).toInt()
 
-            if(ScoreboardManager.scoreboardFormatted[6].contains("Flag")){
-                val bFlag = ScoreboardManager.scoreboardFormatted[6].removeFormatting().removeSpaces()
-                val rFlag = ScoreboardManager.scoreboardFormatted[7].removeFormatting().removeSpaces()
+            if(ScoreboardDetector.scoreboardFormatted[6].contains("Flag")){
+                val bFlag = ScoreboardDetector.scoreboardFormatted[6].removeFormatting().removeSpaces()
+                val rFlag = ScoreboardDetector.scoreboardFormatted[7].removeFormatting().removeSpaces()
 
                 redFlag = rFlag.substring(rFlag.indexOf(":") + 1)
                 blueFlag = bFlag.substring(bFlag.indexOf(":") + 1)

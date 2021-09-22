@@ -6,7 +6,7 @@ import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyInt
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.module.modules.ChatDetector
+import net.unaussprechlich.warlordsplus.module.modules.detector.ChatDetector
 import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.AbstractNotification
 import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.NotificationManager
 import net.unaussprechlich.warlordsplus.util.Colors

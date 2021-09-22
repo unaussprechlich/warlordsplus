@@ -12,6 +12,7 @@ import net.unaussprechlich.warlordsplus.OtherPlayers
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 import java.time.OffsetDateTime
 
@@ -37,7 +38,7 @@ object DiscordRPC : IPCListener {
                     }
                 }
             } else {
-                if (client.status == PipeStatus.CONNECTED && ScoreboardManager.scoreboardTitle.isNotEmpty()) {
+                if (client.status == PipeStatus.CONNECTED && ScoreboardDetector.scoreboardTitle.isNotEmpty()) {
                     try {
                         client.close()
                     } catch (e: Exception) {
@@ -79,11 +80,11 @@ object DiscordRPC : IPCListener {
     private fun lobbyFormatted(): String {
         when {
             GameStateManager.inLobby -> {
-                if (ScoreboardManager.scoreboard.isNotEmpty()) {
-                    return if (ScoreboardManager.scoreboard[10].contains("Map:"))
-                        "In ${ScoreboardManager.scoreboard[10].substring(5)} Lobby"
+                if (ScoreboardDetector.scoreboard.isNotEmpty()) {
+                    return if (ScoreboardDetector.scoreboard[10].contains("Map:"))
+                        "In ${ScoreboardDetector.scoreboard[10].substring(5)} Lobby"
                     else
-                        "In ${ScoreboardManager.scoreboard[9].substring(5)} Lobby"
+                        "In ${ScoreboardDetector.scoreboard[9].substring(5)} Lobby"
                 }
             }
             GameStateManager.isCTF -> {

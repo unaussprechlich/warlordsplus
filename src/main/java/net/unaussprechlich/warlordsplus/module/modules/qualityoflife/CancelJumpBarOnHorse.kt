@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modules
+package net.unaussprechlich.warlordsplus.module.modules.qualityoflife
 
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.GuiIngameForge

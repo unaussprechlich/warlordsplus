@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modules
+package net.unaussprechlich.warlordsplus.module.modules.detector
 
 import net.minecraft.client.Minecraft
 import net.minecraft.scoreboard.ScorePlayerTeam
@@ -12,7 +12,7 @@ import java.util.*
  * ScoreboardManager Created by Alexander on 03.05.2020.
  * Description:
  */
-object ScoreboardManager : IModule{
+object ScoreboardDetector : IModule{
     var scoreboardTitle = ""
         private set
 
@@ -37,8 +37,8 @@ object ScoreboardManager : IModule{
             for (score in scoreboard.getSortedScores(sidebarObjective)) {
                 val team = scoreboard.getPlayersTeam(score.playerName)
                 val value = ScorePlayerTeam.formatPlayerName(team, score.playerName)
-                this.scoreboardFormatted.add(value)
-                this.scoreboard.add(value.removeFormatting())
+                scoreboardFormatted.add(value)
+                ScoreboardDetector.scoreboard.add(value.removeFormatting())
             }
 
         } catch (e: Exception) {

@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.OpenGlHelper
 import net.minecraft.client.renderer.WorldRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.ResourceLocation
 import net.unaussprechlich.renderapi.util.IResourceLocationProvider
 import net.unaussprechlich.renderapi.util.MinecraftOpenGlStuff
+import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.notifications.ChatNotifications
 import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import org.lwjgl.opengl.GL11
@@ -20,6 +22,10 @@ import org.lwjgl.opengl.GL11
 abstract class RenderBasics : MinecraftOpenGlStuff() {
 
     companion object {
+
+        final val STRING_SEPERATOR= "\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC" +
+                "\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC" +
+                "\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC"
 
         /**
          * Scale the renderer to be able to draw inside the world
@@ -127,6 +133,9 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
 
         fun String.height(): Double = 8.0
 
+        fun String.listFormattedStringToWidth(width: Int) =
+            fontRenderer.listFormattedStringToWidth(this, width)
+
         fun String.width(): Int =
             fontRenderer.getStringWidth(this)
 
@@ -211,6 +220,25 @@ abstract class RenderBasics : MinecraftOpenGlStuff() {
             translate(padding.toDouble(), padding.toDouble(), 0.0)
             draw()
             translate(-padding.toDouble(), -padding.toDouble(), 0.0)
+        }
+
+        fun String.drawWithBackgroundAndWidth(backgroundColor: Colors, width: Int, alpha: Int = 255, padding: Int= 1) : Int
+            = drawWithBackgroundAndWidth(backgroundColor, width, alpha, padding, padding, padding, padding)
+
+        fun String.drawWithBackgroundAndWidth(backgroundColor: Colors, width: Int, alpha: Int = 255, paddingLeft: Int = 1, paddingRight : Int = 1, paddingTop : Int = 1, paddingBottom : Int= 1) : Int{
+
+            val renderStrings = this.listFormattedStringToWidth(width - paddingLeft - paddingRight)
+
+            renderRect(width, renderStrings.size * 9 + paddingTop + paddingBottom, backgroundColor, alpha)
+
+            translateY(- paddingTop)
+            translateX(paddingLeft) {
+                renderStrings.forEach { s ->
+                    s.draw()
+                    translateY(-9)
+                }
+            }
+            return renderStrings.size * 9 + paddingTop + paddingBottom
         }
 
         fun String.drawCenteredWithBackground(backgroundColor: Colors) {

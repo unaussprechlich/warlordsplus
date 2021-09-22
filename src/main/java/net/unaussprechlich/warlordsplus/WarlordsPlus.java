@@ -1,8 +1,11 @@
 package net.unaussprechlich.warlordsplus;
 
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -12,7 +15,7 @@ import net.unaussprechlich.eventbus.ForgeEventProcessor;
 import net.unaussprechlich.warlordsplus.commands.*;
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler;
 import net.unaussprechlich.warlordsplus.module.ModuleManager;
-
+import org.lwjgl.input.Keyboard;
 
 @SideOnly(Side.CLIENT)
 @Mod(
@@ -26,9 +29,11 @@ import net.unaussprechlich.warlordsplus.module.ModuleManager;
 public class WarlordsPlus {
 
     public static final String MODID = "warlordsplus";
+    public static final String MOD_NAME_BRANDING = EnumChatFormatting.GOLD + "Warlords" + EnumChatFormatting.RED + "Plus";
     public static final String VERSION = "@VERSION@";
-    public static final boolean IS_DEBUGGING = false;
     public static Configuration CONFIG;
+    public static final boolean IS_DEBUGGING = getModVersion().startsWith("DEV_");
+    public static KeyBinding DEBUG_KEY = null;
 
     /**
      * Wrapper to prevent the Kotlin compiler from replacing the the reference to
@@ -53,6 +58,11 @@ public class WarlordsPlus {
         MinecraftForge.EVENT_BUS.register(this);
         ForgeEventProcessor.INSTANCE.init();
         ModuleManager.INSTANCE.register();
+
+        if(IS_DEBUGGING){
+            DEBUG_KEY = new KeyBinding("key.debug", Keyboard.KEY_F8, "key.debug");
+            ClientRegistry.registerKeyBinding(DEBUG_KEY);
+        }
 
         ClientCommandHandler.instance.registerCommand(new ChangeTargetCommand());
         ClientCommandHandler.instance.registerCommand(new GetPlayerStatsCommand());

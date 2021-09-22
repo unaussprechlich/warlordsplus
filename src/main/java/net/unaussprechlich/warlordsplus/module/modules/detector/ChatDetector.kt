@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modules
+package net.unaussprechlich.warlordsplus.module.modules.detector
 
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.ClientChatReceivedEvent
@@ -24,7 +24,7 @@ object ChatDetector : IModule {
             add(RedShoutChatDetector)
         }
 
-        EventBus.register(::onChat)
+        EventBus.register(ChatDetector::onChat)
     }
 
     /**
@@ -191,13 +191,15 @@ object ChatDetector : IModule {
         abstract fun parseMessage(msg: String): String
 
         fun handle(msg: String, msgFormatted: String) {
-            EventBus.post(ChatMessageEvent(
+            EventBus.post(
+                ChatMessageEvent(
                     type,
                     parsePlayerName(msg),
                     parsePlayerNameFormatted(msgFormatted),
                     parseMessage(msg),
                     parseRank(msg)
-            ))
+            )
+            )
         }
 
         private fun parseRank(msg: String): HypixelRank {

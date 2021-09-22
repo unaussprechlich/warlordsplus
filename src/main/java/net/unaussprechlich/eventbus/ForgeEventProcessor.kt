@@ -13,7 +13,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.warlordsplus.OtherPlayers
+import net.unaussprechlich.warlordsplus.WarlordsPlus
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
+import org.lwjgl.input.Keyboard
 
 object ForgeEventProcessor {
 
@@ -107,8 +109,14 @@ object ForgeEventProcessor {
     }
 
     @SubscribeEvent
-    fun onKeyPress(event: InputEvent.KeyInputEvent?) {
+    fun onKeyPress(event: InputEvent.KeyInputEvent) {
+
+        if(WarlordsPlus.IS_DEBUGGING && WarlordsPlus.DEBUG_KEY.isPressed){
+            EventBus.post(DebugKeyPressedEvent())
+        }
         if (!isDesiredGame) return
         EventBus.post(event)
     }
+
+    class DebugKeyPressedEvent : InputEvent.KeyInputEvent()
 }

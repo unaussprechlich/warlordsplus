@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modules
+package net.unaussprechlich.warlordsplus.module.modules.meme
 
 import net.minecraft.block.Block
 import net.minecraft.block.state.IBlockState
@@ -11,6 +11,7 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 
 
 object AutoTBag : IModule {

@@ -1,6 +1,5 @@
 package net.unaussprechlich.warlordsplus.commands
 
-import kotlinx.serialization.UnstableDefault
 import net.minecraft.client.Minecraft
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommandSender
@@ -78,7 +77,6 @@ class GetPartyMembers : AbstractCommand() {
         return "gets party members"
     }
 
-    @UnstableDefault
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender, parameters: Array<String>) {
         occurrences = 0

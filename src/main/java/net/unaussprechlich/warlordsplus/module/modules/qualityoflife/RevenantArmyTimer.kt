@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modules
+package net.unaussprechlich.warlordsplus.module.modules.qualityoflife
 
 import net.minecraft.client.Minecraft
 import net.minecraft.util.ChatComponentText
@@ -10,6 +10,9 @@ import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
+import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
+import net.unaussprechlich.warlordsplus.module.modules.SecondEvent
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object RevenantArmyTimer : IModule {

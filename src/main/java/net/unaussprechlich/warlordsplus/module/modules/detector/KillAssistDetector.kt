@@ -6,6 +6,7 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.hud.elements.HudElementRespawnTimer
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object KillAssistParser : IModule {
@@ -21,8 +22,8 @@ object KillAssistParser : IModule {
             var respawn = -1
             when {
                 GameStateManager.isCTF -> {
-                    val colon = ScoreboardManager.scoreboardFormatted[9].lastIndexOf(":")
-                    val after = ScoreboardManager.scoreboardFormatted[9].substring(colon + 1, colon + 3)
+                    val colon = ScoreboardDetector.scoreboardFormatted[9].lastIndexOf(":")
+                    val after = ScoreboardDetector.scoreboardFormatted[9].substring(colon + 1, colon + 3)
                     try {
                         respawn = after.toInt() % 12
                         if (after.toInt() % 12 <= 4) {

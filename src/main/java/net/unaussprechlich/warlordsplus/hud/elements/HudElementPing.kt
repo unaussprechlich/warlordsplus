@@ -7,7 +7,7 @@ import net.minecraft.client.network.OldServerPinger
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
-import net.unaussprechlich.warlordsplus.module.modules.Excuses
+import net.unaussprechlich.warlordsplus.module.modules.meme.Excuses
 
 
 object HudElementPing : AbstractHudElement() {
