@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modules
+package net.unaussprechlich.warlordsplus.module.modules.qualityoflife
 
 import net.minecraft.client.Minecraft
 import net.minecraft.util.EnumChatFormatting
@@ -12,6 +12,7 @@ import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object SoulbindingCounter : IModule {
@@ -19,8 +20,8 @@ object SoulbindingCounter : IModule {
     private var binded: MutableList<PlayerBinded> = mutableListOf()
 
     init {
-        EventBus.register(::onClientTick)
-        EventBus.register(::onChat)
+        EventBus.register(SoulbindingCounter::onClientTick)
+        EventBus.register(SoulbindingCounter::onChat)
         Renderer
         RenderPlayer
     }

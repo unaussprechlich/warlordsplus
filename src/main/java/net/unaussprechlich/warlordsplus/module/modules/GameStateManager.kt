@@ -8,9 +8,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.eventbus.IEvent
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboard
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardFormatted
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardTitle
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector.scoreboard
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector.scoreboardFormatted
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector.scoreboardTitle
 import net.unaussprechlich.warlordsplus.util.contain
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 

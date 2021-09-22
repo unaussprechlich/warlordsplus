@@ -11,7 +11,7 @@ import net.unaussprechlich.warlordsplus.hud.AbstractHudElement
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager.isIngame
 import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardFormatted
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector.scoreboardFormatted
 import net.unaussprechlich.warlordsplus.module.modules.SecondEvent
 
 /**

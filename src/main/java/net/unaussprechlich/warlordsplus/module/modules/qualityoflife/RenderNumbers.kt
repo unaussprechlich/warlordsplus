@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modules
+package net.unaussprechlich.warlordsplus.module.modules.qualityoflife
 
 
 import net.minecraft.client.renderer.GlStateManager.*
@@ -11,6 +11,7 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.module.modules.*
 import org.lwjgl.opengl.GL11
 import kotlin.math.abs
 import kotlin.math.exp
@@ -26,11 +27,11 @@ object RenderNumbers : IModule {
     }
 
     init {
-        EventBus.register<DamageDoneEvent>(::addPlayerEvent)
-        EventBus.register<HealingGivenEvent>(::addPlayerEvent)
-        EventBus.register<DamageAbsorbedEvent>(::addPlayerEvent)
-        EventBus.register<EnergyStolenEvent>(::addPlayerEvent)
-        EventBus.register<EnergyGivenEvent>(::addPlayerEvent)
+        EventBus.register<DamageDoneEvent>(RenderNumbers::addPlayerEvent)
+        EventBus.register<HealingGivenEvent>(RenderNumbers::addPlayerEvent)
+        EventBus.register<DamageAbsorbedEvent>(RenderNumbers::addPlayerEvent)
+        EventBus.register<EnergyStolenEvent>(RenderNumbers::addPlayerEvent)
+        EventBus.register<EnergyGivenEvent>(RenderNumbers::addPlayerEvent)
     }
 
     /**

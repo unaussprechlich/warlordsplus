@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modules
+package net.unaussprechlich.warlordsplus.module.modules.meme
 
 import net.unaussprechlich.warlordsplus.module.IModule
 

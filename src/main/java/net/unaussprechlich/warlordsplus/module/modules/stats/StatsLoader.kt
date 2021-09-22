@@ -1,11 +1,9 @@
 package net.unaussprechlich.warlordsplus.module.modules.stats
 
-import io.ktor.client.*
 import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
 import io.ktor.client.request.*
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -18,6 +16,7 @@ import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
+import net.unaussprechlich.http.HttpModule
 
 
 object StatsLoader : IModule {
@@ -29,18 +28,6 @@ object StatsLoader : IModule {
         def = true
     )
     var autoLoadStats = true
-
-    val client = HttpClient {
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(
-                kotlinx.serialization.json.Json {
-                    ignoreUnknownKeys = true
-                    useArrayPolymorphism = false
-                    encodeDefaults = false
-                }
-            )
-        }
-    }
 
     init {
         EventBus.register(this::onClientTick)
@@ -91,7 +78,7 @@ object StatsLoader : IModule {
 
     private suspend fun statsRequest(name: String): PlayerCacheEntry {
         try {
-            val result = client.get<WarlordsSrApiResponse>("https://warlordssr.unaussprechlich.net/api/$name")
+            val result = HttpModule.WarlordsSrApi.getWarlordsSrResponse(name)
             println("Loaded results for $name")
 
             currentlyLoadingMutex.withLock {
@@ -114,7 +101,7 @@ object StatsLoader : IModule {
     private fun loadPlayer(name: String) {
         if (playerCache.containsKey(name)) return
 
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             currentlyLoadingMutex.lock()
             if (!currentlyLoading.contains(name)) {
                 currentlyLoading.add(name)
@@ -131,7 +118,7 @@ object StatsLoader : IModule {
             callback(playerCache[name]!!)
             return
         }
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val result = statsRequest(name)
             playerCache[name] = result
             callback(result)

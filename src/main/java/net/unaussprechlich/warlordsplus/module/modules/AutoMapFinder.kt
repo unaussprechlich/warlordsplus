@@ -11,7 +11,7 @@ import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager.scoreboardFormatted
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector.scoreboardFormatted
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
 object AutoMapFinder : IModule {

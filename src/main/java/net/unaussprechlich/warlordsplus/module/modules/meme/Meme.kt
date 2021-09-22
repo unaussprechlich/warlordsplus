@@ -1,4 +1,4 @@
-package net.unaussprechlich.warlordsplus.module.modules
+package net.unaussprechlich.warlordsplus.module.modules.meme
 
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderWorldLastEvent
@@ -8,6 +8,8 @@ import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.config.CCategory
 import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.module.modules.EnergyReceivedEvent
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.ImageRegistry
 import net.unaussprechlich.warlordsplus.util.SoundsRegistry
 import net.unaussprechlich.warlordsplus.util.removeFormatting
@@ -20,7 +22,7 @@ object Meme : IModule {
         EventBus.register<EnergyReceivedEvent> {
             //playSoundForEvent(Sounds.MEME_CHATURBATE_TIP_SOUND_TINY)
         }
-        EventBus.register(::onChat)
+        EventBus.register(Meme::onChat)
     }
 
     private fun playSoundForEvent(sound: SoundsRegistry) {

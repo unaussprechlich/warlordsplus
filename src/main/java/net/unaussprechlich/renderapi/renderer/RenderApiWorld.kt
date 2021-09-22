@@ -3,21 +3,11 @@ package net.unaussprechlich.renderapi.renderer
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.unaussprechlich.eventbus.EventBus
-import net.unaussprechlich.mixin.AccessorRenderManager
 import net.unaussprechlich.renderapi.RenderApi
 import org.lwjgl.opengl.GL11
 
 
 abstract class RenderApiWorld : RenderApi<RenderWorldLastEvent>() {
-
-    companion object {
-        val renderPosX: Double
-            get() = (renderManager as AccessorRenderManager).renderPosX
-        val renderPosY: Double
-            get() = (renderManager as AccessorRenderManager).renderPosY
-        val renderPosZ: Double
-            get() = (renderManager as AccessorRenderManager).renderPosZ
-    }
 
     init {
         EventBus.register(::render)

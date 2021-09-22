@@ -1,7 +1,7 @@
 package net.unaussprechlich.warlordsplus.commands
 
 import net.minecraft.command.ICommandSender
-import net.unaussprechlich.warlordsplus.module.modules.StatsDisplayAfterGame
+import net.unaussprechlich.warlordsplus.module.modules.stats.StatsDisplayAfterGame
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
 import java.util.*
