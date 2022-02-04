@@ -9,6 +9,7 @@ import net.unaussprechlich.warlordsplus.module.modules.*
 import net.unaussprechlich.warlordsplus.module.modules.detector.ChatDetector
 import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector
 import net.unaussprechlich.warlordsplus.module.modules.meme.AutoTBag
+import net.unaussprechlich.warlordsplus.module.modules.meme.InvisMode
 import net.unaussprechlich.warlordsplus.module.modules.meme.WeirdRendering
 import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.NotificationManager
 import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.notifications.ChatNotifications
@@ -55,6 +56,7 @@ object ModuleManager {
             add(WeirdRendering)
             add(DamageHealingAbsorbedEndOfGame)
             add(UpdateChecker)
+            //add(InvisMode)
         }
     }
 

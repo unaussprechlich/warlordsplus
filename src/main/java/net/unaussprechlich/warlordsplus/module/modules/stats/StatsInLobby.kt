@@ -233,6 +233,8 @@ object StatsInLobby : IModule, RenderApi.World() {
         }
 
         try {
+            if (GameStateManager.isWarlords2) return
+
             Minecraft.getMinecraft().theWorld.getLoadedEntityList().filter {
                 it is EntityArmorStand && it.customNameTag.contains("Shaman") || it.customNameTag.contains("Mage") || it.customNameTag.contains(
                     "Warrior"

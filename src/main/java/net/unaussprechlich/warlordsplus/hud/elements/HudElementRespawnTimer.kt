@@ -97,12 +97,12 @@ object HudElementRespawnTimer : AbstractHudElement() {
         }
 
         override fun shouldRender(e: RenderGameOverlayEvent.Text): Boolean {
-            return isIngame
+            return isIngame && !GameStateManager.isWarlords2
         }
     }
 
     override fun isVisible(): Boolean {
-        return isIngame
+        return isIngame && !GameStateManager.isWarlords2
     }
 
     override fun isEnabled(): Boolean {

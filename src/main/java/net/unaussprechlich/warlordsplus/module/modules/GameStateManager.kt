@@ -27,6 +27,9 @@ object GameStateManager : IModule {
     var isWarlords: Boolean = false
         private set
 
+    var isWarlords2: Boolean = false
+        private set
+
     var isCTF: Boolean = false
         private set
 
@@ -85,9 +88,14 @@ object GameStateManager : IModule {
             && Minecraft.getMinecraft().thePlayer != null
         ) return
         try {
-            if (isWarlords != scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))) {
+            if (isWarlords != (scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*"))) || scoreboardTitle.matches(
+                    Regex(".*I.*M.*M.*O.*R*T.*A.*L.*S.*")
+                )
+            ) {
                 isWarlords = !isWarlords
                 EventBus.post(WarlordsLeaveAndJoinEvent(isWarlords))
+                isWarlords2 =
+                    scoreboardTitle.matches(Regex(".*I.*M.*M.*O.*R*T.*A.*L.*S.*")) || scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*2.*.\\.*0"))
             }
             val ingame = (isWarlords
                     && (scoreboard.size == 15 || scoreboard.size == 12)

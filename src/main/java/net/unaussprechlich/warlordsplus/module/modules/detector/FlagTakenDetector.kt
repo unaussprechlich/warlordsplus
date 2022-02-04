@@ -33,9 +33,9 @@ object FlagTakenDetector : IModule {
                             val player = textMessage.substring(0, textMessage.indexOf("has") - 1)
                             EventBus.post(FlagReturnedEvent(player))
                         }
-                        textMessage.contains("Sending you to") && GameStateManager.isCTF -> {
-                            val player = Minecraft.getMinecraft().thePlayer.name;
-                            EventBus.post(FlagTakenEvent(player, false));
+                        textMessage.contains("Sending you to") -> {
+                            val player = Minecraft.getMinecraft().thePlayer.name
+                            EventBus.post(FlagTakenEvent(player, false))
                         }
                     }
 

@@ -92,6 +92,7 @@ object PowerUpTimer : IModule, RenderApi.World() {
     override fun onRender(event: RenderWorldLastEvent) {
         powerUps.values.forEach {
             if (it.respawnTimer != -1) {
+                if (GameStateManager.isWarlords2) return
                 if (thePlayer!!.getDistance(it.x, it.y, it.z) <= 150) {
                     glMatrix {
                         translateToPos(it.x, it.y + 3, it.z)
