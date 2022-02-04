@@ -24,11 +24,13 @@ object RevenantArmyTimer : IModule {
             armyTime.clear()
         }
         EventBus.register<ClientChatReceivedEvent> {
-            val message = it.message.unformattedText.removeFormatting()
-            if (message.contains("Undying Army protects you for") || message.contains("Your Undying Army is protecting")) {
-                armyTime.add(10)
-            } else if (message.contains("Undying Army revived you with temporary health") || message.startsWith("Winner")) {
-                armyTime.clear()
+            if (!GameStateManager.isWarlords2) {
+                val message = it.message.unformattedText.removeFormatting()
+                if (message.contains("Undying Army protects you for") || message.contains("Your Undying Army is protecting")) {
+                    armyTime.add(10)
+                } else if (message.contains("Undying Army revived you with temporary health") || message.startsWith("Winner")) {
+                    armyTime.clear()
+                }
             }
         }
         EventBus.register<SecondEvent> {

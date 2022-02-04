@@ -55,6 +55,7 @@ object ModuleManager {
             add(WeirdRendering)
             add(DamageHealingAbsorbedEndOfGame)
             add(UpdateChecker)
+            //add(InvisMode)
         }
     }
 

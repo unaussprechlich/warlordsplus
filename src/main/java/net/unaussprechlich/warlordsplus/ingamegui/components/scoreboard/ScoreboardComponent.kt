@@ -229,7 +229,7 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
                     )
                 } ${if (p.name == Minecraft.getMinecraft().thePlayer.name) ThePlayer.spec.icon else p.spec.icon}".draw()
                 translateX(xName)
-                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${p.respawn} " else p.team.color.toString()}${if (p.left) "${EnumChatFormatting.GRAY}${EnumChatFormatting.STRIKETHROUGH}" else ""}${if (p.name == Minecraft.getMinecraft().thePlayer.name) EnumChatFormatting.GREEN else ""}${p.name}".draw()
+                "${drawFlag()}${if (p.isDead) "${EnumChatFormatting.GRAY}${if (!GameStateManager.isWarlords2) "${p.respawn} " else ""}" else p.team.color.toString()}${if (p.left) "${EnumChatFormatting.GRAY}${EnumChatFormatting.STRIKETHROUGH}" else ""}${if (p.name == Minecraft.getMinecraft().thePlayer.name) EnumChatFormatting.GREEN else ""}${p.name}".draw()
 //                if (p.name == "sumSmash") {
 //                    translate(xKills - 50) {
 //                        renderImage(9.0, 9.0, ImageRegistry.MEME_WEIRDCHAMP)
