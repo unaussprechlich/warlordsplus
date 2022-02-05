@@ -118,7 +118,8 @@ dependencies {
     testImplementation(kotlin("test", kotlinVersion))
     testImplementation(kotlin("test-junit", kotlinVersion))
 
-    embed("com.jagrosh:DiscordIPC:0.4")
+    //embed("com.jagrosh:DiscordIPC:0.4")
+    //implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.17.1")
 }
 
 tasks {
