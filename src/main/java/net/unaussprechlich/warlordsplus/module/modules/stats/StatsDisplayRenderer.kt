@@ -28,7 +28,7 @@ object StatsDisplayRenderer : IModule, RenderApi.Player() {
     }
 
     override fun shouldRender(event: RenderPlayerEvent.Post): Boolean {
-        return GameStateManager.isWarlords && !GameStateManager.isIngame
+        return GameStateManager.isWarlords && !GameStateManager.isIngame && !GameStateManager.isWarlords2
     }
 
     private fun onClientTick(e: TickEvent.ClientTickEvent) {
