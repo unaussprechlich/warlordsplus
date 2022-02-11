@@ -139,10 +139,10 @@ enum class SpecsEnum(
     ),
     ASSASSIN(
         "Assassin",
-        "Chain Lightning",
-        "Windfury Weapon",
-        "Lightning Rod",
-        "Capacitor Totem",
+        "Incendiary Curse",
+        "Blinding Assault",
+        "Soul Switch",
+        "Order Of Eviscerate",
         "Judgement",
         SpecTypeEnum.DAMAGE
     ),

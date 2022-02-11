@@ -172,7 +172,7 @@ object OtherPlayers : IModule {
                 if (!GameStateManager.isWarlords2) {
                     if (brokenTab < System.currentTimeMillis()) {
                         Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}LOOKS LIKE YOUR TAB IS BUGGED PLEASE REJOIN THE LOBBY - /hub - /rejoin"))
-                        brokenTab = System.currentTimeMillis() + 2000
+                        brokenTab = System.currentTimeMillis() + 3000
                     }
                 }
 
@@ -203,7 +203,7 @@ object OtherPlayers : IModule {
         }.forEach { playersMap[it.name] = it }
 
         playersMap.filter {
-            it.value.spec == SpecsEnum.NONE
+            it.value.spec == SpecsEnum.NONE || GameStateManager.isWarlords2
         }.forEach { player ->
             val players = Minecraft.getMinecraft().theWorld.playerEntities
             players.filter {
@@ -251,6 +251,32 @@ object OtherPlayers : IModule {
                             ?: SpecsEnum.NONE
                     }
                 }
+            }
+        }
+
+        //update the player if their class/team changed (warlords 2)
+        networkPlayers.filter {
+            //must already be in game and must not be null
+            playersMap.containsKey(it.gameProfile.name) && playersMap[it.gameProfile.name] != null
+        }.filter {
+            //class or team must be different
+            playersMap[it.gameProfile.name]!!.warlord != WarlordsEnum.values()
+                .first { w -> it.playerTeam.colorPrefix contain w.shortName } ||
+                    playersMap[it.gameProfile.name]!!.team != TeamEnum.values()
+                .first { t -> it.playerTeam.colorPrefix.contains(t.color.toString()) }
+        }.forEach {
+            val player = playersMap[it.gameProfile.name]
+            if (player != null) {
+                player.warlord = WarlordsEnum.values().first { w -> it.playerTeam.colorPrefix contain w.shortName }
+                player.spec = SpecsEnum.NONE
+                player.team = TeamEnum.values().first { t -> it.playerTeam.colorPrefix.contains(t.color.toString()) }
+
+                val m = numberPattern.matcher(it.playerTeam.colorSuffix.removeFormatting())
+                player.level = if (!m.find()) 0 else {
+                    m.group().toInt()
+                }
+
+                player.prestiged = it.playerTeam.colorSuffix.contains("${EnumChatFormatting.GOLD}")
             }
         }
 
