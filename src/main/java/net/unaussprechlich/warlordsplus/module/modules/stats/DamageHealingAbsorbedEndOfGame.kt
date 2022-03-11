@@ -3,6 +3,7 @@ package net.unaussprechlich.warlordsplus.module.modules.stats
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.module.IModule
+import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.module.modules.ResetEvent
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 
@@ -78,111 +79,133 @@ object DamageHealingAbsorbedEndOfGame : IModule {
         }
         EventBus.register<ClientChatReceivedEvent> { e ->
             if (e.message.formattedText.removeFormatting().trimStart().startsWith("Damage:")) {
+//                println(e.message)
+//                println(e.message.siblings[1].chatStyle.chatHoverEvent.value.formattedText)
+//                println(e.message.siblings[3].chatStyle.chatHoverEvent.value.formattedText)
+//                println(e.message.siblings[5].chatStyle.chatHoverEvent.value.formattedText)
                 println(e.message)
-                println(e.message.siblings[1].chatStyle.chatHoverEvent.value.formattedText)
-                println(e.message.siblings[3].chatStyle.chatHoverEvent.value.formattedText)
-                println(e.message.siblings[5].chatStyle.chatHoverEvent.value.formattedText)
-
-                val damageUnformatted = e.message.siblings[1].chatStyle.chatHoverEvent.value.formattedText
-                val healingUnformatted = e.message.siblings[3].chatStyle.chatHoverEvent.value.formattedText
-                val absorbedUnformatted = e.message.siblings[5].chatStyle.chatHoverEvent.value.formattedText
-
+                var damageUnformatted = e.message.siblings[1].chatStyle.chatHoverEvent.value.formattedText
+                var healingUnformatted = e.message.siblings[3].chatStyle.chatHoverEvent.value.formattedText
+                var absorbedUnformatted = e.message.siblings[5].chatStyle.chatHoverEvent.value.formattedText
+                println(damageUnformatted)
+                println(damageUnformatted)
+                println(absorbedUnformatted)
+                if (GameStateManager.isWarlords2) {
+                    damageUnformatted = damageUnformatted.substring(damageUnformatted.indexOf("\n") + 2)
+                    healingUnformatted = healingUnformatted.substring(healingUnformatted.indexOf("\n") + 2)
+                    absorbedUnformatted = absorbedUnformatted.substring(absorbedUnformatted.indexOf("\n") + 2)
+                }
                 val lastMinutePosition = damageUnformatted.lastIndexOf("Minute")
                 val minuteString = damageUnformatted.substring(lastMinutePosition)
                 minutes = minuteString.substring(minuteString.indexOf("e") + 2, minuteString.indexOf(":")).toInt()
-                if (minutes == 16) {
-                    minutes--
-                }
 
-                var damageString = damageUnformatted
-                var healingString = healingUnformatted
-                var absorbedString = absorbedUnformatted
-                var damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 12)
-                var healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 12)
-                var absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 12)
-                var damageAmount: String
-                var healingAmount: String
-                var absorbedAmount: String
-                for (x in 0 until minutes) {
-                    if (x >= 9) {
-                        damageAmount = damageMinutePosition.substring(
-                            0,
-                            damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
-                        )
-                        damageString = damageMinutePosition.substring(
-                            damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
-                        )
-                        damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 13)
+                if (GameStateManager.isWarlords2) {
+                    damageUnformatted.split("\n").forEach {
+                        damage.add(it.substring(it.indexOf(":") + 4).replace(",", "").replace("§r", "").toInt())
+                    }
+                    healingUnformatted.split("\n").forEach {
+                        healing.add(it.substring(it.indexOf(":") + 4).replace(",", "").replace("§r", "").toInt())
+                    }
+                    absorbedUnformatted.split("\n").forEach {
+                        absorbed.add(it.substring(it.indexOf(":") + 4).replace(",", "").replace("§r", "").toInt())
+                    }
+                } else {
+                    if (minutes == 16) {
+                        minutes--
+                    }
 
-                        healingAmount = healingMinutePosition.substring(
-                            0,
-                            healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
-                        )
-                        healingString = healingMinutePosition.substring(
-                            healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
-                        )
-                        healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 13)
-
-                        absorbedAmount = absorbedMinutePosition.substring(
-                            0,
-                            absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
-                        )
-                        absorbedString = absorbedMinutePosition.substring(
-                            absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
-                        )
-                        absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 13)
-                    } else {
-                        damageAmount = damageMinutePosition.substring(
-                            0,
-                            damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
-                        )
-
-                        damageString =
-                            if (x == 8) damageMinutePosition.substring(
+                    var damageString = damageUnformatted
+                    var healingString = healingUnformatted
+                    var absorbedString = absorbedUnformatted
+                    var damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 12)
+                    var healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 12)
+                    var absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 12)
+                    var damageAmount: String
+                    var healingAmount: String
+                    var absorbedAmount: String
+                    for (x in 0 until minutes) {
+                        if (x >= 9) {
+                            damageAmount = damageMinutePosition.substring(
+                                0,
                                 damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
-                            ) else damageMinutePosition.substring(
+                            )
+                            damageString = damageMinutePosition.substring(
+                                damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
+                            )
+                            damageMinutePosition = damageString.substring(damageString.indexOf("Minute") + 13)
+
+                            healingAmount = healingMinutePosition.substring(
+                                0,
+                                healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
+                            )
+                            healingString = healingMinutePosition.substring(
+                                healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
+                            )
+                            healingMinutePosition = healingString.substring(healingString.indexOf("Minute") + 13)
+
+                            absorbedAmount = absorbedMinutePosition.substring(
+                                0,
+                                absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
+                            )
+                            absorbedString = absorbedMinutePosition.substring(
+                                absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
+                            )
+                            absorbedMinutePosition = absorbedString.substring(absorbedString.indexOf("Minute") + 13)
+                        } else {
+                            damageAmount = damageMinutePosition.substring(
+                                0,
                                 damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
                             )
 
-                        damageMinutePosition =
-                            if (x == 8) damageString.substring(damageString.indexOf("Minute") + 13)
-                            else damageString.substring(damageString.indexOf("Minute") + 12)
+                            damageString =
+                                if (x == 8) damageMinutePosition.substring(
+                                    damageString.substring(damageString.indexOf("Minute") + 13).indexOf("\"")
+                                ) else damageMinutePosition.substring(
+                                    damageString.substring(damageString.indexOf("Minute") + 12).indexOf("\"")
+                                )
 
-                        healingAmount = healingMinutePosition.substring(
-                            0,
-                            healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
-                        )
-                        healingString =
-                            if (x == 8) healingMinutePosition.substring(
-                                healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
-                            ) else healingMinutePosition.substring(
+                            damageMinutePosition =
+                                if (x == 8) damageString.substring(damageString.indexOf("Minute") + 13)
+                                else damageString.substring(damageString.indexOf("Minute") + 12)
+
+                            healingAmount = healingMinutePosition.substring(
+                                0,
                                 healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
                             )
+                            healingString =
+                                if (x == 8) healingMinutePosition.substring(
+                                    healingString.substring(healingString.indexOf("Minute") + 13).indexOf("\"")
+                                ) else healingMinutePosition.substring(
+                                    healingString.substring(healingString.indexOf("Minute") + 12).indexOf("\"")
+                                )
 
-                        healingMinutePosition =
-                            if (x == 8) healingString.substring(healingString.indexOf("Minute") + 13)
-                            else healingString.substring(healingString.indexOf("Minute") + 12)
+                            healingMinutePosition =
+                                if (x == 8) healingString.substring(healingString.indexOf("Minute") + 13)
+                                else healingString.substring(healingString.indexOf("Minute") + 12)
 
-                        absorbedAmount = absorbedMinutePosition.substring(
-                            0,
-                            absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
-                        )
-                        absorbedString =
-                            if (x == 8) absorbedMinutePosition.substring(
-                                absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
-                            ) else absorbedMinutePosition.substring(
+                            absorbedAmount = absorbedMinutePosition.substring(
+                                0,
                                 absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
                             )
+                            absorbedString =
+                                if (x == 8) absorbedMinutePosition.substring(
+                                    absorbedString.substring(absorbedString.indexOf("Minute") + 13).indexOf("\"")
+                                ) else absorbedMinutePosition.substring(
+                                    absorbedString.substring(absorbedString.indexOf("Minute") + 12).indexOf("\"")
+                                )
 
-                        absorbedMinutePosition =
-                            if (x == 8) absorbedString.substring(absorbedString.indexOf("Minute") + 13)
-                            else absorbedString.substring(absorbedString.indexOf("Minute") + 12)
+                            absorbedMinutePosition =
+                                if (x == 8) absorbedString.substring(absorbedString.indexOf("Minute") + 13)
+                                else absorbedString.substring(absorbedString.indexOf("Minute") + 12)
+                        }
+
+                        damage.add(damageAmount.replace(",", "").toInt())
+                        healing.add(healingAmount.replace(",", "").toInt())
+                        absorbed.add(absorbedAmount.replace(",", "").toInt())
                     }
-
-                    damage.add(damageAmount.replace(",", "").toInt())
-                    healing.add(healingAmount.replace(",", "").toInt())
-                    absorbed.add(absorbedAmount.replace(",", "").toInt())
                 }
+
+
 
                 damage.forEachIndexed { index, element ->
                     dhp.add(element)
@@ -226,6 +249,19 @@ object DamageHealingAbsorbedEndOfGame : IModule {
                         lowestDHP = element
                         lowestDHPMin = index + 1
                     }
+                }
+
+                if (lowestDamage == Integer.MAX_VALUE) {
+                    lowestDamage = 0
+                }
+                if (lowestHealing == Integer.MAX_VALUE) {
+                    lowestHealing = 0
+                }
+                if (lowestAbsorbed == Integer.MAX_VALUE) {
+                    lowestAbsorbed = 0
+                }
+                if (lowestDHP == Integer.MAX_VALUE) {
+                    lowestDHP = 0
                 }
 
                 averageDamagePerMin = totalDamage / minutes

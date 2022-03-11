@@ -5,12 +5,17 @@ import net.minecraft.util.EnumChatFormatting
 
 
 enum class TeamEnum(val teamName: String, val color: EnumChatFormatting?) {
-    BLUE("Blue", EnumChatFormatting.BLUE), RED("Red", EnumChatFormatting.RED), NONE("NONE", null)
+    BLUE("Blue", EnumChatFormatting.BLUE),
+    RED("Red", EnumChatFormatting.RED),
+    NONE("NONE", null)
 }
 
 enum class WarlordsEnum(val classname: String, val shortName: String) {
-    WARRIOR("Warrior", "WAR"), SHAMAN("Shaman", "SHA"),
-    MAGE("Mage", "MAG"), PALADIN("Paladin", "PAL"),
+    WARRIOR("Warrior", "WAR"),
+    SHAMAN("Shaman", "SHA"),
+    MAGE("Mage", "MAG"),
+    PALADIN("Paladin", "PAL"),
+    ROGUE("Rogue", "ROG"),
     NONE("NONE", "NONE")
 }
 
@@ -132,6 +137,34 @@ enum class SpecsEnum(
         "Earthen",
         SpecTypeEnum.HEALER
     ),
+    ASSASSIN(
+        "Assassin",
+        "Incendiary Curse",
+        "Blinding Assault",
+        "Soul Switch",
+        "Order Of Eviscerate",
+        "Judgement",
+        SpecTypeEnum.DAMAGE
+    ),
+    VINDICATOR(
+        "Vindicator",
+        "Soul Shackle",
+        "Heart To Heart",
+        "Prism Guard",
+        "Vindicate",
+        "Righteous",
+        SpecTypeEnum.TANK
+    ),
+    APOTHECARY(
+        "Apothecary",
+        "Soothing Puddle",
+        "Vitality Liquor",
+        "Remedic Chains",
+        "Draining Miasma",
+        "Impaling",
+        SpecTypeEnum.HEALER
+    ),
+
     NONE("NONE", "", "", "", "", "NONE", SpecTypeEnum.NONE);
 
     val icon
