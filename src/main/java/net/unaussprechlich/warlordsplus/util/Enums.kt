@@ -150,7 +150,7 @@ enum class SpecsEnum(
         "Vindicator",
         "Soul Shackle",
         "Heart To Heart",
-        "Wide Guard",
+        "Prism Guard",
         "Vindicate",
         "Righteous",
         SpecTypeEnum.TANK
@@ -158,7 +158,7 @@ enum class SpecsEnum(
     APOTHECARY(
         "Apothecary",
         "Soothing Puddle",
-        "Acupressure",
+        "Vitality Liquor",
         "Remedic Chains",
         "Draining Miasma",
         "Impaling",
