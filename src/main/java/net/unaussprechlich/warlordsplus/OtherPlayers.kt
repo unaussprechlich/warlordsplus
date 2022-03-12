@@ -210,7 +210,7 @@ object OtherPlayers : IModule {
                 it is EntityOtherPlayerMP
                 it.name == player.value.name
             }.filter {
-                it.inventory != null && it.inventory.firstEmptyStack == 1
+                it.inventory != null && it.inventory.mainInventory[0] != null && it.inventory.mainInventory[0].tagCompound != null && it.inventory.firstEmptyStack == 1
             }.map {
                 if (it.inventory.mainInventory[0].tagCompound.toString().contains("LEFT-CLICK")) {
                     //TODO fix where player has the wrong skill boost/skill boost for a different spec
