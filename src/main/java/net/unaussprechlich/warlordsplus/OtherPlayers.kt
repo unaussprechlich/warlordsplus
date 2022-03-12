@@ -332,7 +332,9 @@ object OtherPlayers : IModule {
                     val playerInv = e.entityPlayer.inventory
                     if (playerInv.mainInventory[0] != null && e.displayname != Minecraft.getMinecraft().thePlayer.name) {
                         var spec = SpecsEnum.NONE
-                        if (playerInv.mainInventory[0].tagCompound.toString().contains("LEFT-CLICK")) {
+                        if (playerInv.mainInventory[0].tagCompound != null && playerInv.mainInventory[0].tagCompound.toString()
+                                .contains("LEFT-CLICK")
+                        ) {
                             spec = SpecsEnum.values()
                                 .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.weapon }
                                 ?: SpecsEnum.NONE
