@@ -38,6 +38,13 @@ open class Player(val name: String, val uuid: UUID) {
     var left: Boolean = false
     var isDead: Boolean = false
     var respawn: Int = -1
+
+    var currentEnergy: Int = 0
+    var maxEnergy: Int = 0
+    var redCooldown: Int = 0
+    var purpleCooldown: Int = 0
+    var blueCooldown: Int = 0
+    var orangeCooldown: Int = 0
 }
 
 private val numberPattern = Pattern.compile("[0-9]{2}")
