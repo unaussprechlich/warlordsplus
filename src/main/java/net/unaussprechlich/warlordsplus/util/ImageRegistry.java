@@ -10,7 +10,15 @@ public enum ImageRegistry implements IResourceLocationProvider {
 
     VIGNETTE("images/vignette.png"),
     MEME_RICK_ROLL("images/meme/rickroll.png"),
-    MEME_WEIRDCHAMP("images/meme/weirdchamp.png");
+    MEME_WEIRDCHAMP("images/meme/weirdchamp.png"),
+
+    RED_ABILITY("images/abilityicons/redability.png"),
+    PURPLE_ABILITY("images/abilityicons/purpleability.png"),
+    BLUE_ABILITY("images/abilityicons/blueability.png"),
+    ORANGE_ABILITY("images/abilityicons/orangeability.png"),
+    COOLDOWN("images/abilityicons/cooldown.png"),
+
+    ;
 
     ImageRegistry(String path) {
         this.res = new ResourceLocation(StaticStuff.MODID, path);

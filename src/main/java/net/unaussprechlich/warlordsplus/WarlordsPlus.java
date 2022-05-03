@@ -9,12 +9,16 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.unaussprechlich.eventbus.ForgeEventProcessor;
 import net.unaussprechlich.warlordsplus.commands.*;
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler;
 import net.unaussprechlich.warlordsplus.module.ModuleManager;
+import net.unaussprechlich.warlordsplus.warlords2.PlayerCooldownMessage;
+import net.unaussprechlich.warlordsplus.warlords2.PlayerCooldownRenderer;
 import org.lwjgl.input.Keyboard;
 
 @SideOnly(Side.CLIENT)
@@ -35,6 +39,8 @@ public class WarlordsPlus {
     public static final boolean IS_DEBUGGING = getModVersion().startsWith("DEV_");
     public static KeyBinding DEBUG_KEY = null;
 
+    public static SimpleNetworkWrapper network;
+
     /**
      * Wrapper to prevent the Kotlin compiler from replacing the the reference to
      * VERSION with the actual value.
@@ -51,6 +57,10 @@ public class WarlordsPlus {
         CONFIG = new Configuration(event.getSuggestedConfigurationFile());
         CONFIG.load();
         EasyConfigHandler.INSTANCE.init(event.getAsmData());
+
+        //warlords 2 server
+        network = NetworkRegistry.INSTANCE.newSimpleChannel("Warlords");
+        network.registerMessage(PlayerCooldownMessage.Handler.class, PlayerCooldownMessage.class, 0, Side.CLIENT);
     }
 
     @Mod.EventHandler
@@ -59,7 +69,10 @@ public class WarlordsPlus {
         ForgeEventProcessor.INSTANCE.init();
         ModuleManager.INSTANCE.register();
 
-        if(IS_DEBUGGING){
+        //warlords 2 server
+        PlayerCooldownRenderer.INSTANCE.register();
+
+        if (IS_DEBUGGING) {
             DEBUG_KEY = new KeyBinding("key.debug", Keyboard.KEY_F8, "key.debug");
             ClientRegistry.registerKeyBinding(DEBUG_KEY);
         }
