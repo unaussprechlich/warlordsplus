@@ -15,12 +15,14 @@ import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.TeamEnum
 
-object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.ElementType.PLAYER_LIST, true) {
+object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.ElementType.PLAYER_LIST, false) {
 
     override fun onRender(event: RenderGameOverlayEvent.Pre) {
         try {
-            if (showNewScoreboard)
+            if (showNewScoreboard) {
                 renderPlayerList()
+                event.isCanceled = true
+            }
         } catch (e: Throwable) {
             e.printStackTrace()
         }
