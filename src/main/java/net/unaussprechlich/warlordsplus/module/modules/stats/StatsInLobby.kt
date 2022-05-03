@@ -7,6 +7,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.renderapi.RenderApi
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.Colors
@@ -141,11 +143,12 @@ object StatsInLobby : IModule, RenderApi.World() {
         }
 
         override fun shouldRender(e: RenderGameOverlayEvent.Text): Boolean {
-            return GameStateManager.inLobby
+            return GameStateManager.inLobby && showStatsInLobby
         }
     }
 
     override fun onRender(event: RenderWorldLastEvent) {
+        if (!showStatsInLobby) return
         if (!GameStateManager.isWarlords) return
         if (GameStateManager.isIngame) return
 
@@ -356,5 +359,12 @@ object StatsInLobby : IModule, RenderApi.World() {
         }
     }
 
+    @ConfigPropertyBoolean(
+        category = CCategory.STATS,
+        id = "Stats in Lobby : Show",
+        comment = "Enable or disable the stats in lobby",
+        def = true
+    )
+    var showStatsInLobby = true
 
 }

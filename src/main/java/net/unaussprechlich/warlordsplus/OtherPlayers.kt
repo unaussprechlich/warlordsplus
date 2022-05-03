@@ -219,42 +219,43 @@ object OtherPlayers : IModule {
             }.filter {
                 it.inventory != null && it.inventory.mainInventory[0] != null && it.inventory.mainInventory[0].tagCompound != null && it.inventory.firstEmptyStack == 1
             }.map {
-                if (it.inventory.mainInventory[0].tagCompound.toString().contains("LEFT-CLICK")) {
-                    //TODO fix where player has the wrong skill boost/skill boost for a different spec
+                val handItem = it.inventory.mainInventory[0]
+                val handItemTag = handItem.tagCompound.toString()
+                if (handItemTag.contains("LEFT-CLICK")) {
                     if (player.value.warlord == WarlordsEnum.WARRIOR) {
                         player.value.spec = SpecsEnum.values()
                             .firstOrNull { w ->
-                                it.inventory.mainInventory[0].tagCompound.toString().removeFormatting() contain w.weapon
+                                handItemTag.removeFormatting() contain w.weapon
                             }
                             ?: SpecsEnum.NONE
                     } else {
                         player.value.spec = SpecsEnum.values()
-                            .firstOrNull { w -> it.inventory.mainInventory[0].chatComponent.formattedText contain w.weapon }
+                            .firstOrNull { w -> handItem.chatComponent.formattedText contain w.weapon }
                             ?: SpecsEnum.NONE
                     }
-                } else if (it.inventory.mainInventory[0].tagCompound.toString().contains("RIGHT-CLICK")) {
-                    player.value.spec = SpecsEnum.values()
-                        .firstOrNull { w -> it.inventory.mainInventory[0].chatComponent.formattedText contain w.classname }
-                        ?: SpecsEnum.NONE
-                } else if (it.inventory.mainInventory[0].tagCompound.toString()
-                        .contains("Cooldown") && !it.inventory.mainInventory[0].tagCompound.toString().contains("Mount")
-                ) {
+                } else if (handItemTag.contains("RIGHT-CLICK")) {
+                    if (handItemTag.substringBefore("Health").contains("§a")) {
+                        player.value.spec = SpecsEnum.values()
+                            .firstOrNull { w -> handItem.chatComponent.formattedText contain w.classname }
+                            ?: SpecsEnum.NONE
+                    }
+                } else if (handItemTag.contains("Cooldown") && !handItemTag.contains("Mount")) {
                     val warlord = player.value.warlord
-                    when (it.inventory.mainInventory[0].metadata) {
+                    when (handItem.metadata) {
                         1 -> if (warlord != WarlordsEnum.PALADIN && warlord != WarlordsEnum.WARRIOR)
                             player.value.spec = SpecsEnum.values()
-                                .firstOrNull { w -> it.inventory.mainInventory[0].tagCompound.toString() contain w.red }
+                                .firstOrNull { w -> handItemTag contain w.red }
                                 ?: SpecsEnum.NONE
                         0 -> if (warlord != WarlordsEnum.PALADIN && warlord != WarlordsEnum.WARRIOR && warlord != WarlordsEnum.MAGE)
                             player.value.spec = SpecsEnum.values()
-                                .firstOrNull { w -> it.inventory.mainInventory[0].tagCompound.toString() contain w.purple }
+                                .firstOrNull { w -> handItemTag contain w.purple }
                                 ?: SpecsEnum.NONE
                         10 -> if (warlord != WarlordsEnum.PALADIN && warlord != WarlordsEnum.MAGE)
                             player.value.spec = SpecsEnum.values()
-                                .firstOrNull { w -> it.inventory.mainInventory[0].tagCompound.toString() contain w.blue }
+                                .firstOrNull { w -> handItemTag contain w.blue }
                                 ?: SpecsEnum.NONE
                         14 -> player.value.spec = SpecsEnum.values()
-                            .firstOrNull { w -> it.inventory.mainInventory[0].tagCompound.toString() contain w.orange }
+                            .firstOrNull { w -> handItemTag contain w.orange }
                             ?: SpecsEnum.NONE
                     }
                 }
@@ -337,27 +338,33 @@ object OtherPlayers : IModule {
             GameStateManager.inLobby -> {
                 try {
                     val playerInv = e.entityPlayer.inventory
-                    if (playerInv.mainInventory[0] != null && e.displayname != Minecraft.getMinecraft().thePlayer.name) {
+                    val handItem = playerInv.mainInventory[0]
+                    if (handItem != null && e.displayname != Minecraft.getMinecraft().thePlayer.name) {
                         var spec = SpecsEnum.NONE
-                        if (playerInv.mainInventory[0].tagCompound != null && playerInv.mainInventory[0].tagCompound.toString()
-                                .contains("LEFT-CLICK")
-                        ) {
+                        val handItemTag = handItem.tagCompound.toString()
+                        if (handItem.tagCompound != null && handItemTag.contains("LEFT-CLICK")) {
                             spec = SpecsEnum.values()
-                                .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.weapon }
+                                .firstOrNull { w -> handItemTag contain w.weapon }
                                 ?: SpecsEnum.NONE
-                        } else if (playerInv.mainInventory[0].tagCompound.toString().contains("Cooldown")) {
-                            when (playerInv.mainInventory[0].metadata) {
+                        } else if (handItemTag.contains("RIGHT-CLICK")) {
+                            if (handItemTag.substringBefore("Health").contains("§a")) {
+                                spec = SpecsEnum.values()
+                                    .firstOrNull { w -> handItem.chatComponent.formattedText contain w.classname }
+                                    ?: SpecsEnum.NONE
+                            }
+                        } else if (handItemTag.contains("Cooldown") && !handItemTag.contains("Mount")) {
+                            when (handItem.metadata) {
                                 1 -> spec = SpecsEnum.values()
-                                    .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.red }
+                                    .firstOrNull { w -> handItemTag contain w.red }
                                     ?: SpecsEnum.NONE
                                 0 -> spec = SpecsEnum.values()
-                                    .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.purple }
+                                    .firstOrNull { w -> handItemTag contain w.purple }
                                     ?: SpecsEnum.NONE
                                 10 -> spec = SpecsEnum.values()
-                                    .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.blue }
+                                    .firstOrNull { w -> handItemTag contain w.blue }
                                     ?: SpecsEnum.NONE
                                 14 -> spec = SpecsEnum.values()
-                                    .firstOrNull { w -> playerInv.mainInventory[0].tagCompound.toString() contain w.orange }
+                                    .firstOrNull { w -> handItemTag contain w.orange }
                                     ?: SpecsEnum.NONE
                             }
                         }
