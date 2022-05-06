@@ -35,19 +35,19 @@ object HudElementSessionStats : AbstractHudElement() {
                 totalPlayerKills++
             else if (message.removeSpaces().startsWith("Winner")) {
                 if (message.contains("BLU") && ThePlayer.team == TeamEnum.BLUE || message.contains("RED") && ThePlayer.team == TeamEnum.RED) {
-                    println("WIN")
                     totalWins++
                     if (streak > 0)
                         streak++
                     else
                         streak = 1
                 } else {
-                    println("LOSS")
-                    totalLosses++
-                    if (streak < 0)
-                        streak--
-                    else
-                        streak = -1
+                    if (!GameStateManager.isWarlords2) {
+                        totalLosses++
+                        if (streak < 0)
+                            streak--
+                        else
+                            streak = -1
+                    }
                 }
 //        } else if (message.contains("coins") && message.contains("+")) {
 //            totalCoinsGained += Integer.parseInt(message.substring(1, message.indexOf("coins") - 1))
