@@ -41,7 +41,7 @@ object HudElementSessionStats : AbstractHudElement() {
                     else
                         streak = 1
                 } else {
-                    if (!GameStateManager.isWarlords2) {
+                    if (!(GameStateManager.isWarlords2 && message.removeSpaces().contains("DRAW"))) {
                         totalLosses++
                         if (streak < 0)
                             streak--
