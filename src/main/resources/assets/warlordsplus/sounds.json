@@ -2,43 +2,155 @@
   "meme.suction": {
     "category": "player",
     "sounds": [
-      "warlordsplus:meme/suction"
+      {
+        "name": "warlordsplus:meme/suction",
+        "stream": true
+      }
     ]
   },
   "meme.t1BBC": {
     "category": "player",
     "sounds": [
-      "warlordsplus:meme/t1BBC"
+      {
+        "name": "warlordsplus:meme/t1BBC",
+        "stream": true
+      }
     ]
   },
   "meme.t1BeStrong": {
     "category": "player",
     "sounds": [
-      "warlordsplus:meme/t1BeStrong"
+      {
+        "name": "warlordsplus:meme/t1BeStrong",
+        "stream": true
+      }
+    ]
+  },
+  "meme.ricky": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/ricky",
+        "stream": true
+      }
     ]
   },
   "meme.t1Christmas": {
     "category": "player",
+    "stream": false,
     "sounds": [
-      "warlordsplus:meme/t1Christmas"
+      {
+        "name": "warlordsplus:meme/t1Christmas",
+        "stream": true
+      }
     ]
   },
   "meme.t1GTFO": {
     "category": "player",
     "sounds": [
-      "warlordsplus:meme/t1GTFO"
+      {
+        "name": "warlordsplus:meme/t1GTFO",
+        "stream": true
+      }
     ]
   },
   "meme.t1KS": {
     "category": "player",
     "sounds": [
-      "warlordsplus:meme/t1KS"
+      {
+        "name": "warlordsplus:meme/t1KS",
+        "stream": true
+      }
     ]
   },
   "meme.t1ThanksForGold": {
     "category": "player",
     "sounds": [
-      "warlordsplus:meme/t1ThanksForGold"
+      {
+        "name": "warlordsplus:meme/t1ThanksForGold",
+        "stream": true
+      }
+    ]
+  },
+  "meme.chaturbate_tip_sound_small": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/chaturbate_tip_sound_small",
+        "stream": true
+      }
+    ]
+  },
+  "meme.chaturbate_tip_sound_tiny": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/chaturbate_tip_sound_tiny",
+        "stream": true
+      }
+    ]
+  },
+  "meme.mario_text_message": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/mario_text_message",
+        "stream": true
+      }
+    ]
+  },
+  "meme.1": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/1",
+        "stream": true
+      }
+    ]
+  },
+  "meme.2": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/2",
+        "stream": true
+      }
+    ]
+  },
+  "meme.3": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/3",
+        "stream": true
+      }
+    ]
+  },
+  "meme.4": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/4",
+        "stream": true
+      }
+    ]
+  },
+  "meme.5": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/5",
+        "stream": true
+      }
+    ]
+  },
+  "meme.cyt0": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "warlordsplus:meme/cyt0",
+        "stream": true
+      }
     ]
   }
 }

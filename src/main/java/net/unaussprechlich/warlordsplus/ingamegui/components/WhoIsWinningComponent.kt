@@ -2,17 +2,16 @@ package net.unaussprechlich.warlordsplus.ingamegui.components
 
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.RenderGameOverlayEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
+import net.unaussprechlich.eventbus.EventBus
 import net.unaussprechlich.warlordsplus.ingamegui.AbstractRenderComponent
-import net.unaussprechlich.warlordsplus.module.modules.ScoreboardManager
-import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
-import net.unaussprechlich.warlordsplus.util.convertToArgb
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector
 import net.unaussprechlich.warlordsplus.util.fdiv
 import net.unaussprechlich.warlordsplus.util.removeFormatting
 import net.unaussprechlich.warlordsplus.util.removeSpaces
-import org.lwjgl.util.Color
 
 
-object WhoIsWinningComponent : AbstractRenderComponent(), IUpdateConsumer {
+object WhoIsWinningComponent : AbstractRenderComponent(RenderGameOverlayEvent.ElementType.TEXT) {
 
     var pointsToWin = 1000
     var bluePoints = 0
@@ -22,14 +21,19 @@ object WhoIsWinningComponent : AbstractRenderComponent(), IUpdateConsumer {
     var redFlag = ""
     var blueFlag = ""
 
-    override fun render(e: RenderGameOverlayEvent.Pre) {
+    init {
+        EventBus.register(::update)
+    }
 
-        val vsWidth = getTextWidth(timeToWin) + 12
-        val pWidth = getTextWidth(pointsToWin.toString()) + 20
+    override fun onRender(event: RenderGameOverlayEvent.Pre) {
+
+        val vsWidth = timeToWin.unformattedWidth() + 12
+        val pWidth = pointsToWin.toString().unformattedWidth() + 20
         val y = yTop + 10
         val bpWith = (pWidth * (bluePoints fdiv pointsToWin)).toInt()
         val rpWidth = (pWidth * (redPoints fdiv pointsToWin)).toInt()
 
+        /*TODO convert
         drawCenteredStringWithHeaderBox(xCenter - (vsWidth / 2), y, vsWidth, timeToWin)
 
         drawRect(xCenter - (vsWidth / 2) - bpWith, y, bpWith, 13, Color(0, 0, 255, 150).convertToArgb())
@@ -44,21 +48,25 @@ object WhoIsWinningComponent : AbstractRenderComponent(), IUpdateConsumer {
 
         if (redFlag != "Safe")
             drawStringWithBox(xCenter + (vsWidth / 2), y + 13, redFlag, Color(34, 34, 39, 200).convertToArgb())
+         */
+
+
     }
 
-    override fun update() {
-        try{
-
-            if(ScoreboardManager.scoreboardNames.size != 15) return
+    fun update(e: TickEvent.ClientTickEvent) {
+        try {
+            if (ScoreboardDetector.scoreboardFormatted.size != 15) return
 
             val blue = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardNames[12]
-                    .replace(" ", "").replace("\uD83D\uDCA3", ""))
+                ScoreboardDetector.scoreboardFormatted[12]
+                    .replace(" ", "").replace("\uD83D\uDCA3", "")
+            )
             val red = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardNames[11]
-                    .replace(" ", "").replace("\uD83D\uDC7D", ""))
+                ScoreboardDetector.scoreboardFormatted[11]
+                    .replace(" ", "").replace("\uD83D\uDC7D", "")
+            )
             val time = EnumChatFormatting.getTextWithoutFormattingCodes(
-                ScoreboardManager.scoreboardNames[9]
+                ScoreboardDetector.scoreboardFormatted[9]
                     .replace(" ", "").replace("\uD83D\uDC0D", ""))
 
             timeToWin = time.substring(time.indexOf(":") + 1)
@@ -66,9 +74,9 @@ object WhoIsWinningComponent : AbstractRenderComponent(), IUpdateConsumer {
             bluePoints = blue.substring(blue.indexOf(":") + 1, blue.indexOf("/")).toInt()
             redPoints = red.substring(red.indexOf(":") + 1,red.indexOf("/")).toInt()
 
-            if(ScoreboardManager.scoreboardNames[6].contains("Flag")){
-                val bFlag = ScoreboardManager.scoreboardNames[6].removeFormatting().removeSpaces()
-                val rFlag = ScoreboardManager.scoreboardNames[7].removeFormatting().removeSpaces()
+            if(ScoreboardDetector.scoreboardFormatted[6].contains("Flag")){
+                val bFlag = ScoreboardDetector.scoreboardFormatted[6].removeFormatting().removeSpaces()
+                val rFlag = ScoreboardDetector.scoreboardFormatted[7].removeFormatting().removeSpaces()
 
                 redFlag = rFlag.substring(rFlag.indexOf(":") + 1)
                 blueFlag = bFlag.substring(bFlag.indexOf(":") + 1)
@@ -80,5 +88,6 @@ object WhoIsWinningComponent : AbstractRenderComponent(), IUpdateConsumer {
 
 
     }
+
 
 }

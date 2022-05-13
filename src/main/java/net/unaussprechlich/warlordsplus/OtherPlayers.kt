@@ -1,69 +1,92 @@
 package net.unaussprechlich.warlordsplus
 
 import net.minecraft.client.Minecraft
+import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.client.network.NetworkPlayerInfo
+import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
+import net.minecraftforge.event.entity.player.PlayerEvent
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.unaussprechlich.eventbus.EventBus
-import net.unaussprechlich.warlordsplus.hud.elements.KPEvent
 import net.unaussprechlich.warlordsplus.module.IModule
 import net.unaussprechlich.warlordsplus.module.modules.*
 import net.unaussprechlich.warlordsplus.util.*
 import java.util.*
 import java.util.regex.Pattern
 
-//TODO [ ] find out/think about what spec they are playing :) Just write a comment with some ideas
-open class Player(val name: String, val uuid : UUID) {
+
+open class Player(val name: String, val uuid: UUID) {
 
     var kills: Int = 0
     var deaths: Int = 0
-    var killParticipation: Int = 0
-
-    var damageDone : Int = 0
-    var damageReceived : Int = 0
+    var damageDone: Int = 0
+    var damageReceived: Int = 0
     var healingDone: Int = 0
     var healingReceived: Int = 0
-
     var warlord = WarlordsEnum.NONE
-
     var spec = SpecsEnum.NONE
-
     var team = TeamEnum.NONE
-
     var level = 0
-
     var prestiged: Boolean = false
-
     var hasFlag: Boolean = false
-
     var died: Int = 0
     var stoleKill: Int = 0
+    var picks: Int = 0
+    var returns: Int = 0
+    var caps: Int = 0
+    var left: Boolean = false
+    var isDead: Boolean = false
+    var respawn: Int = -1
 
+    var currentEnergy: Int = 0
+    var maxEnergy: Int = 0
+    var redCooldown: Int = 0
+    var purpleCooldown: Int = 0
+    var blueCooldown: Int = 0
+    var orangeCooldown: Int = 0
 }
 
 private val numberPattern = Pattern.compile("[0-9]{2}")
+private var brokenTab = -1L
 
 object OtherPlayers : IModule {
 
     val playersMap: MutableMap<String, Player> = mutableMapOf()
+    val tempPlayersMap: MutableMap<String, Player> = mutableMapOf()
 
     init {
         EventBus.register<ResetEvent> {
             playersMap.clear()
+            tempPlayersMap.clear()
 
             val players = getPlayersForNetworkPlayers(Minecraft.getMinecraft().thePlayer!!.sendQueue.playerInfoMap)
             println("[WarlordsPlus|OtherPlayers] found ${players.size} players!")
         }
 
-        EventBus.register<KillEvent> {
-            if (it.deathPlayer in playersMap)
-                playersMap[it.deathPlayer]!!.deaths++
-            if (it.player in playersMap)
-                playersMap[it.player]!!.kills++
+        EventBus.register<TenSecondEvent> {
+            tempPlayersMap.clear()
+            val players = getPlayersForNetworkPlayers2(Minecraft.getMinecraft().thePlayer!!.sendQueue.playerInfoMap)
+            //compare playermap with temp - whoever is missing left
+            playersMap.forEach {
+                it.value.left = !it.value.isDead && !tempPlayersMap.containsKey(it.key)
+            }
         }
 
-        EventBus.register<KPEvent> {
+        EventBus.register<SecondEvent> {
+            Minecraft.getMinecraft().theWorld.playerEntities.filterIsInstance<EntityOtherPlayerMP>().forEach {
+                it.refreshDisplayName()
+            }
+        }
+
+        EventBus.register<KillEvent> {
+            if (it.deathPlayer in playersMap) {
+                playersMap[it.deathPlayer]!!.deaths++
+                playersMap[it.deathPlayer]!!.isDead = true
+                playersMap[it.deathPlayer]!!.respawn = it.respawn
+            }
             if (it.player in playersMap)
-                playersMap[it.player]!!.killParticipation = it.amount
+                playersMap[it.player]!!.kills++
         }
 
         EventBus.register<HealingReceivedEvent> {
@@ -97,9 +120,48 @@ object OtherPlayers : IModule {
         EventBus.register<KillStealEvent> {
             playersMap[it.otherPlayer]!!.stoleKill += 1
         }
+
+        EventBus.register<FlagPickedEvent> {
+            playersMap[it.playerThatPicked]!!.picks += 1
+        }
+
+        EventBus.register<FlagCapturedEvent> {
+            playersMap[it.playerThatCaptured]!!.caps += 1
+        }
+
+        EventBus.register<FlagReturnedEvent> {
+            playersMap[it.playerThatReturned]!!.returns += 1
+        }
+
+        /* TODO
+        EventBus.register<PlayerLeaveEvent> {
+            playersMap[it.player]!!.left = it.left
+        }*/
+
+
+        EventBus.register<TickEvent.ClientTickEvent> {
+            if (GameStateManager.inLobby) {
+                try {
+                    Minecraft.getMinecraft().theWorld.playerEntities.filterIsInstance<EntityOtherPlayerMP>().forEach {
+                        val inventory = it.inventory.mainInventory[0]
+                        //todo fix not refreshing if u cant get the spec from hand
+
+                        if (inventory != null && (!inventory.tagCompound.toString().removeFormatting()
+                                .contains("Menu") || !inventory.tagCompound.toString().removeFormatting()
+                                .contains("Mount") || !inventory.tagCompound.toString().removeFormatting()
+                                .contains("Flag"))
+                        ) {
+                            it.refreshDisplayName()
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
-    fun getPlayersForNetworkPlayers(networkPlayers : Collection<NetworkPlayerInfo>): Collection<Player> {
+    fun getPlayersForNetworkPlayers(networkPlayers: Collection<NetworkPlayerInfo>): Collection<Player> {
 
         //Filter out if we already have the Player stored
         networkPlayers.filter {
@@ -109,12 +171,23 @@ object OtherPlayers : IModule {
             //Filter out any strange "Players" appearing in the Scoreboard, by assuming they must have a class
         }.filter { player ->
 
-            WarlordsEnum.values().any {
-                player.playerTeam.colorPrefix contain it.shortName
+            try {
+                WarlordsEnum.values().any {
+                    player.playerTeam.colorPrefix contain it.shortName
+                }
+            } catch (e: Exception) {
+                if (!GameStateManager.isWarlords2) {
+                    if (brokenTab < System.currentTimeMillis()) {
+                        Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}LOOKS LIKE YOUR TAB IS BUGGED PLEASE REJOIN THE LOBBY - /hub - /rejoin"))
+                        brokenTab = System.currentTimeMillis() + 3000
+                    }
+                }
+
+                false
             }
 
-        //Create the Player
-        }.map{
+            //Create the Player
+        }.map {
 
             val player = Player(it.gameProfile.name, it.gameProfile.id)
 
@@ -132,16 +205,199 @@ object OtherPlayers : IModule {
 
             //checking if player is prestige
             player.prestiged = it.playerTeam.colorSuffix.contains("${EnumChatFormatting.GOLD}")
-
             return@map player
 
         }.forEach { playersMap[it.name] = it }
+
+        playersMap.filter {
+            it.value.spec == SpecsEnum.NONE || GameStateManager.isWarlords2
+        }.forEach { player ->
+            val players = Minecraft.getMinecraft().theWorld.playerEntities
+            players.filter {
+                it is EntityOtherPlayerMP
+                it.name == player.value.name
+            }.filter {
+                it.inventory != null && it.inventory.mainInventory[0] != null && it.inventory.mainInventory[0].tagCompound != null && it.inventory.firstEmptyStack == 1
+            }.map {
+                val handItem = it.inventory.mainInventory[0]
+                val handItemTag = handItem.tagCompound.toString()
+                if (handItemTag.contains("LEFT-CLICK")) {
+                    if (player.value.warlord == WarlordsEnum.WARRIOR) {
+                        player.value.spec = SpecsEnum.values()
+                            .firstOrNull { w ->
+                                handItemTag.removeFormatting() contain w.weapon
+                            }
+                            ?: SpecsEnum.NONE
+                    } else {
+                        player.value.spec = SpecsEnum.values()
+                            .firstOrNull { w -> handItem.chatComponent.formattedText contain w.weapon }
+                            ?: SpecsEnum.NONE
+                    }
+                } else if (handItemTag.contains("RIGHT-CLICK")) {
+                    if (handItemTag.substringBefore("Health").contains("§a")) {
+                        player.value.spec = SpecsEnum.values()
+                            .firstOrNull { w -> handItem.chatComponent.formattedText contain w.classname }
+                            ?: SpecsEnum.NONE
+                    }
+                } else if (handItemTag.contains("Cooldown") && !handItemTag.contains("Mount")) {
+                    val warlord = player.value.warlord
+                    when (handItem.metadata) {
+                        1 -> if (warlord != WarlordsEnum.PALADIN && warlord != WarlordsEnum.WARRIOR)
+                            player.value.spec = SpecsEnum.values()
+                                .firstOrNull { w -> handItemTag contain w.red }
+                                ?: SpecsEnum.NONE
+                        0 -> if (warlord != WarlordsEnum.PALADIN && warlord != WarlordsEnum.WARRIOR && warlord != WarlordsEnum.MAGE)
+                            player.value.spec = SpecsEnum.values()
+                                .firstOrNull { w -> handItemTag contain w.purple }
+                                ?: SpecsEnum.NONE
+                        10 -> if (warlord != WarlordsEnum.PALADIN && warlord != WarlordsEnum.MAGE)
+                            player.value.spec = SpecsEnum.values()
+                                .firstOrNull { w -> handItemTag contain w.blue }
+                                ?: SpecsEnum.NONE
+                        14 -> player.value.spec = SpecsEnum.values()
+                            .firstOrNull { w -> handItemTag contain w.orange }
+                            ?: SpecsEnum.NONE
+                    }
+                }
+            }
+        }
+
+        //update the player if their class/team changed (warlords 2)
+        networkPlayers.filter {
+            //must already be in game and must not be null
+            playersMap.containsKey(it.gameProfile.name) && playersMap[it.gameProfile.name] != null
+        }.filter {
+            //class or team must be different
+            playersMap[it.gameProfile.name]!!.warlord != WarlordsEnum.values()
+                .first { w -> it.playerTeam.colorPrefix contain w.shortName } ||
+                    playersMap[it.gameProfile.name]!!.team != TeamEnum.values()
+                .first { t -> it.playerTeam.colorPrefix.contains(t.color.toString()) }
+        }.forEach {
+            val player = playersMap[it.gameProfile.name]
+            if (player != null) {
+                player.warlord = WarlordsEnum.values().first { w -> it.playerTeam.colorPrefix contain w.shortName }
+                player.spec = SpecsEnum.NONE
+                player.team = TeamEnum.values().first { t -> it.playerTeam.colorPrefix.contains(t.color.toString()) }
+
+                val m = numberPattern.matcher(it.playerTeam.colorSuffix.removeFormatting())
+                player.level = if (!m.find()) 0 else {
+                    m.group().toInt()
+                }
+
+                player.prestiged = it.playerTeam.colorSuffix.contains("${EnumChatFormatting.GOLD}")
+            }
+        }
 
         //Return the players :)
         return playersMap.values
     }
 
-    fun getPlayerForName(name : String) : Player?{
+    fun getPlayersForNetworkPlayers2(networkPlayers: Collection<NetworkPlayerInfo>): Collection<Player> {
+
+        //Filter out if we already have the Player stored
+        networkPlayers.filter {
+
+            !tempPlayersMap.containsKey(it.gameProfile.name)
+
+            //Filter out any strange "Players" appearing in the Scoreboard, by assuming they must have a class
+        }.filter { player ->
+
+            try {
+                WarlordsEnum.values().any {
+                    player.playerTeam.colorPrefix contain it.shortName
+                }
+            } catch (e: Exception) {
+                false
+            }
+
+            //Create the Player
+        }.map {
+
+            val player = Player(it.gameProfile.name, it.gameProfile.id)
+
+            return@map player
+
+        }.forEach { tempPlayersMap[it.name] = it }
+
+        return tempPlayersMap.values
+    }
+
+    @SubscribeEvent
+    fun onPlayerName(e: PlayerEvent.NameFormat) {
+        when {
+            GameStateManager.isIngame -> {
+                playersMap.filter {
+                    it.value.spec != SpecsEnum.NONE
+                }.filter {
+                    it.value.name == e.username
+                }.forEach {
+                    e.displayname =
+                        "${EnumChatFormatting.DARK_GRAY}[${it.value.spec.type.coloredSymbol}${EnumChatFormatting.DARK_GRAY}] ${if (it.value.team == TeamEnum.BLUE) EnumChatFormatting.BLUE else if (it.value.team == TeamEnum.RED) EnumChatFormatting.RED else ""}${e.displayname}${EnumChatFormatting.RESET}"
+                }
+            }
+            GameStateManager.inLobby -> {
+                try {
+                    val playerInv = e.entityPlayer.inventory
+                    val handItem = playerInv.mainInventory[0]
+                    if (handItem != null && e.displayname != Minecraft.getMinecraft().thePlayer.name) {
+                        var spec = SpecsEnum.NONE
+                        val handItemTag = handItem.tagCompound.toString()
+                        if (handItem.tagCompound != null && handItemTag.contains("LEFT-CLICK")) {
+                            spec = SpecsEnum.values()
+                                .firstOrNull { w -> handItemTag contain w.weapon }
+                                ?: SpecsEnum.NONE
+                        } else if (handItemTag.contains("RIGHT-CLICK")) {
+                            if (handItemTag.substringBefore("Health").contains("§a")) {
+                                spec = SpecsEnum.values()
+                                    .firstOrNull { w -> handItem.chatComponent.formattedText contain w.classname }
+                                    ?: SpecsEnum.NONE
+                            }
+                        } else if (handItemTag.contains("Cooldown") && !handItemTag.contains("Mount")) {
+                            when (handItem.metadata) {
+                                1 -> spec = SpecsEnum.values()
+                                    .firstOrNull { w -> handItemTag contain w.red }
+                                    ?: SpecsEnum.NONE
+                                0 -> spec = SpecsEnum.values()
+                                    .firstOrNull { w -> handItemTag contain w.purple }
+                                    ?: SpecsEnum.NONE
+                                10 -> spec = SpecsEnum.values()
+                                    .firstOrNull { w -> handItemTag contain w.blue }
+                                    ?: SpecsEnum.NONE
+                                14 -> spec = SpecsEnum.values()
+                                    .firstOrNull { w -> handItemTag contain w.orange }
+                                    ?: SpecsEnum.NONE
+                            }
+                        }
+                        e.displayname =
+                            "${EnumChatFormatting.DARK_GRAY}[${spec.type.coloredSymbol}${EnumChatFormatting.DARK_GRAY}]${EnumChatFormatting.RESET}${e.displayname}"
+                    }
+                } catch (err: Exception) {
+                    println(e)
+                    println(e.entityPlayer)
+                    println(err.printStackTrace())
+                }
+            }
+            else -> {
+                e.displayname = e.username
+            }
+        }
+    }
+
+    fun getPlayerForName(name: String): Player? {
         return playersMap[name]
+    }
+
+    fun colorForPlayer(name: String): Colors {
+        return when (playersMap[name]!!.team) {
+            TeamEnum.BLUE -> {
+                Colors.DARK_BLUE
+            }
+            TeamEnum.RED -> {
+                Colors.DARK_RED
+            }
+            else -> {
+                Colors.BLACK
+            }
+        }
     }
 }

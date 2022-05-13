@@ -1,21 +1,21 @@
 package net.unaussprechlich.warlordsplus.module
 
-import kotlinx.serialization.UnstableDefault
-import net.minecraft.client.Minecraft
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import net.unaussprechlich.warlordsplus.ThePlayer
 import net.unaussprechlich.warlordsplus.config.EasyConfigHandler
 import net.unaussprechlich.warlordsplus.hud.HudManager
 import net.unaussprechlich.warlordsplus.ingamegui.IngameGuiManager
 import net.unaussprechlich.warlordsplus.module.modules.*
-import net.unaussprechlich.warlordsplus.module.modules.stats.StatsDisplayRenderer
-import net.unaussprechlich.warlordsplus.module.modules.stats.StatsLoader
-import net.unaussprechlich.warlordsplus.util.consumers.IUpdateConsumer
+import net.unaussprechlich.warlordsplus.module.modules.detector.ChatDetector
+import net.unaussprechlich.warlordsplus.module.modules.detector.ScoreboardDetector
+import net.unaussprechlich.warlordsplus.module.modules.meme.AutoTBag
+import net.unaussprechlich.warlordsplus.module.modules.meme.WeirdRendering
+import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.NotificationManager
+import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.notifications.ChatNotifications
+import net.unaussprechlich.warlordsplus.module.modules.notificationmodule.notifications.KillFeedNotifications
+import net.unaussprechlich.warlordsplus.module.modules.qualityoflife.*
+import net.unaussprechlich.warlordsplus.module.modules.stats.*
 
-@UnstableDefault
 object ModuleManager {
 
     private val modules = ArrayList<IModule>()
@@ -23,21 +23,39 @@ object ModuleManager {
     init {
         with(modules) {
             add(EasyConfigHandler)
-            add(ScoreboardManager)
+            add(ScoreboardDetector)
             add(GameStateManager)
-            //add(Meme)
             add(DamageAndHealParser)
             add(KillAssistParser)
             add(FlagTakenDetector)
             add(ThePlayer)
-            add(HudManager.INSTANCE())
+            add(HudManager)
             add(IngameGuiManager)
             add(ChatDetector)
             add(RenderNumbers)
             add(StatsLoader)
             add(StatsDisplayRenderer)
             add(RenderStatsInGame)
-            //add(testRender)
+            add(StatsDisplayAfterGame)
+            add(PowerUpTimer)
+            add(StatsInLobby)
+            add(NotificationManager)
+            add(ChatNotifications)
+            add(KillFeedNotifications)
+            //add(Meme)
+            add(CancelJumpBarOnHorse)
+            add(SoulbindingCounter)
+            add(SkillDetector)
+            add(RenderVignette)
+            add(AutoMapFinder)
+            //add(MotivationalMessages)
+            add(AutoTBag)
+            add(RevenantArmyTimer)
+            //add(Excuses)
+            add(WeirdRendering)
+            add(DamageHealingAbsorbedEndOfGame)
+            add(UpdateChecker)
+            //add(InvisMode)
         }
     }
 
