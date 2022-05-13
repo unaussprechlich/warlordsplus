@@ -37,8 +37,10 @@ object UpdateChecker : IModule{
 
                             //We just compare if their version is the latest. They should always run the latest version!!!!!!
                             if(currentVersion != SNAPSHOT_PREFIX + latestSnapshotNumber!! ){
-                                val latestSnapshot = snapshots.firstOrNull { it.name == SNAPSHOT_PREFIX + latestSnapshotNumber }
-                                val latestAsset = latestSnapshot!!.assets.firstOrNull{it.name == "WarlordsPlus-$SNAPSHOT_PREFIX$latestSnapshotNumber.jar"}
+                                val latestSnapshot =
+                                    snapshots.firstOrNull { it.name == SNAPSHOT_PREFIX + latestSnapshotNumber }
+                                val latestAsset =
+                                    latestSnapshot!!.assets.firstOrNull { it.name.lowercase() == "WarlordsPlus-$SNAPSHOT_PREFIX$latestSnapshotNumber.jar".lowercase() }
 
                                 NotificationManager.add(UpdateModNotification(latestSnapshot.name, latestAsset!!.browser_download_url))
 
