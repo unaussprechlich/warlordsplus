@@ -13,7 +13,7 @@ class UpdateModNotification (private val version : String, private val url : Str
 
     private val UPDATE_NOTIFICATION_WIDTH = 200
 
-    override val validUntil: Long = System.currentTimeMillis() + 100000
+    override val validUntil: Long = System.currentTimeMillis() + 60000
 
     init {
         ChatMessageComposer.printSeparationMessage(EnumChatFormatting.DARK_RED)
