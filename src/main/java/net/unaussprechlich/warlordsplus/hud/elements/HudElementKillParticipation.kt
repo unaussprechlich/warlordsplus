@@ -88,7 +88,7 @@ object HudElementKillParticipation : AbstractHudElement() {
     }
 
     override fun isVisible(): Boolean {
-        return GameStateManager.isIngame
+        return GameStateManager.isIngame && !GameStateManager.isPvE
     }
 
     override fun isEnabled(): Boolean {

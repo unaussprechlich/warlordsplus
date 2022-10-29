@@ -30,6 +30,9 @@ object GameStateManager : IModule {
     var isWarlords2: Boolean = false
         private set
 
+    var isPvE: Boolean = false
+        private set
+
     var isCTF: Boolean = false
         private set
 
@@ -94,15 +97,20 @@ object GameStateManager : IModule {
             ) {
                 isWarlords = !isWarlords
                 EventBus.post(WarlordsLeaveAndJoinEvent(isWarlords))
-                isWarlords2 =
-                    scoreboardTitle.matches(Regex(".*I.*M.*M.*O.*R*T.*A.*L.*S.*")) || scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*2.*.\\.*0"))
+                isWarlords2 = scoreboardTitle.matches(Regex(".*I.*M.*M.*O.*R*T.*A.*L.*S.*")) ||
+                        scoreboardTitle.matches(Regex(".*W.*A.*R.*L.*O*R.*D.*S.*2.*.\\.*0"))
             }
-            val ingame = (isWarlords
-                    && (scoreboard.size == 15 || scoreboard.size == 12)
-                    && (scoreboard[9].contains("Wins in:")
-                    || scoreboard[9].contains("Time Left:")
-                    || scoreboard[6].contains("Wins in:")
-                    || scoreboard[6].contains("Time Left:")))
+            val size = scoreboard.size
+            val ingame = (isWarlords2 &&
+                    size > 8 &&
+                    (scoreboard[size - 4].contains("Monsters Left:") || scoreboard[size - 3].contains("Wave:"))) ||
+                    (isWarlords
+                            && (size == 15 || size == 12)
+                            && (scoreboard[9].contains("Wins in:")
+                            || scoreboard[9].contains("Time Left:")
+                            || scoreboard[6].contains("Wins in:")
+                            || scoreboard[6].contains("Time Left:"))
+                            )
 
             if (ingame != isIngame) {
                 isIngame = ingame
@@ -113,6 +121,7 @@ object GameStateManager : IModule {
                 isCTF = scoreboard[7].contains("RED Flag")
                 isTDM = scoreboard[9].contains("BLU:")
                 isDOM = scoreboard[11].contain("/2000")
+                isPvE = isWarlords2 && (scoreboard[size - 4].contains("Monsters Left:") || scoreboard[size - 3].contains("Wave:"))
 
                 if (isCTF) {
                     val colon = scoreboardFormatted[9].lastIndexOf(":")
@@ -165,6 +174,7 @@ object GameStateManager : IModule {
                 isCTF = false
                 isTDM = false
                 isDOM = false
+                isPvE = false
             }
             inLobby = isWarlords && scoreboard.isNotEmpty()
                     && (scoreboard[10].isNotEmpty() || scoreboard[9].isNotEmpty())
