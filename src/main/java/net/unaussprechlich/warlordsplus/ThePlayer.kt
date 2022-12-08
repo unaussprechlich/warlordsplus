@@ -147,7 +147,7 @@ object ThePlayer : IModule {
                 team = when {
                     Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A7c") -> TeamEnum.RED
                     Minecraft.getMinecraft().thePlayer.displayName.formattedText.contains("\u00A79") -> TeamEnum.BLUE
-                    else -> TeamEnum.NONE
+                    else -> if (GameStateManager.isPvE) TeamEnum.BLUE else TeamEnum.NONE
                 }
                 println("GAME INFO")
                 println(Minecraft.getMinecraft().thePlayer.name)

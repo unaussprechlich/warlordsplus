@@ -65,11 +65,14 @@ object HudElementKillParticipation : AbstractHudElement() {
 
         }
         EventBus.register<KillEvent> {
-            if (!GameStateManager.isTDM &&
-                ((OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.BLUE && ThePlayer.team == TeamEnum.BLUE) ||
-                        (OtherPlayers.getPlayerForName(it.player)!!.team == TeamEnum.RED && ThePlayer.team == TeamEnum.RED))
-            )
-                numberOfTeamKills++
+            val playerForName = OtherPlayers.getPlayerForName(it.player)
+            if (playerForName != null) {
+                if (!GameStateManager.isTDM &&
+                    ((playerForName.team == TeamEnum.BLUE && ThePlayer.team == TeamEnum.BLUE) || (playerForName.team == TeamEnum.RED && ThePlayer.team == TeamEnum.RED))
+                ) {
+                    numberOfTeamKills++
+                }
+            }
         }
 
     }
@@ -88,7 +91,7 @@ object HudElementKillParticipation : AbstractHudElement() {
     }
 
     override fun isVisible(): Boolean {
-        return GameStateManager.isIngame
+        return GameStateManager.isIngame && !GameStateManager.isPvE
     }
 
     override fun isEnabled(): Boolean {

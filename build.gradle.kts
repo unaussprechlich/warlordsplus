@@ -64,8 +64,9 @@ configure<ForgeExtension> {
     runDir = "run"
     mappings = "stable_22"
 
-    clientRunArgs.add("--username=${System.getenv()["EMAIL"]}")
-    clientRunArgs.add("--password=${System.getenv()["PASSWORD"]}")
+//    clientRunArgs.add("--username=${System.getenv()["EMAIL"]}")
+//    clientRunArgs.add("--password=${System.getenv()["PASSWORD"]}")
+    clientRunArgs.add("-Ddevauth.enabled=true}")
 
     makeObfSourceJar = false
 

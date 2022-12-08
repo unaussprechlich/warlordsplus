@@ -42,39 +42,39 @@ object StatsDisplayAfterGame : IModule {
     }
 
     fun onChat(e: ClientChatReceivedEvent) {
-        if (GameStateManager.notIngame) return
+        if (GameStateManager.notIngame || !GameStateManager.isWarlords) return
 
         val message = e.message.formattedText
         if (message.removeFormatting().contains("Winner - ")) {
             addStatsToClipboard(message)
         }
-        if (GameStateManager.isIngame) {
-            if (sendDHP) {
-                sendCenteredMessage("       DHP: ${EnumChatFormatting.GOLD}${addCommas(DamageHealingAbsorbedEndOfGame.totalDHP)}")
-                sendDHP = false
-            }
-            if (message.removeFormatting().trimStart().startsWith("Damage:")) {
-                sendDHP = true
-            }
-            if (message.contains("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")) {
-                counter++
-                if (counter == 2) {
-                    if (showStats) {
-                        if (printGeneralStats) {
-                            Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
-                            displayStats()
-                        }
-                        if (printScoreboard) {
-                            Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
-                            displayScoreboard()
-                        }
-                        if (printGeneralStats || printScoreboard)
-                            Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
-                        //displayMinuteStats()
-                        showStats = false
+        if (sendDHP) {
+            sendCenteredMessage("      DHP: ${EnumChatFormatting.GOLD}${addCommas(DamageHealingAbsorbedEndOfGame.totalDHP)}")
+            sendDHP = false
+        }
+        if (message.removeFormatting().trimStart().startsWith("Damage:")) {
+            counter++
+            sendDHP = true
+        }
+        if (message.contains("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")) {
+            counter++
+            if (counter == 3) {
+                if (showStats) {
+                    if (printGeneralStats) {
+                        sendCenteredMessage("${EnumChatFormatting.GOLD}▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
+                        displayStats()
                     }
-                    counter = 0
+                    if (printScoreboard) {
+                        sendCenteredMessage("${EnumChatFormatting.GOLD}▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
+                        displayScoreboard()
+                    }
+                    if (printGeneralStats || printScoreboard) {
+                        sendCenteredMessage("${EnumChatFormatting.GOLD}▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
+                    }
+                    //displayMinuteStats()
+                    showStats = false
                 }
+                counter = 0
             }
         }
     }
@@ -284,7 +284,7 @@ object StatsDisplayAfterGame : IModule {
             }
 
         }
-        Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.GOLD}------------------------------------------------------"))
+        sendCenteredMessage("${EnumChatFormatting.GOLD}▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
         for (player in teamRed) {
             if (ThePlayer.team == TeamEnum.RED) {
                 Minecraft.getMinecraft().thePlayer.addChatMessage(

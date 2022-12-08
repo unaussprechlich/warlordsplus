@@ -5,17 +5,20 @@ import net.minecraftforge.client.event.RenderPlayerEvent
 import net.minecraftforge.common.MinecraftForge
 import net.unaussprechlich.renderapi.RenderApi
 import net.unaussprechlich.warlordsplus.OtherPlayers
+import net.unaussprechlich.warlordsplus.config.CCategory
+import net.unaussprechlich.warlordsplus.config.ConfigPropertyBoolean
 import net.unaussprechlich.warlordsplus.module.modules.GameStateManager
 import net.unaussprechlich.warlordsplus.util.Colors
 import net.unaussprechlich.warlordsplus.util.ImageRegistry
 
 object PlayerCooldownRenderer : RenderApi.Player() {
 
-    override fun shouldRender(event: RenderPlayerEvent.Post): Boolean {
-        return GameStateManager.isWarlords2 &&
+    override fun shouldRender(e: RenderPlayerEvent.Post): Boolean {
+        return showStats &&
+                GameStateManager.isWarlords2 &&
                 GameStateManager.isIngame &&
-                event.entityPlayer != Minecraft.getMinecraft().thePlayer &&
-                !OtherPlayers.playersMap.containsKey(Minecraft.getMinecraft().thePlayer.name)
+                e.entityPlayer != Minecraft.getMinecraft().thePlayer &&
+                (GameStateManager.isPvE || !OtherPlayers.playersMap.containsKey(Minecraft.getMinecraft().thePlayer.name))
     }
 
     override fun onRender(event: RenderPlayerEvent.Post) {
@@ -88,4 +91,12 @@ object PlayerCooldownRenderer : RenderApi.Player() {
     fun register() {
         MinecraftForge.EVENT_BUS.register(this)
     }
+
+    @ConfigPropertyBoolean(
+        category = CCategory.RENDERER,
+        id = "Warlords 2 Player Stats | Show",
+        comment = "Enable or disable showing player stats (cooldowns, energy, etc.) above their head in Warlords 2",
+        def = true
+    )
+    var showStats = true
 }

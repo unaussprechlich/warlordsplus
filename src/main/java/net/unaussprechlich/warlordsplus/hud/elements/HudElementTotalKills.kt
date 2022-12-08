@@ -79,7 +79,7 @@ object HudElementTotalKills : AbstractHudElement() {
     }
 
     override fun isVisible(): Boolean {
-        return isIngame
+        return isIngame && !GameStateManager.isPvE
     }
 
     override fun isEnabled(): Boolean {
