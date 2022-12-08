@@ -21,7 +21,9 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         try {
             if (showNewScoreboard) {
                 renderPlayerList()
-                event.isCanceled = true
+                if (!hideNewScoreboardPvE) {
+                    event.isCanceled = true
+                }
             }
         } catch (e: Throwable) {
             e.printStackTrace()
@@ -33,6 +35,10 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         if (thePlayer == null) return
 
         val players = OtherPlayers.getPlayersForNetworkPlayers(thePlayer!!.sendQueue.playerInfoMap)
+
+        if (hideNewScoreboardPvE) {
+            return
+        }
 
         val teamBlue = players.filter { it.team == TeamEnum.BLUE }.sortedByDescending { it.level }
         val teamRed = players.filter { it.team == TeamEnum.RED }.sortedByDescending { it.level }
@@ -167,7 +173,7 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
             translate(xStart, yStart - 15)
         }
 
-        fun renderLine(index : Int, p: net.unaussprechlich.warlordsplus.Player) {
+        fun renderLine(index: Int, p: net.unaussprechlich.warlordsplus.Player) {
             if (showOutline) {
                 translateY(-2) {
                     renderRect(w.toDouble(), 1.25, Colors.DEF)
@@ -180,8 +186,8 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
                     renderRect(w.toDouble(), 1.25, Colors.DEF)
                 }
             } else {
-                if(index % 2 == 1){
-                    translateY(-1.2){
+                if (index % 2 == 1) {
+                    translateY(-1.2) {
                         renderRect(w.toDouble(), 10.75, Colors.DEF, alpha = 40)
                     }
                 }
@@ -302,7 +308,15 @@ object ScoreboardComponent : AbstractRenderComponent(RenderGameOverlayEvent.Elem
         comment = "Enable or disable the new scoreboard",
         def = true
     )
-    var showNewScoreboard = false
+    var showNewScoreboard = true
+
+    @ConfigPropertyBoolean(
+        category = CCategory.SCOREBOARD,
+        id = "Scoreboard | Hide in PvE",
+        comment = "Enable or disable the new scoreboard in PvE",
+        def = true
+    )
+    var hideNewScoreboardPvE = true
 
     @ConfigPropertyString(
         category = CCategory.SCOREBOARD,

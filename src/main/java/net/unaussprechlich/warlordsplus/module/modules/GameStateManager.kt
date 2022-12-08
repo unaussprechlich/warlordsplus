@@ -71,7 +71,10 @@ object GameStateManager : IModule {
             //if (it.isChat()) {
             try {
                 val message = it.message.unformattedText.removeFormatting()
-                if (message == "The gates will fall in 5 seconds!" || message == "The gates will fall in 1 second!") {
+                if (message == "The gates will fall in 5 seconds!" ||
+                    message == "The gates will fall in 1 second!" ||
+                    (isWarlords2 && message == "The game starts in 1 second!")
+                ) {
                     EventBus.post(ResetEvent())
                     totalSeconds = 8
                     println("RESET EVENT")
@@ -252,7 +255,7 @@ object GameStateManager : IModule {
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            //e.printStackTrace()
         }
         return -1
     }
